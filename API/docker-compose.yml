@@ -4,7 +4,6 @@ services:
   db:
     image: postgres
     restart: always
-    hostname: 'localhost'
     environment:
       POSTGRES_USER: DB_USER
       POSTGRES_PASSWORD: DB_PASSWORD
@@ -27,5 +26,4 @@ services:
       - ./:/API
     ports:
       - "3000:3000"
-#    command: npm start src/app.js
     command: npm start src/app.js

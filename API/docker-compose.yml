@@ -4,9 +4,10 @@ services:
   db:
     image: postgres
     restart: always
+    hostname: 'localhost'
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: DB_USER
+      POSTGRES_PASSWORD: DB_PASSWORD
     volumes:
       - ./tmp/data_db:/var/lib/postgresql/data
     ports:
@@ -18,9 +19,13 @@ services:
     ports:
       - "8080:8080"
 
-#  app:
-#    image: node
-#    restart: unless-stopped
-#    ports:
-#      - "3000:3000"
-#    command: npm start ./src/app.js
+  app:
+    image: node
+    restart: on-failure
+    working_dir: /API
+    volumes:
+      - ./:/API
+    ports:
+      - "3000:3000"
+#    command: npm start src/app.js
+    command: npm start src/app.js

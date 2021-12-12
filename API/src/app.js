@@ -1,9 +1,22 @@
-const express = require("express");
-const app = express();
+// const express = require("express");
+// const app = express();
+//
+// app.get("/", function (req, res) {
+//   res.send("This is testing api");
+// });
+//
+// console.log(process.env.APP_PORT);
+// app.listen(process.env.APP_PORT);
 
-app.get("/", function (req, res) {
-  res.send("This is testing api");
+const { Pool } = require("pg");
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: "localhost",
+  database: "postgres",
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
-
-console.log(process.env.APP_PORT);
-app.listen(process.env.APP_PORT);
+pool.query("SELECT * FROM ex", (err, res) => {
+  console.log(err, res);
+  pool.end();
+});

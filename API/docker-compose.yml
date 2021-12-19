@@ -1,15 +1,16 @@
-version: '3.1'
+version: '3.5'
 
 services:
   db:
     image: postgres
+    container_name: back_db
     restart: always
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./tmp/data_db:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
   adminer:
     image: adminer

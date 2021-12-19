@@ -1,6 +1,6 @@
 import {PostContainer} from "./containers/Post";
 
-import postImg from './ellie2.jpg';
+import postImg from './ellie2.jpg'
 import './App.css';
 
 function App() {

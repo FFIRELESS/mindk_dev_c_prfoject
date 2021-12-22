@@ -35,7 +35,7 @@ export var HeaderContainer = function () {
     return <div>
         <button onClick={showArticles}>SHOW ARTICLES</button>
         {articles}
-        <button onClick={showAdd_articles}>ADD ARTICLES</button>
+        <button onClick={showAdd_articles}>ADD ARTICLE</button>
         {add_article}
         <button onClick={showProfile}>SHOW PROFILE</button>
         {profile}

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node -r dotenv/config src/app.js",
+    "start:dev": "nodemon -r dotenv/config src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "cd .. && husky install API/.husky"
   },
@@ -15,9 +16,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.1",
     "dotenv": "^10.0.0",
     "eslint-config-prettier": "^8.3.0",
     "express": "^4.17.1",
+    "knex": "^0.95.15",
+    "nodemon": "^2.0.15",
     "pg": "^8.7.1"
   },
   "devDependencies": {

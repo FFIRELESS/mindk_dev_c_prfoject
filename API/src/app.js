@@ -1,22 +1,19 @@
-// const express = require("express");
-// const app = express();
-//
-// app.get("/", function (req, res) {
-//   res.send("This is testing api");
-// });
-//
-// console.log(process.env.APP_PORT);
-// app.listen(process.env.APP_PORT);
+const express = require("express");
+const config = require("./services/config");
 
-const { Pool } = require("pg");
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_DATABASE,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
-pool.query("SELECT * FROM ex", (err, res) => {
-  console.log(err, res);
-  pool.end();
-});
+const usersRoutes = require("./routes/users");
+const postsRoutes = require("./routes/posts");
+const commentsRoutes = require("./routes/comments");
+const commLikesRoutes = require("./routes/commentLikes");
+const postLikesRoutes = require("./routes/postLikes");
+
+const app = express();
+const port = config.appPort;
+
+app.use("/users", usersRoutes);
+app.use("/posts", postsRoutes);
+app.use("/comments", commentsRoutes);
+app.use("/comm_likes", commLikesRoutes);
+app.use("/post_likes", postLikesRoutes);
+
+app.listen(port);

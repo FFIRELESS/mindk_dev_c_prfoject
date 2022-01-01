@@ -17,3 +17,4 @@ app.use("/comm_likes", commLikesRoutes);
 app.use("/post_likes", postLikesRoutes);
 
 app.listen(port);
+console.log("Server started at /localhost:" + port);

@@ -7,8 +7,8 @@ router.get("/", async (req, res) => {
 
 router.post("/", (req, res) => {
   db.insert({
-    Post_ID: req.query.Post_ID,
-    Like_User_ID: req.query.Like_User_ID,
+    Post_ID: req.body.Post_ID,
+    Like_User_ID: req.body.Like_User_ID,
   })
     .into("Post_likes")
     .then(function () {

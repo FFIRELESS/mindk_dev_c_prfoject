@@ -5,20 +5,25 @@ router.get("/", async (req, res) => {
   res.send(await db.select().from("User").orderBy("User_ID"));
 });
 
+router.get("/:User_ID", async (req, res) => {
+  res.send(
+    await db.select().from("User").where({ User_ID: req.params.User_ID })
+  );
+});
+
 router.post("/", (req, res) => {
   db.insert({
-    User_ID: req.query.User_ID,
-    University_ID: req.query.University_ID,
-    Username: req.query.Username,
-    Fullname: req.query.Fullname,
-    Image: req.query.Image,
-    Email: req.query.Email,
-    Phone: req.query.Phone,
-    AuthToken: req.query.AuthToken,
-    FName_Visibility: req.query.FName_Visibility,
-    Email_Visibility: req.query.Email_Visibility,
-    Phone_Visibility: req.query.Phone_Visibility,
-    University_Visibility: req.query.University_Visibility,
+    University_ID: req.body.University_ID,
+    Username: req.body.Username,
+    Fullname: req.body.Fullname,
+    Image: req.body.Image,
+    Email: req.body.Email,
+    Phone: req.body.Phone,
+    AuthToken: req.body.AuthToken,
+    FName_Visibility: req.body.FName_Visibility,
+    Email_Visibility: req.body.Email_Visibility,
+    Phone_Visibility: req.body.Phone_Visibility,
+    University_Visibility: req.body.University_Visibility,
   })
     .into("User")
     .then(function () {
@@ -29,16 +34,16 @@ router.post("/", (req, res) => {
 router.put("/:User_ID", (req, res) => {
   db.where({ User_ID: req.params.User_ID })
     .update({
-      Username: req.query.Username,
-      Fullname: req.query.Fullname,
-      Image: req.query.Image,
-      Email: req.query.Email,
-      Phone: req.query.Phone,
-      AuthToken: req.query.AuthToken,
-      FName_Visibility: req.query.FName_Visibility,
-      Email_Visibility: req.query.Email_Visibility,
-      Phone_Visibility: req.query.Phone_Visibility,
-      University_Visibility: req.query.University_Visibility,
+      Username: req.body.Username,
+      Fullname: req.body.Fullname,
+      Image: req.body.Image,
+      Email: req.body.Email,
+      Phone: req.body.Phone,
+      AuthToken: req.body.AuthToken,
+      FName_Visibility: req.body.FName_Visibility,
+      Email_Visibility: req.body.Email_Visibility,
+      Phone_Visibility: req.body.Phone_Visibility,
+      University_Visibility: req.body.University_Visibility,
     })
     .from("User")
     .then(function () {

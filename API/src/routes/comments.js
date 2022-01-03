@@ -5,13 +5,21 @@ router.get("/", async (req, res) => {
   res.send(await db.select().from("Comment").orderBy("Comment_ID"));
 });
 
+router.get("/likes/:Comment_ID", async (req, res) => {
+  res.send(
+    await db
+      .select()
+      .from("Comment_likes")
+      .where({ Comment_ID: req.params.Comment_ID })
+  );
+});
+
 router.post("/", (req, res) => {
   db.insert({
-    Comment_ID: req.query.Comment_ID,
-    User_ID: req.query.User_ID,
-    Post_ID: req.query.Post_ID,
-    Repl_to_Comment_ID: req.query.Repl_to_Comment_ID,
-    Text: req.query.Text,
+    User_ID: req.body.User_ID,
+    Post_ID: req.body.Post_ID,
+    Repl_to_Comment_ID: req.body.Repl_to_Comment_ID,
+    Text: req.body.Text,
   })
     .into("Comment")
     .then(function () {
@@ -21,7 +29,7 @@ router.post("/", (req, res) => {
 
 router.put("/:Comment_ID", (req, res) => {
   db.where({ Comment_ID: req.params.Comment_ID })
-    .update({ Text: req.query.Text })
+    .update({ Text: req.body.Text })
     .from("Comment")
     .then(function () {
       res.send({ success: true, message: "Updating OK" });

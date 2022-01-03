@@ -5,14 +5,31 @@ router.get("/", async (req, res) => {
   res.send(await db.select().from("Post").orderBy("Post_ID"));
 });
 
+router.get("/:Post_ID", async (req, res) => {
+  res.send(
+    await db.select().from("Post").where({ Post_ID: req.params.Post_ID })
+  );
+});
+
+router.get("/comments/:Post_ID", async (req, res) => {
+  res.send(
+    await db.select().from("Comment").where({ Post_ID: req.params.Post_ID })
+  );
+});
+
+router.get("/likes/:Post_ID", async (req, res) => {
+  res.send(
+    await db.select().from("Post_likes").where({ Post_ID: req.params.Post_ID })
+  );
+});
+
 router.post("/", (req, res) => {
   db.insert({
-    Post_ID: req.query.Post_ID,
-    User_ID: req.query.User_ID,
-    Title: req.query.Title,
-    Timestamp: req.query.Timestamp,
-    Text: req.query.Text,
-    Visibility: req.query.Visibility,
+    User_ID: req.body.User_ID,
+    Title: req.body.Title,
+    Timestamp: req.body.Timestamp,
+    Text: req.body.Text,
+    Visibility: req.body.Visibility,
   })
     .into("Post")
     .then(function () {
@@ -25,10 +42,10 @@ router.put("/:Post_ID", (req, res) => {
     Post_ID: req.params.Post_ID,
   })
     .update({
-      Title: req.query.Title,
-      Timestamp: req.query.Timestamp,
-      Text: req.query.Text,
-      Visibility: req.query.Visibility,
+      Title: req.body.Title,
+      Timestamp: req.body.Timestamp,
+      Text: req.body.Text,
+      Visibility: req.body.Visibility,
     })
     .from("Post")
     .then(function () {

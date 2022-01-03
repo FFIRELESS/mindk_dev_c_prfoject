@@ -5,7 +5,7 @@ router.get("/", async (req, res) => {
   res.send(await db.select().from("Comment").orderBy("Comment_ID"));
 });
 
-router.get("/likes/:Comment_ID", async (req, res) => {
+router.get("/:Comment_ID/likes", async (req, res) => {
   res.send(
     await db
       .select()

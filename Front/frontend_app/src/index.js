@@ -10,9 +10,11 @@ import App from "./App";
 import {Add_article, Articles, Profile} from "./components/body";
 import {ValidateDate, ValidatePostDigits, ValidatePostFile, ValidatePostUpper} from "./components/Post";
 import {NotFound} from "./components/NotFound";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 ReactDOM.render(
   <React.StrictMode>
+      <ErrorBoundary>
       <BrowserRouter>
           <Routes>
               <Route path="/" element={<App/>}/>
@@ -26,6 +28,7 @@ ReactDOM.render(
               <Route path="*" element={<NotFound/>}/>
           </Routes>
       </BrowserRouter>
+      </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById('root'),
 );

@@ -6,29 +6,39 @@ import {
     Route
 } from "react-router-dom";
 import './index.css';
+import {QueryClient, QueryClientProvider} from "react-query";
 import App from "./App";
-import {Add_article, Articles, Profile} from "./components/body";
+import {Add_article, Profile} from "./components/body";
 import {ValidateDate, ValidatePostDigits, ValidatePostFile, ValidatePostUpper} from "./components/Post";
 import {NotFound} from "./components/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
+import PostContainer from "./containers/Post";
+import UserProfileContainer from "./containers/userProfile";
+import UsersContainer from "./containers/Users";
+
+const queryClient = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>
-      <ErrorBoundary>
-      <BrowserRouter>
-          <Routes>
-              <Route path="/" element={<App/>}/>
-              <Route path="/profile" element={<Profile/>}/>
-              <Route path="/articles" element={<Articles/>}/>
-              <Route path="/add_article" element={<Add_article/>}/>
-              <Route path="/posts_digits/:id" element={<ValidatePostDigits/>}/>
-              <Route path="/posts_upper/:id" element={<ValidatePostUpper/>}/>
-              <Route path="/posts_file/:id" element={<ValidatePostFile/>}/>
-              <Route path="/date/:date" element={<ValidateDate/>}/>
-              <Route path="*" element={<NotFound/>}/>
-          </Routes>
-      </BrowserRouter>
-      </ErrorBoundary>
+      <QueryClientProvider client = {queryClient}>
+          <ErrorBoundary>
+              <BrowserRouter>
+                  <Routes>
+                      <Route path="/" element={<App/>}/>
+                      <Route path="/posts" element={<PostContainer/>}/>
+                      <Route path="/users" element={<UsersContainer/>}/>
+                      <Route path="/users/:id" element={<UserProfileContainer/>}/>
+                      <Route path="/add_article" element={<Add_article/>}/>
+                      <Route path="/profile" element={<Profile/>}/>
+                      <Route path="/posts_digits/:id" element={<ValidatePostDigits/>}/>
+                      <Route path="/posts_upper/:id" element={<ValidatePostUpper/>}/>
+                      <Route path="/posts_file/:id" element={<ValidatePostFile/>}/>
+                      <Route path="/date/:date" element={<ValidateDate/>}/>
+                      <Route path="*" element={<NotFound/>}/>
+                  </Routes>
+              </BrowserRouter>
+          </ErrorBoundary>
+      </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

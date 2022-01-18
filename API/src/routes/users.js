@@ -2,10 +2,12 @@ const router = require("express").Router();
 const db = require("../services/db");
 
 router.get("/", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   res.send(await db.select().from("User").orderBy("User_ID"));
 });
 
 router.get("/:User_ID", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   res.send(
     await db.select().from("User").where({ User_ID: req.params.User_ID })
   );

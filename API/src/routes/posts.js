@@ -2,6 +2,7 @@ const router = require("express").Router();
 const db = require("../services/db");
 
 router.get("/", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   res.send(await db.select().from("Post").orderBy("Post_ID"));
 });
 

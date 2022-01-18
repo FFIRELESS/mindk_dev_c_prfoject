@@ -35,16 +35,18 @@ export var ValidateDate = function () {
     return <NotFound/>;
 }
 
-export var Post = function ({
-  postId, postHeader, postImg, postText, postAuthor,
-}) {
+export var Post = function ({posts}) {
   return (
-    <div>
-        <p>Post #{postId}</p>
-      <p><b>{postHeader}</b></p>
-      <p>{postImg}</p>
-      <p>{postText}</p>
-      <p><i>{postAuthor}</i></p>
-    </div>
+      <>
+          {
+              posts.map(({Post_ID, User_ID, Title, Text, Timestamp, Visibility}) =>
+              (<div key={Post_ID}>
+                  Post #{Post_ID} User #{User_ID} <b>{Title}</b>
+                  <div> {Text} </div>
+                  <div> {Timestamp} </div>
+                  <div>{Visibility} </div> <br/>
+              </div>))
+          }
+      </>
   );
 };

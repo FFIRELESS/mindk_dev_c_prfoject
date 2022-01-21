@@ -37,16 +37,16 @@ export var ValidateDate = function () {
 
 export var Post = function ({posts}) {
   return (
-      <>
+      <div className="container">
           {
               posts.map(({Post_ID, User_ID, Title, Text, Timestamp, Visibility}) =>
-              (<div key={Post_ID}>
+              (<div className="Post-card" key={Post_ID}>
                   Post #{Post_ID} User #{User_ID} <b>{Title}</b>
                   <div> {Text} </div>
                   <div> {Timestamp} </div>
                   <div>{Visibility} </div> <br/>
               </div>))
           }
-      </>
+      </div>
   );
 };

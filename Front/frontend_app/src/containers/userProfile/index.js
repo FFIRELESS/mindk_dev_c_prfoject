@@ -3,7 +3,7 @@ import React from 'react';
 import {UserProfile} from "../../components/userProfile";
 import {useQuery} from "react-query";
 import {getUser} from "./api/crud";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {NotFound} from "../../components/NotFound";
 
 const UserProfileContainer = () => {
@@ -25,8 +25,6 @@ const UserProfileContainer = () => {
     return <>
         {isFetching && <div>Loading...</div>}
         <UserProfile user={user}/>
-        <Link to="/users"><button>GO TO USERS LIST</button></Link>
-        <Link to="/"><button>GO TO MAIN PAGE</button></Link>
     </>;
 }
 

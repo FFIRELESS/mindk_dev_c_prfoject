@@ -1,27 +1,28 @@
 const router = require("express").Router();
 const db = require("../services/db");
 
+const {
+  getAllPosts,
+  getPostById,
+  getPostComments,
+  getPostLikes,
+} = require("../services/store/posts.service");
+
 router.get("/", async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.send(await db.select().from("Post").orderBy("Post_ID"));
+  res.send(await getAllPosts());
 });
 
 router.get("/:Post_ID", async (req, res) => {
-  res.send(
-    await db.select().from("Post").where({ Post_ID: req.params.Post_ID })
-  );
+  res.send(await getPostById(req.params.Post_ID));
 });
 
 router.get("/:Post_ID/comments", async (req, res) => {
-  res.send(
-    await db.select().from("Comment").where({ Post_ID: req.params.Post_ID })
-  );
+  res.send(await getPostComments(req.params.Post_ID));
 });
 
 router.get("/:Post_ID/likes", async (req, res) => {
-  res.send(
-    await db.select().from("Post_likes").where({ Post_ID: req.params.Post_ID })
-  );
+  res.send(await getPostLikes(req.params.Post_ID));
 });
 
 router.post("/", (req, res) => {

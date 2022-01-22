@@ -2,9 +2,9 @@ import React from 'react';
 
 import {UserProfile} from "../../components/userProfile";
 import {useQuery} from "react-query";
-import {getUser} from "./api/crud";
 import {useParams} from "react-router-dom";
 import {NotFound} from "../../components/NotFound";
+import {getUser} from "../Users/api/crud";
 
 const UserProfileContainer = () => {
     const {id} = useParams();
@@ -14,10 +14,7 @@ const UserProfileContainer = () => {
     }
 
     const {isFetching, data} = useQuery('user', () => getUser(id));
-    const user = data?.data;
-
-    console.log(id);
-    console.log(user);
+    const user = data?.data[0];
 
     if (user === undefined || user.length === 0) {
         return <NotFound/>;

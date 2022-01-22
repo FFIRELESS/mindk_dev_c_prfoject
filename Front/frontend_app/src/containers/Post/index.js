@@ -1,25 +1,18 @@
 import { Post } from '../../components/Post';
-import PropTypes from "prop-types";
+import {useQuery} from "react-query";
+import {getPosts} from "./api/crud";
+import {Link} from "react-router-dom";
 
-const PostContainer = ({
-  postHeader, postImg, postText, postAuthor,
-}) => {
-  const header = `${postHeader}!`;
-  const text = `Today ${postText}`;
-  const author = `${postAuthor} //2021`;
+const PostContainer = () => {
+  const {isFetching, data} = useQuery('posts', () => getPosts());
 
-  return <Post postHeader={header} postImg={postImg} postText={text} postAuthor={author} />;
+  const posts = data?.data || [];
+
+  return <>
+    {isFetching && <div>Loading...</div>}
+    <Post posts={posts}/>
+    <Link to="/"><button>GO TO MAIN PAGE</button></Link>
+    </>;
 };
-
-PostContainer.propTypes = {
-  postHeader: PropTypes.string.isRequired,
-  postImg: PropTypes.string,
-  postText: PropTypes.string.isRequired,
-  postAuthor: PropTypes.string.isRequired
-}
-
-PostContainer.defaultProps = {
-  postImg: '/src/default.img'
-}
 
 export default PostContainer;

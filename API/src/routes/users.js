@@ -1,5 +1,20 @@
 const router = require("express").Router();
 const db = require("../services/db");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1000000,
+  },
+});
 
 router.get("/", async (req, res) => {
   res.send(await db.select().from("User").orderBy("User_ID"));
@@ -9,6 +24,36 @@ router.get("/:User_ID", async (req, res) => {
   res.send(
     await db.select().from("User").where({ User_ID: req.params.User_ID })
   );
+});
+
+router.get("/:User_ID/avatar", async (req, res) => {
+  const img = await db
+    .select("Image")
+    .first("Image")
+    .from("User")
+    .where({ User_ID: req.params.User_ID });
+
+  if (img === undefined) {
+    res.send("Error");
+    return;
+  }
+
+  if (img.Image === null) {
+    res.sendFile("icon.png", { root: "uploads/default" });
+  } else {
+    res.sendFile(img.Image, { root: "uploads/" });
+  }
+});
+
+router.post("/:User_ID/avatar", upload.single("avatar"), async (req, res) => {
+  await db
+    .update({ Image: req.file.filename })
+    .from("User")
+    .where({ User_ID: req.params.User_ID })
+    .then(function () {
+      console.log(req.file);
+      res.send("Success");
+    });
 });
 
 router.post("/", (req, res) => {

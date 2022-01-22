@@ -1,6 +1,7 @@
 const express = require("express");
 const config = require("./services/config");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const usersRoutes = require("./routes/users");
 const postsRoutes = require("./routes/posts");
@@ -11,8 +12,9 @@ const postLikesRoutes = require("./routes/postLikes");
 const app = express();
 const port = config.appPort;
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(cors());
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
 
 app.use("/users", usersRoutes);
 app.use("/posts", postsRoutes);

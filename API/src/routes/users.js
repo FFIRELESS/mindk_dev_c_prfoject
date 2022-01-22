@@ -17,32 +17,34 @@ const upload = multer({
 });
 
 router.get("/", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
   res.send(await db.select().from("User").orderBy("User_ID"));
 });
 
 router.get("/:User_ID", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
   res.send(
     await db.select().from("User").where({ User_ID: req.params.User_ID })
   );
 });
 
 router.get("/:User_ID/avatar", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
   const img = await db
     .select("Image")
     .first("Image")
     .from("User")
     .where({ User_ID: req.params.User_ID });
-  res.sendFile(img.Image, { root: "uploads/" });
+
+  if (img.Image === null) {
+    res.send("Warning: Avatar wasn't set");
+  } else {
+    res.sendFile(img.Image, { root: "uploads/" });
+  }
 });
 
-router.post("/profile", upload.single("avatar"), async (req, res) => {
+router.post("/:User_ID/avatar", upload.single("avatar"), async (req, res) => {
   await db
     .update({ Image: req.file.filename })
     .from("User")
-    .where({ User_ID: 1 })
+    .where({ User_ID: req.params.User_ID })
     .then(function () {
       console.log(req.file);
       res.send("Success");

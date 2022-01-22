@@ -9,7 +9,6 @@ const {
 } = require("../services/store/posts.service");
 
 router.get("/", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
   res.send(await getAllPosts());
 });
 

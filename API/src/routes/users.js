@@ -33,8 +33,13 @@ router.get("/:User_ID/avatar", async (req, res) => {
     .from("User")
     .where({ User_ID: req.params.User_ID });
 
+  if (img === undefined) {
+    res.send("Error");
+    return;
+  }
+
   if (img.Image === null) {
-    res.send("Warning: Avatar wasn't set");
+    res.sendFile("icon.png", { root: "uploads/default" });
   } else {
     res.sendFile(img.Image, { root: "uploads/" });
   }

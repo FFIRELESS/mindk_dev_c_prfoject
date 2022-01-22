@@ -9,7 +9,6 @@ import './index.css';
 import {QueryClient, QueryClientProvider} from "react-query";
 import App from "./App";
 import {Add_article, Profile} from "./components/body";
-import {ValidateDate, ValidatePostDigits, ValidatePostFile, ValidatePostUpper} from "./components/Post";
 import {NotFound} from "./components/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PostContainer from "./containers/Post";
@@ -30,10 +29,6 @@ ReactDOM.render(
                       <Route path="/users/:id" element={<UserProfileContainer/>}/>
                       <Route path="/add_article" element={<Add_article/>}/>
                       <Route path="/profile" element={<Profile/>}/>
-                      <Route path="/posts_digits/:id" element={<ValidatePostDigits/>}/>
-                      <Route path="/posts_upper/:id" element={<ValidatePostUpper/>}/>
-                      <Route path="/posts_file/:id" element={<ValidatePostFile/>}/>
-                      <Route path="/date/:date" element={<ValidateDate/>}/>
                       <Route path="*" element={<NotFound/>}/>
                   </Routes>
               </BrowserRouter>

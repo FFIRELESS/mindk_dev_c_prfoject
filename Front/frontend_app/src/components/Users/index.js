@@ -4,20 +4,22 @@ import {UserProfile} from "../userProfile";
 
 export function Users({ users }) {
     return (
-        <div className="container">
+        <>
             {
                 users.map(({User_ID, University_ID, Username, Fullname, Image, Email, Phone}) =>
-                    (<div className="card" key={User_ID}>
+                    (<div key={User_ID} className="container">
+                        <div className="card">
                         <Link to={{pathname: `/users/${User_ID}`}}><button>User #{User_ID}</button></Link>
                         from university #{University_ID}
                         <div> {Username} </div>
                         <div> {Fullname} </div>
                         <div> {Image} </div>
                         <div> {Email} </div>
-                        <div> {Phone} </div> <br/>
+                        <div> {Phone} </div>
+                        </div>
                     </div>))
             }
-        </div>
+        </>
     );
 }
 

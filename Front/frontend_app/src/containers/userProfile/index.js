@@ -3,7 +3,7 @@ import React from 'react';
 import {UserProfile} from "../../components/userProfile";
 import {useQuery} from "react-query";
 import {useParams} from "react-router-dom";
-import {NotFound} from "../../components/NotFound";
+import {NotFound} from "../../components/404/NotFound";
 import {getUser} from "../Users/api/crud";
 
 const UserProfileContainer = () => {

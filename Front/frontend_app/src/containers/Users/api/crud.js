@@ -7,3 +7,7 @@ export const getUsers = async () => {
 export const getUser = async (id) => {
     return apiClient.get(`/users/${id}`)
 }
+
+export const getUserAvatar = async (id) => {
+    return apiClient.get(`/users/${id}/avatar`)
+}

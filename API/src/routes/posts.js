@@ -42,6 +42,7 @@ router.put("/:Post_ID", (req, res) => {
     Post_ID: req.params.Post_ID,
   })
     .update({
+      User_ID: req.body.User_ID,
       Title: req.body.Title,
       Timestamp: req.body.Timestamp,
       Text: req.body.Text,

@@ -1,13 +1,15 @@
 import React from "react";
 
-import EditPostForm from "../../../components/Post/EditPostForm";
-import {useQuery} from "react-query";
-import {getPost} from "../api/crud";
+import {useMutation, useQuery} from "react-query";
+import {editPost, getPost} from "../api/crud";
 import {useParams} from "react-router-dom";
 import {NotFound} from "../../../components/404/NotFound";
+import AddEditForm from "../../../components/Post/AddEditForm";
 
 const EditPostFormContainer = () => {
     const {id} = useParams();
+    const  { mutate, isLoading } = useMutation(({id, data}) => editPost(id, data));
+    const name = 'EDITING POST';
 
     if (!id.match(/^\d+$/)) {
         return <NotFound/>;
@@ -30,7 +32,7 @@ const EditPostFormContainer = () => {
     return (
         <>
             {isFetching && <div>Loading...</div>}
-            <EditPostForm id={id} postData={postData}/>
+            <AddEditForm formName={name} postData={postData} mutate={mutate} isLoading={isLoading} id={id}/>
         </>
     );
 }

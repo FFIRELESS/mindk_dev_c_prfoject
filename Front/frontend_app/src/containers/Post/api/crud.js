@@ -15,3 +15,7 @@ export const createPost = async (post) => {
 export const editPost = async (id, post) => {
     return await apiClient.put(`/posts/${id}`, post);
 }
+
+export const deletePost = async (id) => {
+    return apiClient.delete(`/posts/${id}`);
+}

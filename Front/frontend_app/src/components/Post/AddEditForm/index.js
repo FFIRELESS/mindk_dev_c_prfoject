@@ -2,14 +2,11 @@ import React from "react";
 import * as Yup from 'yup';
 import {Formik, Form, Field} from "formik";
 import {TextField} from "formik-mui";
-import {useMutation} from "react-query";
 
-import {createPost} from "../../../containers/Post/api/crud";
 import {Box, Button, createTheme, Grid, MenuItem} from "@mui/material";
 import {ThemeProvider} from "@emotion/react";
 
-const AddPostForm = ({postData}) => {
-    const  { mutate, isLoading } = useMutation(createPost);
+const AddEditForm = ({postData, mutate, isLoading, formName, id = null}) => {
 
     const theme = createTheme({
         status: {
@@ -47,7 +44,11 @@ const AddPostForm = ({postData}) => {
     const onFormSubmit = (data, actions) => {
         setTimeout(() => {
             actions.setSubmitting(true);
-            mutate(data);
+            if (id === null) {
+                mutate(data);
+            } else {
+                mutate({id: id, data: data});
+            }
             actions.setSubmitting(false);
         }, 1000);
     };
@@ -61,10 +62,10 @@ const AddPostForm = ({postData}) => {
             justifyContent="center"
             style={{ minHeight: '100vh' }}
         >
-            <Grid item xs={3}>
+            <Grid>
                 {isLoading && <div>Loading...</div>}
 
-                <Box margin={1}><h1>NEW POST</h1></Box>
+                <Box margin={1}><h1>{formName}</h1></Box>
 
             <Formik
                 onSubmit={onFormSubmit}
@@ -148,4 +149,4 @@ const AddPostForm = ({postData}) => {
     )
 }
 
-export default AddPostForm;
+export default AddEditForm;

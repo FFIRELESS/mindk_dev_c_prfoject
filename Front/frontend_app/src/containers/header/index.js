@@ -29,6 +29,14 @@ export var HeaderContainer = function () {
                     SHOW USERS
                 </Button>
             </Box>
+            <Box margin={1}>
+                <Button
+                    href="/users/1"
+                    variant="contained"
+                >
+                    YOUR PROFILE
+                </Button>
+            </Box>
         </div>
     );
 };

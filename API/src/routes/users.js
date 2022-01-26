@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 1000000,
+    fileSize: 10000000,
   },
 });
 
@@ -52,7 +52,7 @@ router.post("/:User_ID/avatar", upload.single("avatar"), async (req, res) => {
     .where({ User_ID: req.params.User_ID })
     .then(function () {
       console.log(req.file);
-      res.send("Success");
+      res.end("You new avatar is uploaded");
     });
 });
 

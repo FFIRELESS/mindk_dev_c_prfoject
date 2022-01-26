@@ -45,7 +45,7 @@ export const Post = function ({posts}) {
                justifyContent="center"
                alignItems="center"
               >
-              <Card sx={{ minWidth: 800, maxWidth: 800 }}>
+              <Card sx={{ width: '80vh', maxWidth: 800 }}>
                   <CardHeader
                       avatar={
                           <Avatar sx={{ bgcolor: red[500] }} aria-label="username">

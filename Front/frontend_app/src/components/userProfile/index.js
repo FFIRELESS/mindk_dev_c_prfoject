@@ -1,24 +1,58 @@
-import {Link} from "react-router-dom";
 import React from "react";
 import PropTypes from "prop-types";
 
+import {Avatar, Box, Card, CardContent, CardHeader, IconButton, Typography} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
 export function UserProfile({ user }) {
     return (
-        <div className="App-User">
-            <div key={user.User_ID}>
-                <div className="user_header"><b> USER #{user.User_ID} FROM UNIVERSITY #{user.University_ID} </b></div>
-                <div> <b><i>Username: </i></b>{user.Username} </div>
-                <div> <b><i>Full name: </i></b>{user.Fullname} </div>
-                <div> <b><i>Image path: </i></b>{user.Image} </div>
-                {/*<img src={`../../../../../API/uploads/${user.Image}`} alt="img"/>*/}
-                <div> <b><i>Email: </i></b>{user.Email} </div>
-                <div> <b><i>Phone: </i></b>{user.Phone} </div> <br/>
-            </div>
-            <div className="row">
-            <Link to="/users"><button>GO TO USERS LIST</button></Link>
-            <Link to="/"><button>GO TO MAIN PAGE</button></Link>
-        </div>
-        </div>
+        <>
+            <Box margin={3} display="flex"
+                 justifyContent="center"
+                 alignItems="center"
+            >
+                <Card sx={{ width: '80vh', maxWidth: 800 }}>
+                    <CardHeader
+                        avatar={
+                            <Avatar
+                                src={require(`../../../../../API/uploads/${user.Image}`)}
+                                sx={{ width: '20vh', height: '20vh' }}
+                                aria-label="username"
+                            >
+                                U
+                            </Avatar>
+                        }
+                        action={
+                            <div>
+                                <IconButton aria-label="edit" href={`${user.User_ID}/edit`}>
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton aria-label="settings" disabled>
+                                    <MoreVertIcon />
+                                </IconButton>
+                            </div>
+                        }
+                        title={user.Username}
+                        subheader={`UNIVERSITY #${user.University_ID}`}
+                    />
+                    <CardContent>
+                        <Typography variant="h6" gutterBottom component="div" color="text.primary">
+                            Full name: {user.Fullname}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Email: {user.Email}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Phone: {user.Phone}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Image path: {user.Image}
+                        </Typography>
+                    </CardContent>
+                </Card>
+            </Box>
+        </>
     );
 }
 

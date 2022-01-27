@@ -1,21 +1,11 @@
-import {apiClient} from "../../../config/axios";
+import { apiClient } from '../../../config/axios';
 
-export const getPosts = async () => {
-    return apiClient.get('/posts');
-}
+export const getPosts = async () => apiClient.get('/posts');
 
-export const getPost = async (id) => {
-    return apiClient.get(`/posts/${id}`);
-}
+export const getPost = async (id) => apiClient.get(`/posts/${id}`);
 
-export const createPost = async (post) => {
-    return await apiClient.post('/posts', post);
-}
+export const createPost = async (post) => apiClient.post('/posts', post);
 
-export const editPost = async (id, post) => {
-    return await apiClient.put(`/posts/${id}`, post);
-}
+export const editPost = async (id, post) => apiClient.put(`/posts/${id}`, post);
 
-export const deletePost = async (id) => {
-    return apiClient.delete(`/posts/${id}`);
-}
+export const deletePost = async (id) => apiClient.delete(`/posts/${id}`);

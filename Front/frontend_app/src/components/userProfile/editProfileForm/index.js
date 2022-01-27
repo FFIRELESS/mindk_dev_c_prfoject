@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import {
-  Box, Button, createTheme, Grid, MenuItem,
+  Box, Button, Grid, MenuItem,
 } from '@mui/material';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import { ThemeProvider } from '@emotion/react';
 import React from 'react';
 
 const EditProfileForm = function ({
@@ -48,17 +47,6 @@ const EditProfileForm = function ({
     }, 1000);
   };
 
-  const theme = createTheme({
-    status: {
-      danger: '#e53e3e',
-    },
-    palette: {
-      neutral: {
-        main: '#000000',
-      },
-    },
-  });
-
   return (
     // <div className="card">
     //   <p><b>THIS IS YOUR PROFILE</b></p>
@@ -90,71 +78,43 @@ const EditProfileForm = function ({
           {({ isSubmitting, isValid }) => (
             <Form>
               <Box margin={1}>
-                <Field
-                  component={TextField}
-                  fullWidth
-                  type="integer"
-                  name="University_ID"
-                  label="University_ID"
-                  helperText=" "
-                />
+                <Grid container columnSpacing={{ xs: 2 }}>
+                  <Grid item xs={3}>
+                    <Field
+                      component={TextField}
+                      fullWidth
+                      type="integer"
+                      name="University_ID"
+                      label="University_ID"
+                      helperText=" "
+                    />
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Field
+                      component={TextField}
+                      fullWidth
+                      type="text"
+                      name="Username"
+                      label="Username"
+                      helperText=" "
+                    />
+                  </Grid>
+                </Grid>
               </Box>
+
               <Box margin={1}>
-                <Field
-                  component={TextField}
-                  fullWidth
-                  type="text"
-                  name="Username"
-                  label="Username"
-                  helperText=" "
-                />
-                {' '}
-                <br />
-              </Box>
-              <Box margin={1}>
-                <Field
-                  component={TextField}
-                  fullWidth
-                  type="text"
-                  name="Fullname"
-                  label="Fullname"
-                  helperText=" "
-                />
-                {' '}
-                <br />
-              </Box>
-              <Box margin={1}>
-                <Field
-                  component={TextField}
-                  fullWidth
-                  type="email"
-                  name="Email"
-                  label="Email"
-                  helperText=" "
-                />
-                {' '}
-                <br />
-              </Box>
-              <Box margin={1}>
-                <Field
-                  component={TextField}
-                  fullWidth
-                  type="text"
-                  name="Phone"
-                  label="Phone"
-                  helperText=" "
-                />
-                {' '}
-                <br />
-              </Box>
-              <Box margin={1}>
-                <Grid
-                  container
-                  columnSpacing={{ xs: 1 }}
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Grid item xs={4}>
+                <Grid container columnSpacing={{ xs: 2 }}>
+                  <Grid item xs={9}>
+                    <Field
+                      component={TextField}
+                      fullWidth
+                      type="text"
+                      name="Fullname"
+                      label="Fullname"
+                      helperText=" "
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -174,7 +134,22 @@ const EditProfileForm = function ({
                       ))}
                     </Field>
                   </Grid>
-                  <Grid item xs={4}>
+                </Grid>
+              </Box>
+
+              <Box margin={1}>
+                <Grid container columnSpacing={{ xs: 2 }}>
+                  <Grid item xs={9}>
+                    <Field
+                      component={TextField}
+                      fullWidth
+                      type="email"
+                      name="Email"
+                      label="Email"
+                      helperText=" "
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -194,7 +169,22 @@ const EditProfileForm = function ({
                       ))}
                     </Field>
                   </Grid>
-                  <Grid item xs={4}>
+                </Grid>
+              </Box>
+
+              <Box margin={1}>
+                <Grid container columnSpacing={{ xs: 2 }}>
+                  <Grid item xs={9}>
+                    <Field
+                      component={TextField}
+                      fullWidth
+                      type="text"
+                      name="Phone"
+                      label="Phone"
+                      helperText=" "
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
                     <Field
                       component={TextField}
                       fullWidth
@@ -216,6 +206,7 @@ const EditProfileForm = function ({
                   </Grid>
                 </Grid>
               </Box>
+
               <Grid container columnSpacing={{ xs: 1 }}>
                 <Grid item xs={8}>
                   <Button
@@ -239,19 +230,6 @@ const EditProfileForm = function ({
                   >
                     Back
                   </Button>
-                </Grid>
-                <Grid item xs={11.6}>
-                  <ThemeProvider theme={theme}>
-                    <Button
-                      href="/"
-                      sx={{ margin: 1 }}
-                      variant="outlined"
-                      color="neutral"
-                      fullWidth
-                    >
-                      GO TO MAIN PAGE
-                    </Button>
-                  </ThemeProvider>
                 </Grid>
               </Grid>
             </Form>

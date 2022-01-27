@@ -1,7 +1,5 @@
 import { useQuery } from 'react-query';
-import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Button } from '@mui/material';
 import { Post } from '../../components/Post';
 import { getPosts } from './api/crud';
 import ResponsiveAppBar from '../../components/header/navbar';
@@ -23,7 +21,6 @@ const PostContainer = function () {
       {
             posts.map((post) => <div key={post.Post_ID}><Post posts={post} /></div>)
           }
-      <Link to="/"><Button>GO TO MAIN PAGE</Button></Link>
     </>
   );
 };

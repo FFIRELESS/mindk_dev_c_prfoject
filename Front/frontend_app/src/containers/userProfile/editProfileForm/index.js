@@ -4,6 +4,7 @@ import React from 'react';
 import EditProfileForm from '../../../components/userProfile/editProfileForm';
 import { editUser, getUser } from '../../Users/api/crud';
 import NotFound from '../../../components/404/NotFound';
+import ResponsiveAppBar from '../../../components/header/navbar';
 
 const EditProfileContainer = function () {
   const { id } = useParams();
@@ -22,6 +23,7 @@ const EditProfileContainer = function () {
 
   return (
     <>
+      <ResponsiveAppBar />
       {isFetching && <div>Loading...</div>}
       <EditProfileForm userData={user} mutate={mutate} isLoading={isLoading} id={id} />
     </>

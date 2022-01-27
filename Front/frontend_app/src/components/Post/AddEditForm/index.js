@@ -4,9 +4,8 @@ import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 
 import {
-  Box, Button, createTheme, Grid, MenuItem,
+  Box, Button, Grid, MenuItem,
 } from '@mui/material';
-import { ThemeProvider } from '@emotion/react';
 import PropTypes from 'prop-types';
 
 const AddEditForm = function ({
@@ -33,17 +32,6 @@ const AddEditForm = function ({
       label: 'All',
     },
   ];
-
-  const theme = createTheme({
-    status: {
-      danger: '#e53e3e',
-    },
-    palette: {
-      neutral: {
-        main: '#000000',
-      },
-    },
-  });
 
   const onFormSubmit = (data, actions) => {
     setTimeout(() => {
@@ -79,14 +67,38 @@ const AddEditForm = function ({
           {({ isSubmitting, isValid }) => (
             <Form>
               <Box margin={1}>
-                <Field
-                  component={TextField}
-                  fullWidth
-                  type="integer"
-                  name="User_ID"
-                  label="User_ID"
-                  helperText="Please Enter User_ID"
-                />
+                <Grid container columnSpacing={{ xs: 1 }}>
+                  <Grid item xs={6}>
+                    <Field
+                      component={TextField}
+                      type="integer"
+                      name="User_ID"
+                      label="User_ID"
+                      helperText="Please Enter User_ID"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Field
+                      component={TextField}
+                      fullWidth
+                      type="text"
+                      name="Visibility"
+                      label="Visibility"
+                      helperText="Please Enter Visibility"
+                      select
+                      variant="standard"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    >
+                      {visibilityVars.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </Grid>
+                </Grid>
               </Box>
               <Box margin={1}>
                 <Field
@@ -120,27 +132,6 @@ const AddEditForm = function ({
                 {' '}
                 <br />
               </Box>
-              <Box margin={1}>
-                <Field
-                  component={TextField}
-                  fullWidth
-                  type="text"
-                  name="Visibility"
-                  label="Visibility"
-                  helperText="Please Enter Visibility"
-                  select
-                  variant="standard"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                >
-                  {visibilityVars.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Field>
-              </Box>
               <Grid container columnSpacing={{ xs: 1 }}>
                 <Grid item xs={8}>
                   <Button
@@ -164,19 +155,6 @@ const AddEditForm = function ({
                   >
                     Back
                   </Button>
-                </Grid>
-                <Grid item xs={11.6}>
-                  <ThemeProvider theme={theme}>
-                    <Button
-                      href="/"
-                      sx={{ margin: 1 }}
-                      variant="outlined"
-                      color="neutral"
-                      fullWidth
-                    >
-                      GO TO MAIN PAGE
-                    </Button>
-                  </ThemeProvider>
                 </Grid>
               </Grid>
             </Form>

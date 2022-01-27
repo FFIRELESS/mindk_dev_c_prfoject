@@ -37,7 +37,7 @@ const UserProfile = function ({ user }) {
             </div>
                           )}
           title={(
-            <Typography variant="h4" gutterBottom component="div" color="text.primary">
+            <Typography variant="h4" component="div" color="text.primary">
               {user.Username}
             </Typography>
                           )}

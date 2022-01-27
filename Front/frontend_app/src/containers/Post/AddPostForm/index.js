@@ -3,6 +3,7 @@ import React from 'react';
 import { useMutation } from 'react-query';
 import { createPost } from '../api/crud';
 import AddEditForm from '../../../components/Post/AddEditForm';
+import ResponsiveAppBar from '../../../components/header/navbar';
 
 const AddPostContainer = function () {
   const postData = {};
@@ -10,7 +11,10 @@ const AddPostContainer = function () {
   const name = 'NEW POST';
 
   return (
-    <AddEditForm formName={name} postData={postData} mutate={mutate} isLoading={isLoading} />
+    <>
+      <ResponsiveAppBar />
+      <AddEditForm formName={name} postData={postData} mutate={mutate} isLoading={isLoading} />
+    </>
   );
 };
 

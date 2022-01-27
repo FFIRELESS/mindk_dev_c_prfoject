@@ -5,8 +5,9 @@ import {TextField} from "formik-mui";
 
 import {Box, Button, createTheme, Grid, MenuItem} from "@mui/material";
 import {ThemeProvider} from "@emotion/react";
+import PropTypes from "prop-types";
 
-const AddEditForm = ({postData, mutate, isLoading, formName, id = null}) => {
+const AddEditForm = ({postData, mutate, isLoading, formName, id}) => {
 
     const theme = createTheme({
         status: {
@@ -150,3 +151,22 @@ const AddEditForm = ({postData, mutate, isLoading, formName, id = null}) => {
 }
 
 export default AddEditForm;
+
+AddEditForm.propTypes = {
+    postData: PropTypes.shape({
+        Post_ID: PropTypes.number.isRequired,
+        User_ID:  PropTypes.number.isRequired,
+        Title:  PropTypes.string.isRequired,
+        Text:  PropTypes.string.isRequired,
+        Timestamp:  PropTypes.string.isRequired,
+        Visibility:  PropTypes.string.isRequired
+    }),
+    formName: PropTypes.string.isRequired,
+    isLoading: PropTypes.bool,
+    mutate: PropTypes.func,
+    id: PropTypes.number
+}
+
+AddEditForm.defaultProps = {
+    id: null
+}

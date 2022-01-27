@@ -33,7 +33,10 @@ export function UserProfile({ user }) {
                                 </IconButton>
                             </div>
                         }
-                        title={user.Username}
+                        title={
+                            <Typography variant="h4" gutterBottom component="div" color="text.primary">
+                                {user.Username}
+                            </Typography>}
                         subheader={`UNIVERSITY #${user.University_ID}`}
                     />
                     <CardContent>

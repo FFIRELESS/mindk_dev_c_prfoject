@@ -22,17 +22,10 @@ const EditPostFormContainer = () => {
         return <NotFound/>;
     }
 
-    const postData = {
-        User_ID: post.User_ID,
-        Title: post.Title,
-        Text: post.Text,
-        Visibility: post.Visibility
-    };
-
     return (
         <>
             {isFetching && <div>Loading...</div>}
-            <AddEditForm formName={name} postData={postData} mutate={mutate} isLoading={isLoading} id={id}/>
+            <AddEditForm formName={name} postData={post} mutate={mutate} isLoading={isLoading} id={id}/>
         </>
     );
 }

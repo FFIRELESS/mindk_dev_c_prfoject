@@ -45,8 +45,6 @@ const UserProfile = function ({ user }) {
         />
         <CardContent>
           <Typography variant="h6" gutterBottom component="div" color="text.primary">
-            Full name:
-            {' '}
             {user.Fullname}
           </Typography>
           <Typography variant="body2" color="text.secondary">

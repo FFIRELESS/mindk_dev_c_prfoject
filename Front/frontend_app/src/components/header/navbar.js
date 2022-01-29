@@ -24,10 +24,6 @@ const pages = [
     link: '/posts',
   },
   {
-    name: 'Main page',
-    link: '/',
-  },
-  {
     name: 'Profile',
     link: '/users/1',
   },

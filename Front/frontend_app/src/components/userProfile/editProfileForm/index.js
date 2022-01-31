@@ -40,11 +40,9 @@ const EditProfileForm = function ({
   ];
 
   const onFormSubmit = (data, actions) => {
-    setTimeout(() => {
-      actions.setSubmitting(true);
-      mutate({ id, data });
-      actions.setSubmitting(false);
-    }, 1000);
+    actions.setSubmitting(true);
+    mutate({ id, data });
+    actions.setSubmitting(false);
   };
 
   return (

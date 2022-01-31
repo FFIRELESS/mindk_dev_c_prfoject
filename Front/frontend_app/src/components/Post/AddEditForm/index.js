@@ -34,15 +34,13 @@ const AddEditForm = function ({
   ];
 
   const onFormSubmit = (data, actions) => {
-    setTimeout(() => {
-      actions.setSubmitting(true);
-      if (id === null) {
-        mutate(data);
-      } else {
-        mutate({ id, data });
-      }
-      actions.setSubmitting(false);
-    }, 1000);
+    actions.setSubmitting(true);
+    if (id === null) {
+      mutate(data);
+    } else {
+      mutate({ id, data });
+    }
+    actions.setSubmitting(false);
   };
 
   return (
@@ -109,8 +107,6 @@ const AddEditForm = function ({
                   label="Title"
                   helperText="Please Enter Post Title"
                 />
-                {' '}
-                <br />
               </Box>
               <Box
                 margin={1}

@@ -39,19 +39,13 @@ const Users = function ({ user }) {
               {user.Fullname}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Email:
-              {' '}
-              {user.Email}
+              {`Email: ${user.Email}`}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Phone:
-              {' '}
-              {user.Phone}
+              {`Phone: ${user.Phone}`}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Image path:
-              {' '}
-              {user.Image}
+              {`Image: ${user.Image}`}
             </Typography>
           </CardContent>
           <Box margin={2}>

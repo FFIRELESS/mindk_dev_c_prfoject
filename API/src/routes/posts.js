@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const asyncHandler = require("express-async-handler");
 const db = require("../services/db");
 
 const {
@@ -8,21 +9,33 @@ const {
   getPostLikes,
 } = require("../services/store/posts.service");
 
-router.get("/", async (req, res) => {
-  res.send(await getAllPosts());
-});
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    res.send(await getAllPosts());
+  })
+);
 
-router.get("/:Post_ID", async (req, res) => {
-  res.send(await getPostById(req.params.Post_ID));
-});
+router.get(
+  "/:Post_ID",
+  asyncHandler(async (req, res) => {
+    res.send(await getPostById(req.params.Post_ID));
+  })
+);
 
-router.get("/:Post_ID/comments", async (req, res) => {
-  res.send(await getPostComments(req.params.Post_ID));
-});
+router.get(
+  "/:Post_ID/comments",
+  asyncHandler(async (req, res) => {
+    res.send(await getPostComments(req.params.Post_ID));
+  })
+);
 
-router.get("/:Post_ID/likes", async (req, res) => {
-  res.send(await getPostLikes(req.params.Post_ID));
-});
+router.get(
+  "/:Post_ID/likes",
+  asyncHandler(async (req, res) => {
+    res.send(await getPostLikes(req.params.Post_ID));
+  })
+);
 
 router.post("/", (req, res) => {
   db.insert({

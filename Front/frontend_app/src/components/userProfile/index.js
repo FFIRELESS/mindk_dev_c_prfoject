@@ -1,39 +1,89 @@
-import {Link} from "react-router-dom";
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-export function UserProfile({ user }) {
-    return (
-        <div className="App-User">
-            <div key={user.User_ID}>
-                <b> User #{user.User_ID} from university #{user.University_ID} </b>
-                <div> {user.Username} </div>
-                <div> {user.Fullname} </div>
-                {user.Image}
-                <img src={`../../../../../API/uploads/${user.Image}`} alt="img"/>
-                <div> {user.Email} </div>
-                <div> {user.Phone} </div> <br/>
+import {
+  Avatar, Box, Card, CardContent, CardHeader, IconButton, Typography,
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+
+const UserProfile = function ({ user }) {
+  return (
+    <Box
+      margin={3}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Card sx={{ width: '80vh', maxWidth: 800 }}>
+        <CardHeader
+          avatar={(
+            <Avatar
+              src={require(`../../../../../API/uploads/${user.Image}`)}
+              sx={{ width: '20vh', height: '20vh' }}
+              aria-label="username"
+            >
+              U
+            </Avatar>
+                          )}
+          action={(
+            <div>
+              <IconButton aria-label="edit" href={`${user.User_ID}/edit`}>
+                <EditIcon />
+              </IconButton>
+              <IconButton aria-label="settings" disabled>
+                <MoreVertIcon />
+              </IconButton>
             </div>
-            <Link to="/users"><button>GO TO USERS LIST</button></Link>
-            <Link to="/"><button>GO TO MAIN PAGE</button></Link>
-        </div>
-    );
-}
+                          )}
+          title={(
+            <Typography variant="h4" component="div" color="text.primary">
+              {user.Username}
+            </Typography>
+                          )}
+          subheader={`UNIVERSITY #${user.University_ID}`}
+        />
+        <CardContent>
+          <Typography variant="h6" gutterBottom component="div" color="text.primary">
+            {user.Fullname}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Email:
+            {' '}
+            {user.Email}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Phone:
+            {' '}
+            {user.Phone}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Image path:
+            {' '}
+            {user.Image}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Box>
+  );
+};
+
+export default UserProfile;
 
 UserProfile.propTypes = {
-    user: PropTypes.shape({
-        User_ID: PropTypes.number.isRequired,
-        University_ID:  PropTypes.number.isRequired,
-        Username:  PropTypes.string.isRequired,
-        Fullname:  PropTypes.string.isRequired,
-        Image:  PropTypes.string.isRequired,
-        Email:  PropTypes.string.isRequired,
-        Phone:  PropTypes.string,
-    })
-}
+  user: PropTypes.shape({
+    User_ID: PropTypes.number.isRequired,
+    University_ID: PropTypes.number.isRequired,
+    Username: PropTypes.string.isRequired,
+    Fullname: PropTypes.string.isRequired,
+    Image: PropTypes.string.isRequired,
+    Email: PropTypes.string.isRequired,
+    Phone: PropTypes.string,
+  }),
+};
 
 UserProfile.defaultProps = {
-    user: PropTypes.shape({
-        Phone:  'Не указан'
-    })
-}
+  user: PropTypes.shape({
+    Phone: 'Не указан',
+  }),
+};

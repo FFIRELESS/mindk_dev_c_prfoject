@@ -1,14 +1,41 @@
-import {Link} from "react-router-dom";
+import { Box, Button } from '@mui/material';
 
-export var HeaderContainer = function () {
-
-    return (
-        <div>
-            <p>*MAIN PAGE*</p>
-            <Link to="/posts"><button>SHOW ARTICLES</button></Link>
-            <Link to="/add_article"><button>ADD ARTICLE</button></Link>
-            <Link to="/profile"><button>SHOW PROFILE</button></Link>
-            <Link to="/users"><button>SHOW USERS</button></Link>
-        </div>
-    );
+export const HeaderContainer = function () {
+  return (
+    <div>
+      <h1>MAIN PAGE</h1>
+      <Box margin={1}>
+        <Button
+          href="/posts"
+          variant="contained"
+        >
+          SHOW POSTS
+        </Button>
+      </Box>
+      <Box margin={1}>
+        <Button
+          href="/add_post"
+          variant="contained"
+        >
+          ADD POST
+        </Button>
+      </Box>
+      <Box margin={1}>
+        <Button
+          href="/users"
+          variant="contained"
+        >
+          SHOW USERS
+        </Button>
+      </Box>
+      <Box margin={1}>
+        <Button
+          href="/users/1"
+          variant="contained"
+        >
+          YOUR PROFILE
+        </Button>
+      </Box>
+    </div>
+  );
 };

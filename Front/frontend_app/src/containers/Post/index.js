@@ -1,18 +1,28 @@
+import { useQuery } from 'react-query';
+import { styled } from '@mui/material/styles';
 import { Post } from '../../components/Post';
-import {useQuery} from "react-query";
-import {getPosts} from "./api/crud";
-import {Link} from "react-router-dom";
+import { getPosts } from './api/crud';
+import ResponsiveAppBar from '../../components/header/navbar';
 
-const PostContainer = () => {
-  const {isFetching, data} = useQuery('posts', () => getPosts());
+const PostContainer = function () {
+  const { isFetching: isFetchingPosts, data: dataPosts } = useQuery('posts', () => getPosts());
+  // const {isFetching: isFetchingUsers, data: dataUsers} = useQuery('users', () => getUsers());
 
-  const posts = data?.data || [];
+  const posts = dataPosts?.data || [];
+  // const users = dataUsers?.data || [];
 
-  return <>
-    {isFetching && <div>Loading...</div>}
-    <Post posts={posts}/>
-    <Link to="/"><button>GO TO MAIN PAGE</button></Link>
-    </>;
+  const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
+
+  return (
+    <>
+      <ResponsiveAppBar />
+      <Offset />
+      {isFetchingPosts && <div>Loading...</div>}
+      {
+            posts.map((post) => <div key={post.Post_ID}><Post posts={post} /></div>)
+          }
+    </>
+  );
 };
 
 export default PostContainer;

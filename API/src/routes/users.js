@@ -5,6 +5,7 @@ const multer = require("multer");
 const {
   getAllUsers,
   getUserAvatar,
+  getUserById,
 } = require("../services/store/users.service");
 
 const storage = multer.diskStorage({
@@ -31,7 +32,7 @@ router.get(
 router.get(
   "/:User_ID",
   asyncHandler(async (req, res) => {
-    res.send(await getAllUsers(req.params.User_ID));
+    res.send(await getUserById(req.params.User_ID));
   })
 );
 

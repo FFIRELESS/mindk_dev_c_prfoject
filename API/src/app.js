@@ -20,6 +20,13 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
 
+app.use(
+  loggerMiddleware({
+    logTableName: "logs",
+    db,
+  })
+);
+
 app.use("/users", usersRoutes);
 app.use("/posts", postsRoutes);
 app.use("/comments", commentsRoutes);
@@ -27,12 +34,6 @@ app.use("/comm_likes", commLikesRoutes);
 app.use("/post_likes", postLikesRoutes);
 
 app.use(syncErrorHandler);
-app.use(
-  loggerMiddleware({
-    logTableName: "logs",
-    db,
-  })
-);
 
 app.listen(port);
 console.log("Server started at /localhost:" + port);

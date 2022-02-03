@@ -1,9 +1,13 @@
 const router = require("express").Router();
 const db = require("../services/db");
+const asyncHandler = require("express-async-handler");
 
-router.get("/", async (req, res) => {
-  res.send(await db.select().from("Comment_likes"));
-});
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    res.send(await db.select().from("Comment_likes"));
+  })
+);
 
 router.post("/", (req, res) => {
   db.insert({

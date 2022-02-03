@@ -1,18 +1,24 @@
 const router = require("express").Router();
 const db = require("../services/db");
+const asyncHandler = require("express-async-handler");
+const {
+  getAllComments,
+  getCommentLikes,
+} = require("../services/store/comments.service");
 
-router.get("/", async (req, res) => {
-  res.send(await db.select().from("Comment").orderBy("Comment_ID"));
-});
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    res.send(await getAllComments());
+  })
+);
 
-router.get("/:Comment_ID/likes", async (req, res) => {
-  res.send(
-    await db
-      .select()
-      .from("Comment_likes")
-      .where({ Comment_ID: req.params.Comment_ID })
-  );
-});
+router.get(
+  "/:Comment_ID/likes",
+  asyncHandler(async (req, res) => {
+    res.send(await getCommentLikes(req.params.Comment_ID));
+  })
+);
 
 router.post("/", (req, res) => {
   db.insert({

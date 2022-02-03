@@ -1,6 +1,12 @@
 const router = require("express").Router();
 const db = require("../services/db");
+const asyncHandler = require("express-async-handler");
 const multer = require("multer");
+const {
+  getAllUsers,
+  getUserAvatar,
+  getUserById,
+} = require("../services/store/users.service");
 
 const storage = multer.diskStorage({
   destination: "uploads/",
@@ -16,45 +22,52 @@ const upload = multer({
   },
 });
 
-router.get("/", async (req, res) => {
-  res.send(await db.select().from("User").orderBy("User_ID"));
-});
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    res.send(await getAllUsers());
+  })
+);
 
-router.get("/:User_ID", async (req, res) => {
-  res.send(
-    await db.select().from("User").where({ User_ID: req.params.User_ID })
-  );
-});
+router.get(
+  "/:User_ID",
+  asyncHandler(async (req, res) => {
+    res.send(await getUserById(req.params.User_ID));
+  })
+);
 
-router.get("/:User_ID/avatar", async (req, res) => {
-  const img = await db
-    .select("Image")
-    .first("Image")
-    .from("User")
-    .where({ User_ID: req.params.User_ID });
+router.get(
+  "/:User_ID/avatar",
+  asyncHandler(async (req, res) => {
+    const img = await getUserAvatar(req.params.User_ID);
 
-  if (img === undefined) {
-    res.send("Error");
-    return;
-  }
+    if (img === undefined) {
+      res.send("Error");
+      return;
+    }
 
-  if (img.Image === null) {
-    res.sendFile("icon.png", { root: "uploads/default" });
-  } else {
-    res.sendFile(img.Image, { root: "uploads/" });
-  }
-});
+    if (img.Image === null) {
+      res.sendFile("icon.png", { root: "uploads/default" });
+    } else {
+      res.sendFile(img.Image, { root: "uploads/" });
+    }
+  })
+);
 
-router.post("/:User_ID/avatar", upload.single("avatar"), async (req, res) => {
-  await db
-    .update({ Image: req.file.filename })
-    .from("User")
-    .where({ User_ID: req.params.User_ID })
-    .then(function () {
-      console.log(req.file);
-      res.end("You new avatar is uploaded");
-    });
-});
+router.post(
+  "/:User_ID/avatar",
+  upload.single("avatar"),
+  asyncHandler(async (req, res) => {
+    await db
+      .update({ Image: req.file.filename })
+      .from("User")
+      .where({ User_ID: req.params.User_ID })
+      .then(function () {
+        console.log(req.file);
+        res.end("You new avatar is uploaded");
+      });
+  })
+);
 
 router.post("/", (req, res) => {
   db.insert({

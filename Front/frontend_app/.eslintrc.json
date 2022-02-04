@@ -17,7 +17,7 @@
     "plugins": [
         "react"
     ],
-    "ignorePatterns": ["src/App.css"],
+    "ignorePatterns": ["src/App.css", "src/components/ErrorBoundary.jsx"],
     "rules": {
         "react/require-default-props": "off",
         "import/no-dynamic-require": "off",

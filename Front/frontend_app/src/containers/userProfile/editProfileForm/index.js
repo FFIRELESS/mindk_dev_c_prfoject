@@ -8,7 +8,7 @@ import ResponsiveAppBar from '../../../components/header/navbar';
 
 const EditProfileContainer = function () {
   const { id } = useParams();
-  const { mutate, isLoading } = useMutation(({ data }) => editUser(id, data));
+  const { mutate, isLoading } = useMutation(({ data, avatar }) => editUser(id, data, avatar));
 
   if (!id.match(/^\d+$/)) {
     return <NotFound />;

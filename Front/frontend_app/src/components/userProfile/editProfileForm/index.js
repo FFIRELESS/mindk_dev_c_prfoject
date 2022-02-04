@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import {
+  Avatar,
   Box, Button, Grid, MenuItem,
 } from '@mui/material';
 import * as Yup from 'yup';
@@ -75,6 +76,17 @@ const EditProfileForm = function ({
         >
           {({ isSubmitting, isValid }) => (
             <Form>
+              <Box margin={1} marginBottom={3}>
+                <Grid container>
+                  <Avatar
+                    src={`http://localhost:3003/users/${userData.User_ID}/avatar`}
+                    sx={{ width: '10vh', height: '10vh' }}
+                    aria-label="username"
+                  >
+                    U
+                  </Avatar>
+                </Grid>
+              </Box>
               <Box margin={1}>
                 <Grid container columnSpacing={{ xs: 2 }}>
                   <Grid item xs={3}>
@@ -87,7 +99,7 @@ const EditProfileForm = function ({
                       helperText=" "
                     />
                   </Grid>
-                  <Grid item xs={9}>
+                  <Grid item xs={4}>
                     <Field
                       component={TextField}
                       fullWidth

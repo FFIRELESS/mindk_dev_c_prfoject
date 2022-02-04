@@ -93,6 +93,7 @@ router.put("/:User_ID", (req, res) => {
   db.where({ User_ID: req.params.User_ID })
     .update({
       Username: req.body.Username,
+      University_ID: req.body.University_ID,
       Fullname: req.body.Fullname,
       Image: req.body.Image,
       Email: req.body.Email,

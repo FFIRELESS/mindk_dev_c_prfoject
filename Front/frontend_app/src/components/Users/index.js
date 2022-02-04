@@ -13,7 +13,7 @@ const Users = function ({ user }) {
           <CardHeader
             avatar={(
               <Avatar
-                src={require(`../../../../../API/uploads/${user.Image}`)}
+                src={`http://localhost:3003/users/${user.User_ID}/avatar`}
                 sx={{ width: '10vh', height: '10vh' }}
                 aria-label="username"
               >

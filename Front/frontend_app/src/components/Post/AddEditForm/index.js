@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
@@ -7,6 +7,7 @@ import {
   Box, Button, Grid, MenuItem,
 } from '@mui/material';
 import PropTypes from 'prop-types';
+import CircleLoader from '../../header/CircleLoader';
 
 const AddEditForm = function ({
   postData, mutate, isLoading, formName, id,
@@ -33,6 +34,25 @@ const AddEditForm = function ({
     },
   ];
 
+  const [image, setImage] = useState();
+  const [filename, setFilename] = useState();
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+
+    if (file.type.match('image.*') && file.size < 10000000) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setFilename(file.name);
+    } else {
+      console.error('Image error');
+    }
+  };
+
   const onFormSubmit = (data, actions) => {
     actions.setSubmitting(true);
     if (id === null) {
@@ -53,7 +73,7 @@ const AddEditForm = function ({
       style={{ minHeight: '100vh' }}
     >
       <Grid>
-        {isLoading && <div>Loading...</div>}
+        {isLoading && <CircleLoader />}
 
         <Box margin={1}><h1>{formName}</h1></Box>
 
@@ -125,9 +145,19 @@ const AddEditForm = function ({
                   label="Text"
                   helperText="Please Enter Post Text"
                 />
-                {' '}
-                <br />
               </Box>
+              {image && (
+              <Box margin={1}>
+                <img width="200vh" src={image} alt="ddd" />
+              </Box>
+              )}
+              <Box margin={1}>
+                <Button variant="outlined" component="label">
+                  Choose image
+                  <input type="file" hidden onChange={handleChange} />
+                </Button>
+              </Box>
+              {filename}
               <Grid container columnSpacing={{ xs: 1 }}>
                 <Grid item xs={8}>
                   <Button

@@ -25,7 +25,7 @@ const UserProfile = function ({ user }) {
             >
               U
             </Avatar>
-                          )}
+          )}
           action={(
             <div>
               <IconButton aria-label="edit" href={`${user.User_ID}/edit`}>
@@ -35,12 +35,12 @@ const UserProfile = function ({ user }) {
                 <MoreVertIcon />
               </IconButton>
             </div>
-                          )}
+          )}
           title={(
             <Typography variant="h4" component="div" color="text.primary">
               {user.Username}
             </Typography>
-                          )}
+          )}
           subheader={`UNIVERSITY #${user.University_ID}`}
         />
         <CardContent>

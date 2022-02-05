@@ -19,19 +19,19 @@ const Users = function ({ user }) {
               >
                 U
               </Avatar>
-                    )}
+            )}
             action={(
               <div>
                 <IconButton aria-label="edit" href={`users/${user.User_ID}/edit`}>
                   <EditIcon />
                 </IconButton>
               </div>
-                    )}
+            )}
             title={(
               <Typography variant="h6" component="div" color="text.primary">
                 {user.Username}
               </Typography>
-                    )}
+            )}
             subheader={`UNIVERSITY #${user.University_ID}`}
           />
           <CardContent>
@@ -58,7 +58,7 @@ const Users = function ({ user }) {
         </Card>
       </Grid>
     </Box
-      >
+>
   );
 };
 

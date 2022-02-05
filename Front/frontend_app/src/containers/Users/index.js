@@ -22,9 +22,7 @@ const UsersContainer = function () {
         direction="row"
         justifyContent="center"
       >
-        {
-            users.map((user) => <div key={user.User_ID}><Users user={user} /></div>)
-        }
+        {users.map((user) => <div key={user.User_ID}><Users user={user} /></div>)}
       </Grid>
     </>
   );

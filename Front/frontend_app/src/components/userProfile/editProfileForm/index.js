@@ -9,6 +9,7 @@ import { TextField } from 'formik-mui';
 import React, { useState } from 'react';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import CircleLoader from '../../header/CircleLoader';
 
 const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
@@ -104,7 +105,7 @@ const EditProfileForm = function ({
       style={{ minHeight: '100vh' }}
     >
       <Grid>
-        {isLoadingUser && isLoadingAvatar && <div>Loading...</div>}
+        {isLoadingUser && isLoadingAvatar && <CircleLoader />}
 
         <Box margin={1}><h1>EDIT PROFILE</h1></Box>
 

@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Post } from '../../components/Post';
 import { getPosts } from './api/crud';
 import ResponsiveAppBar from '../../components/header/navbar';
+import CircleLoader from '../../components/header/CircleLoader';
 
 const PostContainer = function () {
   const { isFetching: isFetchingPosts, data: dataPosts } = useQuery('posts', () => getPosts());
@@ -17,10 +18,8 @@ const PostContainer = function () {
     <>
       <ResponsiveAppBar />
       <Offset />
-      {isFetchingPosts && <div>Loading...</div>}
-      {
-            posts.map((post) => <div key={post.Post_ID}><Post posts={post} /></div>)
-          }
+      {isFetchingPosts && <CircleLoader />}
+      {posts.map((post) => <div key={post.Post_ID}><Post posts={post} /></div>)}
     </>
   );
 };

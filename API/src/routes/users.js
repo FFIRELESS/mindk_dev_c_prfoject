@@ -9,7 +9,7 @@ const {
 } = require("../services/store/users.service");
 
 const storage = multer.diskStorage({
-  destination: "uploads/",
+  destination: "uploads/avatars",
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
   },
@@ -49,7 +49,7 @@ router.get(
     if (img.Image === null) {
       res.sendFile("icon.png", { root: "uploads/default" });
     } else {
-      res.sendFile(img.Image, { root: "uploads/" });
+      res.sendFile(img.Image, { root: "uploads/avatars" });
     }
   })
 );
@@ -113,6 +113,17 @@ router.put("/:User_ID", (req, res) => {
 router.delete("/:User_ID", (req, res) => {
   db.where({ User_ID: req.params.User_ID })
     .del()
+    .from("User")
+    .then(function () {
+      res.send({ success: true, message: "Deleting OK" });
+    });
+});
+
+router.delete("/:User_ID/avatar", (req, res) => {
+  db.where({ User_ID: req.params.User_ID })
+    .update({
+      Image: "default/icon.png",
+    })
     .from("User")
     .then(function () {
       res.send({ success: true, message: "Deleting OK" });

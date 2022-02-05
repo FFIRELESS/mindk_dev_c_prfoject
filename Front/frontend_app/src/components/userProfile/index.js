@@ -48,19 +48,10 @@ const UserProfile = function ({ user }) {
             {user.Fullname}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Email:
-            {' '}
-            {user.Email}
+            {`Email: ${user.Email}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Phone:
-            {' '}
-            {user.Phone}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Image path:
-            {' '}
-            {user.Image}
+            {`Phone: ${user.Phone}`}
           </Typography>
         </CardContent>
       </Card>

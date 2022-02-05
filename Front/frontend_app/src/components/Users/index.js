@@ -44,9 +44,6 @@ const Users = function ({ user }) {
             <Typography variant="body2" color="text.secondary">
               {`Phone: ${user.Phone}`}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {`Image: ${user.Image}`}
-            </Typography>
           </CardContent>
           <Box margin={2}>
             <Button

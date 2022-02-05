@@ -13,7 +13,7 @@ import 'cropperjs/dist/cropper.css';
 const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
 const EditProfileForm = function ({
-  userData, mutate, isLoading, id,
+  userData, mutateUser, mutateAvatar, removeAvatar, isLoadingUser, isLoadingAvatar, id,
 }) {
   const schema = Yup.object().shape({
     University_ID: Yup.number().typeError('University_ID must be a number').required(),
@@ -77,12 +77,20 @@ const EditProfileForm = function ({
     setImage(null);
   };
 
-  const onFormSubmit = (data, actions) => {
-    const formData = new FormData();
-    formData.append('avatar', dataURLtoBlob(croppedImage), filename);
+  const rmUserAvatar = () => {
+    setImage(null);
+    removeAvatar({ id });
+    // in deployment
+  };
 
+  const onFormSubmit = (data, actions) => {
     actions.setSubmitting(true);
-    mutate({ id, data, avatar: formData });
+    mutateUser({ id, data });
+    if (croppedImage) {
+      const formData = new FormData();
+      formData.append('avatar', dataURLtoBlob(croppedImage), filename);
+      mutateAvatar({ id, avatar: formData });
+    }
     actions.setSubmitting(false);
   };
 
@@ -96,7 +104,7 @@ const EditProfileForm = function ({
       style={{ minHeight: '100vh' }}
     >
       <Grid>
-        {isLoading && <div>Loading...</div>}
+        {isLoadingUser && isLoadingAvatar && <div>Loading...</div>}
 
         <Box margin={1}><h1>EDIT PROFILE</h1></Box>
 
@@ -118,21 +126,30 @@ const EditProfileForm = function ({
                   </Avatar>
                   <Box
                     margin={3}
-                    border={1}
                   >
-                    {!image
+                    <Grid
+                      container
+                      style={{ minHeight: '10vh' }}
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      {!image
                     && (
                     <Button variant="contained" component="label">
                       Choose image
                       <input type="file" hidden onChange={handleChange} />
                     </Button>
                     )}
-                    {image
+                      <Button variant="contained" onClick={rmUserAvatar}>
+                        Delete image
+                      </Button>
+                      {image
                     && (
                     <Button variant="contained" onClick={deleteImage}>
                       Clear image
                     </Button>
                     )}
+                    </Grid>
                     {image && (
                     <Cropper
                       src={image}
@@ -327,6 +344,9 @@ EditProfileForm.propTypes = {
     Phone: PropTypes.string,
   }).isRequired,
   id: PropTypes.number.isRequired,
-  mutate: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  mutateUser: PropTypes.func.isRequired,
+  mutateAvatar: PropTypes.func.isRequired,
+  removeAvatar: PropTypes.func.isRequired,
+  isLoadingUser: PropTypes.bool.isRequired,
+  isLoadingAvatar: PropTypes.bool.isRequired,
 };

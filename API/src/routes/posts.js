@@ -71,24 +71,18 @@ router.get(
 );
 
 router.post("/", upload.single("image"), (req, res) => {
-  // let filename;
-  // if (req.file.filename) {
-  //   filename = req.file.filename;
-  // } else {
-  //   filename = null;
-  // }
-
   db.insert({
     User_ID: req.body.User_ID,
     Title: req.body.Title,
     Text: req.body.Text,
     Visibility: req.body.Visibility,
-    Image: req.file.filename !== undefined ? req.file.filename : null,
+    Image: req.file !== undefined ? req.file.filename : null,
   })
     .into("Post")
     .then(function () {
-      res.send({ success: true, message: "Inserting OK" });
+      res.end();
     });
+  return res.end("Inserting OK");
 });
 
 router.post("/:Post_ID/image", upload.single("image"), (req, res) => {
@@ -97,7 +91,7 @@ router.post("/:Post_ID/image", upload.single("image"), (req, res) => {
     .where({ Post_ID: req.params.Post_ID })
     .then(function () {
       console.log(req.file);
-      res.end("You post image is changed");
+      res.end("Your post image is changed");
     });
 });
 

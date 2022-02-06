@@ -76,17 +76,16 @@ const AddEditForm = function ({
       const formData = serialize(data);
       if (image) {
         formData.append('image', dataURLtoBlob(image), filename);
-        mutate(formData);
       }
       mutate(formData);
     } else {
       mutate({ id, data });
     }
-    // if (image) {
-    //   const formData = new FormData();
-    //   formData.append('image', dataURLtoBlob(image), filename);
-    //   mutatePostImage({ id, postImage: formData });
-    // }
+    if (0) {
+      const formData = new FormData();
+      formData.append('image', dataURLtoBlob(image), filename);
+      mutatePostImage({ id, postImage: formData });
+    }
     actions.setSubmitting(false);
   };
 

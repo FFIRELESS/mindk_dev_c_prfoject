@@ -4,13 +4,17 @@ import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 
 import {
-  Box, Button, Grid, MenuItem,
+  Box, Button, CardMedia, Grid, MenuItem,
 } from '@mui/material';
 import PropTypes from 'prop-types';
-import CircleLoader from '../../header/CircleLoader';
+// import CircleLoader from '../../header/CircleLoader';
+import { serialize } from 'object-to-formdata';
+import { handleImageError } from '../../../config/componentHandlers';
+
+const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
 const AddEditForm = function ({
-  postData, mutate, isLoading, formName, id,
+  postData, mutate, mutatePostImage, formName, id,
 }) {
   const schema = Yup.object().shape({
     User_ID: Yup.number().typeError('User must be a number').required(),
@@ -34,8 +38,21 @@ const AddEditForm = function ({
     },
   ];
 
+  // const
+  //   {
+  //     mutate: rmPostImage,
+  //   } = useMutation(() => removePostImage(id));
+
   const [image, setImage] = useState();
   const [filename, setFilename] = useState();
+
+  let postImagePath;
+
+  if (formName === 'NEW POST') {
+    postImagePath = null;
+  } else {
+    postImagePath = `http://localhost:3003/posts/${postData.Post_ID}/image`;
+  }
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -56,10 +73,20 @@ const AddEditForm = function ({
   const onFormSubmit = (data, actions) => {
     actions.setSubmitting(true);
     if (id === null) {
-      mutate(data);
+      const formData = serialize(data);
+      if (image) {
+        formData.append('image', dataURLtoBlob(image), filename);
+        mutate(formData);
+      }
+      mutate(formData);
     } else {
       mutate({ id, data });
     }
+    // if (image) {
+    //   const formData = new FormData();
+    //   formData.append('image', dataURLtoBlob(image), filename);
+    //   mutatePostImage({ id, postImage: formData });
+    // }
     actions.setSubmitting(false);
   };
 
@@ -70,10 +97,10 @@ const AddEditForm = function ({
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ minHeight: '100vh' }}
+      style={{ minHeight: '90vh' }}
     >
       <Grid>
-        {isLoading && <CircleLoader />}
+        {/* {isLoading && <CircleLoader />} */}
 
         <Box margin={1}><h1>{formName}</h1></Box>
 
@@ -146,10 +173,20 @@ const AddEditForm = function ({
                   helperText="Please Enter Post Text"
                 />
               </Box>
-              {image && (
-              <Box margin={1}>
-                <img width="200vh" src={image} alt="ddd" />
-              </Box>
+              {image ? (
+                <Box margin={1}>
+                  <img width="150vh" src={image} alt="Post pic." />
+                </Box>
+              ) : (
+                <Box margin={1}>
+                  <Grid container maxWidth="20vh">
+                    <CardMedia
+                      component="img"
+                      image={postImagePath}
+                      onError={handleImageError}
+                    />
+                  </Grid>
+                </Box>
               )}
               <Box margin={1}>
                 <Button variant="outlined" component="label">
@@ -157,7 +194,6 @@ const AddEditForm = function ({
                   <input type="file" hidden onChange={handleChange} />
                 </Button>
               </Box>
-              {filename}
               <Grid container columnSpacing={{ xs: 1 }}>
                 <Grid item xs={8}>
                   <Button
@@ -203,8 +239,8 @@ AddEditForm.propTypes = {
     Visibility: PropTypes.string,
   }).isRequired,
   formName: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool.isRequired,
   mutate: PropTypes.func.isRequired,
+  mutatePostImage: PropTypes.func.isRequired,
   id: PropTypes.number,
 };
 

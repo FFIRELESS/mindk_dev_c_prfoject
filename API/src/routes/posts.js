@@ -70,12 +70,20 @@ router.get(
   })
 );
 
-router.post("/", (req, res) => {
+router.post("/", upload.single("image"), (req, res) => {
+  // let filename;
+  // if (req.file.filename) {
+  //   filename = req.file.filename;
+  // } else {
+  //   filename = null;
+  // }
+
   db.insert({
     User_ID: req.body.User_ID,
     Title: req.body.Title,
     Text: req.body.Text,
     Visibility: req.body.Visibility,
+    Image: req.file.filename !== undefined ? req.file.filename : null,
   })
     .into("Post")
     .then(function () {
@@ -83,20 +91,15 @@ router.post("/", (req, res) => {
     });
 });
 
-router.post(
-  "/:Post_ID/image",
-  upload.single("image"),
-  asyncHandler(async (req, res) => {
-    await db
-      .update({ Image: req.file.filename })
-      .from("Post")
-      .where({ Post_ID: req.params.Post_ID })
-      .then(function () {
-        console.log(req.file);
-        res.end("You post image is uploaded");
-      });
-  })
-);
+router.post("/:Post_ID/image", upload.single("image"), (req, res) => {
+  db.update({ Image: req.file.filename })
+    .from("Post")
+    .where({ Post_ID: req.params.Post_ID })
+    .then(function () {
+      console.log(req.file);
+      res.end("You post image is changed");
+    });
+});
 
 router.put("/:Post_ID", (req, res) => {
   db.where({
@@ -118,6 +121,17 @@ router.put("/:Post_ID", (req, res) => {
 router.delete("/:Post_ID", (req, res) => {
   db.where({ Post_ID: req.params.Post_ID })
     .del()
+    .from("Post")
+    .then(function () {
+      res.send({ success: true, message: "Deleting OK" });
+    });
+});
+
+router.delete("/:Post_ID/image", (req, res) => {
+  db.where({ Post_ID: req.params.Post_ID })
+    .update({
+      Image: null,
+    })
     .from("Post")
     .then(function () {
       res.send({ success: true, message: "Deleting OK" });

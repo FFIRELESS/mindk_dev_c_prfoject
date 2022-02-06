@@ -7,6 +7,7 @@ import {
 } from '../../Users/api/crud';
 import NotFound from '../../../components/404/NotFound';
 import ResponsiveAppBar from '../../../components/header/navbar';
+import CircleLoader from '../../../components/header/CircleLoader';
 
 const EditProfileContainer = function () {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const EditProfileContainer = function () {
     {
       mutate: mutateUserData,
       isLoading: loadingUserData,
-    } = useMutation(({ data, avatar }) => editUser(id, data, avatar));
+    } = useMutation(({ data }) => editUser(id, data));
   const
     {
       mutate: mutateUserAvatar,
@@ -39,7 +40,7 @@ const EditProfileContainer = function () {
   return (
     <>
       <ResponsiveAppBar />
-      {isFetching && <div>Loading...</div>}
+      {isFetching && <CircleLoader />}
       <EditProfileForm
         userData={user}
         mutateUser={mutateUserData}

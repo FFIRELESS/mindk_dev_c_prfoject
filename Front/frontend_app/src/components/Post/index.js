@@ -20,6 +20,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { styled } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
+import { handleImageError } from '../../config/componentHandlers';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -37,11 +38,6 @@ export const Post = function ({ posts }) {
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
-  };
-
-  const handleImageError = (e) => {
-    e.target.onerror = null;
-    e.target.style.display = 'none';
   };
 
   const postImage = `http://localhost:3003/posts/${posts.Post_ID}/image`;

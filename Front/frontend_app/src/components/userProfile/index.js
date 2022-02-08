@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Avatar, Box, Card, CardContent, CardHeader, IconButton, Typography,
+  Avatar, Box, Card, CardContent, CardHeader, IconButton, Tooltip, Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -28,9 +28,11 @@ const UserProfile = function ({ user }) {
           )}
           action={(
             <div>
-              <IconButton aria-label="edit" href={`${user.User_ID}/edit`}>
-                <EditIcon />
-              </IconButton>
+              <Tooltip title="Edit">
+                <IconButton aria-label="edit" href={`${user.User_ID}/edit`}>
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
               <IconButton aria-label="settings" disabled>
                 <MoreVertIcon />
               </IconButton>

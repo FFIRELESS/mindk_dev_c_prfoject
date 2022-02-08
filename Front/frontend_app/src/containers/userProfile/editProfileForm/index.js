@@ -15,12 +15,12 @@ const EditProfileContainer = function () {
     {
       mutate: mutateUserData,
       isLoading: loadingUserData,
-    } = useMutation(({ data }) => editUser(id, data));
+    } = useMutation((data) => editUser(id, data));
   const
     {
       mutate: mutateUserAvatar,
       isLoading: loadingUserAvatar,
-    } = useMutation(({ avatar }) => setUserAvatar(id, avatar));
+    } = useMutation((avatar) => setUserAvatar(id, avatar));
   const
     {
       mutate: removeAvatar,

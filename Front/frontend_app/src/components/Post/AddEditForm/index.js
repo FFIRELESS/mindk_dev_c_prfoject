@@ -14,7 +14,7 @@ import { handleImageError } from '../../../config/componentHandlers';
 const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
 const AddEditForm = function ({
-  postData, mutate, mutatePostImage, formName, id,
+  postData, mutate, isAddPostForm,
 }) {
   const schema = Yup.object().shape({
     User_ID: Yup.number().typeError('User must be a number').required(),
@@ -38,6 +38,7 @@ const AddEditForm = function ({
     },
   ];
 
+  // in deployment
   // const
   //   {
   //     mutate: rmPostImage,
@@ -48,7 +49,7 @@ const AddEditForm = function ({
 
   let postImagePath;
 
-  if (formName === 'NEW POST') {
+  if (isAddPostForm) {
     postImagePath = null;
   } else {
     postImagePath = `http://localhost:3003/posts/${postData.Post_ID}/image`;
@@ -72,20 +73,12 @@ const AddEditForm = function ({
 
   const onFormSubmit = (data, actions) => {
     actions.setSubmitting(true);
-    if (id === null) {
-      const formData = serialize(data);
-      if (image) {
-        formData.append('image', dataURLtoBlob(image), filename);
-      }
-      mutate(formData);
-    } else {
-      mutate({ id, data });
-    }
-    if (0) {
-      const formData = new FormData();
+    const formData = serialize(data);
+
+    if (image) {
       formData.append('image', dataURLtoBlob(image), filename);
-      mutatePostImage({ id, postImage: formData });
     }
+    mutate(formData);
     actions.setSubmitting(false);
   };
 
@@ -101,7 +94,7 @@ const AddEditForm = function ({
       <Grid>
         {/* {isLoading && <CircleLoader />} */}
 
-        <Box margin={1}><h1>{formName}</h1></Box>
+        <Box margin={1}><h1>{isAddPostForm ? 'ADD POST' : 'EDIT POST'}</h1></Box>
 
         <Formik
           onSubmit={onFormSubmit}
@@ -237,12 +230,6 @@ AddEditForm.propTypes = {
     Timestamp: PropTypes.string,
     Visibility: PropTypes.string,
   }).isRequired,
-  formName: PropTypes.string.isRequired,
+  isAddPostForm: PropTypes.bool.isRequired,
   mutate: PropTypes.func.isRequired,
-  mutatePostImage: PropTypes.func.isRequired,
-  id: PropTypes.number,
-};
-
-AddEditForm.defaultProps = {
-  id: null,
 };

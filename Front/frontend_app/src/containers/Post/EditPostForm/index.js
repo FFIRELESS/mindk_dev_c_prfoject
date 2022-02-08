@@ -3,7 +3,7 @@ import React from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { editPost, editPostImage, getPost } from '../api/crud';
+import { editPost, getPost } from '../api/crud';
 import AddEditForm from '../../../components/Post/AddEditForm';
 import NotFound from '../../../components/404/NotFound';
 import ResponsiveAppBar from '../../../components/header/navbar';
@@ -11,13 +11,8 @@ import CircleLoader from '../../../components/header/CircleLoader';
 
 const EditPostFormContainer = function () {
   const { id } = useParams();
-  const { mutate, isLoading } = useMutation(({ data }) => editPost(id, data));
-  const
-    {
-      mutate: mutateEditPostImage,
-      // isLoading: loadingPostImage,
-    } = useMutation(({ postImage }) => editPostImage(id, postImage));
-  const name = 'EDITING POST';
+  const { mutate, isLoading } = useMutation((postFormData) => editPost(id, postFormData));
+  const isAddPostForm = false;
 
   if (!id.match(/^\d+$/)) {
     return <NotFound />;
@@ -39,11 +34,9 @@ const EditPostFormContainer = function () {
       {isFetching && <CircleLoader />}
       {isLoading && <CircleLoader />}
       <AddEditForm
-        formName={name}
+        isAddPostForm={isAddPostForm}
         postData={post}
         mutate={mutate}
-        mutatePostImage={mutateEditPostImage}
-        id={id}
       />
     </>
   );

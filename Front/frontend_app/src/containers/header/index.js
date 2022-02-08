@@ -9,31 +9,7 @@ export const HeaderContainer = function () {
           href="/posts"
           variant="contained"
         >
-          SHOW POSTS
-        </Button>
-      </Box>
-      <Box margin={1}>
-        <Button
-          href="/add_post"
-          variant="contained"
-        >
-          ADD POST
-        </Button>
-      </Box>
-      <Box margin={1}>
-        <Button
-          href="/users"
-          variant="contained"
-        >
-          SHOW USERS
-        </Button>
-      </Box>
-      <Box margin={1}>
-        <Button
-          href="/users/1"
-          variant="contained"
-        >
-          YOUR PROFILE
+          EXPLORE APP!
         </Button>
       </Box>
     </div>

@@ -95,21 +95,40 @@ router.post("/:Post_ID/image", upload.single("image"), (req, res) => {
     });
 });
 
-router.put("/:Post_ID", (req, res) => {
-  db.where({
-    Post_ID: req.params.Post_ID,
-  })
-    .update({
-      User_ID: req.body.User_ID,
-      Title: req.body.Title,
-      Timestamp: req.body.Timestamp,
-      Text: req.body.Text,
-      Visibility: req.body.Visibility,
+router.put("/:Post_ID", upload.single("image"), (req, res) => {
+  if (req.file !== undefined) {
+    db.where({
+      Post_ID: req.params.Post_ID,
     })
-    .from("Post")
-    .then(function () {
-      res.send({ success: true, message: "Updating OK" });
-    });
+      .update({
+        User_ID: req.body.User_ID,
+        Title: req.body.Title,
+        Timestamp: req.body.Timestamp,
+        Text: req.body.Text,
+        Visibility: req.body.Visibility,
+        Image: req.file.filename,
+      })
+      .from("Post")
+      .then(function () {
+        res.end();
+      });
+  } else {
+    db.where({
+      Post_ID: req.params.Post_ID,
+    })
+      .update({
+        User_ID: req.body.User_ID,
+        Title: req.body.Title,
+        Timestamp: req.body.Timestamp,
+        Text: req.body.Text,
+        Visibility: req.body.Visibility,
+      })
+      .from("Post")
+      .then(function () {
+        res.end();
+      });
+  }
+  return res.end("Updating OK");
 });
 
 router.delete("/:Post_ID", (req, res) => {

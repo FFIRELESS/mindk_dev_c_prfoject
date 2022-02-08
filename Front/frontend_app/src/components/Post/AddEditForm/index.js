@@ -4,12 +4,13 @@ import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 
 import {
-  Box, Button, CardMedia, Grid, MenuItem,
+  Box, Button, CardMedia, Grid,
 } from '@mui/material';
 import PropTypes from 'prop-types';
 // import CircleLoader from '../../header/CircleLoader';
 import { serialize } from 'object-to-formdata';
 import { handleImageError } from '../../../config/componentHandlers';
+import FormikAutocomplete from '../../FormikAutocomplete';
 
 const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
@@ -23,17 +24,32 @@ const AddEditForm = function ({
     Visibility: Yup.string().required(),
   });
 
-  const visibilityVars = [
+  // const visibilityVars = [
+  //   {
+  //     value: 'none',
+  //     label: 'None',
+  //   },
+  //   {
+  //     value: 'friends',
+  //     label: 'Friends',
+  //   },
+  //   {
+  //     value: 'all',
+  //     label: 'All',
+  //   },
+  // ];
+
+  const optionsAutocomplete = [
     {
-      value: 'none',
+      value: 'None',
       label: 'None',
     },
     {
-      value: 'friends',
+      value: 'Friends',
       label: 'Friends',
     },
     {
-      value: 'all',
+      value: 'All',
       label: 'All',
     },
   ];
@@ -100,6 +116,7 @@ const AddEditForm = function ({
           onSubmit={onFormSubmit}
           initialValues={postData}
           validationSchema={schema}
+          validateOnBlur={false}
         >
           {({ isSubmitting, isValid }) => (
             <Form>
@@ -115,25 +132,32 @@ const AddEditForm = function ({
                     />
                   </Grid>
                   <Grid item xs={6}>
+                    {/* <Field */}
+                    {/* component={TextField} */}
+                    {/* fullWidth */}
+                    {/* type="text" */}
+                    {/* name="Visibility" */}
+                    {/* label="Visibility" */}
+                    {/* helperText="Please Enter Visibility" */}
+                    {/* select */}
+                    {/* variant="standard" */}
+                    {/* InputLabelProps={{ */}
+                    {/*   shrink: true, */}
+                    {/* }} */}
+                    {/* > */}
+                    {/* {visibilityVars.map((option) => ( */}
+                    {/*   <MenuItem key={option.value} value={option.value}> */}
+                    {/*     {option.label} */}
+                    {/*   </MenuItem> */}
+                    {/* ))} */}
+                    {/* </Field> */}
                     <Field
-                      component={TextField}
-                      fullWidth
-                      type="text"
+                      component={FormikAutocomplete}
                       name="Visibility"
                       label="Visibility"
                       helperText="Please Enter Visibility"
-                      select
-                      variant="standard"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    >
-                      {visibilityVars.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Field>
+                      options={optionsAutocomplete}
+                    />
                   </Grid>
                 </Grid>
               </Box>
@@ -186,6 +210,7 @@ const AddEditForm = function ({
                   <input type="file" hidden onChange={handleChange} />
                 </Button>
               </Box>
+
               <Grid container columnSpacing={{ xs: 1 }}>
                 <Grid item xs={8}>
                   <Button

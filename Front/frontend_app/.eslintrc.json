@@ -19,8 +19,8 @@
     ],
     "ignorePatterns": [
         "src/App.css",
-        "src/components/ErrorBoundary.jsx"
-//        "src/components/FormikAutocomplete.jsx"
+        "src/components/ErrorBoundary.jsx",
+        "src/components/FormikAutocomplete.jsx"
     ],
     "rules": {
         "react/require-default-props": "off",

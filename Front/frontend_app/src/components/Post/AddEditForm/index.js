@@ -21,7 +21,11 @@ const AddEditForm = function ({
     User_ID: Yup.number().typeError('User must be a number').required(),
     Title: Yup.string('Title must not be empty').max(125, 'Too Long!').required(),
     Text: Yup.string('Text must not be empty').required(),
-    Visibility: Yup.string().required(),
+    Visibility: Yup.string('Visibility must not be empty').required(),
+    // Visibility: Yup.object().shape({
+    //   value: Yup.string(),
+    //   label: Yup.string(),
+    // }).typeError('Visibility must not be empty').required(),
   });
 
   // const visibilityVars = [
@@ -206,7 +210,7 @@ const AddEditForm = function ({
               )}
               <Box margin={1}>
                 <Button variant="outlined" component="label">
-                  Choose image
+                  Add image
                   <input type="file" hidden onChange={handleChange} />
                 </Button>
               </Box>

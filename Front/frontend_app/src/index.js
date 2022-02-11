@@ -16,6 +16,7 @@ import AddPostContainer from './containers/Post/AddPostForm';
 import EditPostFormContainer from './containers/Post/EditPostForm';
 import EditProfileContainer from './containers/userProfile/editProfileForm';
 import NotFound from './components/404/NotFound';
+import TestAuth from './components/testAuth';
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ ReactDOM.render(
             <Route path="/users/:id" element={<UserProfileContainer />} />
             <Route path="/users/:id/edit" element={<EditProfileContainer />} />
             <Route path="/add_post" element={<AddPostContainer />} />
+            <Route path="/auth" element={<TestAuth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

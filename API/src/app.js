@@ -11,6 +11,7 @@ const postsRoutes = require("./routes/posts");
 const commentsRoutes = require("./routes/comments");
 const commLikesRoutes = require("./routes/commentLikes");
 const postLikesRoutes = require("./routes/postLikes");
+const authRoutes = require("./routes/auth");
 
 const loggerMiddleware = require("./middlewares/loggerMiddleware");
 const syncErrorHandler = require("./middlewares/syncErrorHandler");
@@ -37,6 +38,7 @@ app.use("/posts", postsRoutes);
 app.use("/comments", commentsRoutes);
 app.use("/comm_likes", commLikesRoutes);
 app.use("/post_likes", postLikesRoutes);
+app.use("/auth", authRoutes);
 
 app.use(syncErrorHandler);
 

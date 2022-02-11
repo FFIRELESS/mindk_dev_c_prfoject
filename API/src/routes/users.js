@@ -36,7 +36,7 @@ router.get(
 router.get(
   "/:User_ID",
   asyncHandler(async (req, res) => {
-    if (getUserById(req.params.User_ID)) {
+    if (await getUserById(req.params.User_ID)) {
       return res.send(await getUserById(req.params.User_ID));
     }
     res.sendStatus(404);
@@ -87,6 +87,7 @@ router.post(
 
 router.put(
   "/:User_ID",
+  authMiddleware,
   asyncHandler(async (req, res) => {
     await updateUserById(req.params.User_ID, req.body);
     return res.status(201).send("Updated successfully");

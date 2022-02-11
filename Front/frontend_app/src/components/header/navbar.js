@@ -31,6 +31,10 @@ const pages = [
     name: 'New post',
     link: '/add_post',
   },
+  {
+    name: 'AUTH',
+    link: '/auth',
+  },
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -111,7 +115,7 @@ const ResponsiveAppBar = function (props) {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <MenuItem key={page.name} onClick={handleCloseNavMenu} href={page.link}>
                     <Typography textAlign="center">{page.name}</Typography>
                   </MenuItem>
                 ))}

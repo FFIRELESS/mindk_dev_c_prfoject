@@ -7,7 +7,7 @@ module.exports = {
   updateUserById: (id, data) => db("User").where("User_ID", id).update(data),
   deleteUserById: (id) => db("User").where("User_ID", id).del(),
   getUserByEmail: (email) =>
-    db.select().first().where("Email", email).from("Users"),
+    db.select().first().where("Email", email).from("User"),
   getUserAvatar: async (id) =>
     db.select("Image").first("Image").from("User").where({ User_ID: id }),
 };

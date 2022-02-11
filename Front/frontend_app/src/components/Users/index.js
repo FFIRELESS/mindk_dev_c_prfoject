@@ -65,7 +65,7 @@ const Users = function ({ user }) {
 export default Users;
 
 Users.propTypes = {
-  user: PropTypes.arrayOf(PropTypes.shape({
+  user: PropTypes.shape({
     User_ID: PropTypes.number.isRequired,
     University_ID: PropTypes.number.isRequired,
     Username: PropTypes.string.isRequired,
@@ -73,7 +73,7 @@ Users.propTypes = {
     Image: PropTypes.string.isRequired,
     Email: PropTypes.string.isRequired,
     Phone: PropTypes.string,
-  })),
+  }),
 };
 
 Users.defaultProps = {

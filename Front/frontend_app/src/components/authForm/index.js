@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import GoogleLogin from 'react-google-login';
-// import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login';
 import axios from 'axios';
+import { Box, Grid } from '@mui/material';
 
 const parseJwt = (token) => {
   try {
@@ -35,25 +36,36 @@ const AuthForm = function () {
         console.log(error);
       });
   });
-  console.log(auth);
 
   if (!auth.user) {
     return (
-      <div>
-        <GoogleLogin
-          clientId="506687723240-a0oprpgj8bq076v7lts8fjiouvta1r4o.apps.googleusercontent.com"
-          onSuccess={handleGoogleAuth}
-          onFailure={(errors) => {
-            console.log(errors);
-          }}
-          cookiePolicy="single_host_origin"
-        />
-        {/*<FacebookLogin*/}
-        {/*  appId="1088597931155576"*/}
-        {/*  autoLoad*/}
-        {/*  fields="name,email,picture"*/}
-        {/*/>*/}
-      </div>
+      <Box>
+        <h1>LOGIN</h1>
+        <Grid
+          container
+          justifyContent="center"
+          direction="row"
+          columnSpacing={{ xs: 2 }}
+        >
+          <Grid item xs={6}>
+            <GoogleLogin
+              clientId="506687723240-a0oprpgj8bq076v7lts8fjiouvta1r4o.apps.googleusercontent.com"
+              onSuccess={handleGoogleAuth}
+              onFailure={(errors) => {
+                console.log(errors);
+              }}
+              cookiePolicy="single_host_origin"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <FacebookLogin
+              appId="1088597931155576"
+              fields="name,email,picture"
+              size="small"
+            />
+          </Grid>
+        </Grid>
+      </Box>
     );
   }
 

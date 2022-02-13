@@ -21,7 +21,7 @@ module.exports = {
         );
         const refreshToken = uuidv4();
         await create({
-          User_ID: user.id,
+          User_ID: user.User_ID,
           token: refreshToken,
         });
         return { accessToken, refreshToken };

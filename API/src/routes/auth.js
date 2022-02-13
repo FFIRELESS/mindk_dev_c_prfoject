@@ -50,8 +50,6 @@ router.post(
   "/google",
   passport.authenticate("google-token", { session: false }),
   asyncHandler(async (req, res) => {
-    console.log("router auth/google THERE"); //******************************
-
     const { accessToken, refreshToken } = await authorizeById(req.user.User_ID);
     if (accessToken) {
       return res.send({

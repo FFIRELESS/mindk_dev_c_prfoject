@@ -21,7 +21,7 @@ const TestAuth = function () {
 
   const handleGoogleAuth = useCallback((data) => {
     axios.post('http://localhost:3003/auth/google', {
-      access_token: data.access_token,
+      access_token: data.accessToken,
     })
       .then((response) => {
         setAuth({
@@ -34,7 +34,6 @@ const TestAuth = function () {
         console.log(error);
       });
   });
-  console.log(auth);
 
   if (!auth.user) {
     return (

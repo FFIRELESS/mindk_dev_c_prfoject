@@ -23,9 +23,6 @@ module.exports = () => {
             });
             user = await getUserByEmail(email);
           }
-
-          console.log("google strategy THERE"); //*******************************
-
           return done(null, {
             id: user.User_ID,
             name: user.Fullname,

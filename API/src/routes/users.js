@@ -63,6 +63,7 @@ router.get(
 
 router.post(
   "/:User_ID/avatar",
+  authMiddleware,
   upload.single("avatar"),
   asyncHandler(async (req, res) => {
     await db
@@ -96,21 +97,26 @@ router.put(
 
 router.delete(
   "/:User_ID",
+  authMiddleware,
   asyncHandler(async (req, res) => {
     await deleteUserById(req.params.User_ID);
     return res.status(201).send("Deleted successfully");
   })
 );
 
-router.delete("/:User_ID/avatar", (req, res) => {
-  db.where({ User_ID: req.params.User_ID })
-    .update({
-      Image: "default/icon.png",
-    })
-    .from("User")
-    .then(function () {
-      res.send({ success: true, message: "Deleting OK" });
-    });
-});
+router.delete(
+  "/:User_ID/avatar",
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    db.where({ User_ID: req.params.User_ID })
+      .update({
+        Image: "default/icon.png",
+      })
+      .from("User")
+      .then(function () {
+        res.send({ success: true, message: "Deleting OK" });
+      });
+  })
+);
 
 module.exports = router;

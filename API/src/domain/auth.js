@@ -8,7 +8,7 @@ const {
 } = require("../services/store/session.service");
 const { checkPassword } = require("./user");
 
-const { appKey } = require("../services/config");
+const config = require("../services/config");
 
 module.exports = {
   authorize: async (email, password) => {
@@ -16,8 +16,8 @@ module.exports = {
     if (user) {
       if (checkPassword(password, user.password)) {
         const accessToken = jwt.sign(
-          { user_id: user.User_ID, name: user.Fullname },
-          appKey
+          { User_id: user.User_ID, Fullname: user.Fullname },
+          config.appKey
         );
         const refreshToken = uuidv4();
         await create({
@@ -34,8 +34,8 @@ module.exports = {
     if (session) {
       const user = await getUserById(session.User_ID);
       const accessToken = jwt.sign(
-        { user_id: user.User_ID, name: user.Fullname },
-        appKey
+        { User_id: user.User_ID, Fullname: user.Fullname },
+        config.appKey
       );
       const refreshToken = uuidv4();
       await deleteByToken(session.token);
@@ -48,20 +48,17 @@ module.exports = {
     return {};
   },
   authorizeById: async (id) => {
-    console.log("auth by id THERE");
     const user = await getUserById(id);
     if (user) {
       const accessToken = jwt.sign(
-        { user_id: user.User_ID, name: user.Fullname },
-        appKey
+        { User_ID: user.User_ID, Fullname: user.Fullname },
+        config.appKey
       );
       const refreshToken = uuidv4();
       await create({
         User_ID: user.User_ID,
         token: refreshToken,
       });
-      console.log(accessToken); //********************************
-      console.log(refreshToken); //********************************
       return { accessToken, refreshToken };
     }
     return {};

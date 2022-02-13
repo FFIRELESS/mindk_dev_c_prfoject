@@ -18,15 +18,15 @@ module.exports = () => {
           let user = await getUserByEmail(email);
           if (!user) {
             await createUser({
-              name: profile.displayName,
-              email,
+              Fullname: profile.displayName,
+              Email: email,
             });
             user = await getUserByEmail(email);
           }
           return done(null, {
-            id: user.User_ID,
-            name: user.Fullname,
-            email: user.Email,
+            User_ID: user.User_ID,
+            Fullname: user.Fullname,
+            Email: user.Email,
           });
         }
       )

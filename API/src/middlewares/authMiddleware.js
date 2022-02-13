@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const UnauthorizedException = require("../exceptions/UnauthorizedException");
-const { appKey } = require("../services/config");
+const config = require("../services/config");
 
 module.exports = async (req, res, next) => {
   if (req.headers.authorization) {
@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
     let decoded;
     try {
       decoded = await new Promise((resolve, reject) => {
-        jwt.verify(token, appKey, (err, result) => {
+        jwt.verify(token, config.appKey, (err, result) => {
           if (err) {
             return reject(err);
           }
@@ -24,6 +24,5 @@ module.exports = async (req, res, next) => {
       return next();
     }
   }
-
   next(new UnauthorizedException());
 };

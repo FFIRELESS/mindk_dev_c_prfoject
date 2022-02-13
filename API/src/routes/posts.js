@@ -10,6 +10,7 @@ const {
   getPostLikes,
   getPostImage,
 } = require("../services/store/posts.service");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 const storage = multer.diskStorage({
   destination: "uploads/postImages",
@@ -70,85 +71,108 @@ router.get(
   })
 );
 
-router.post("/", upload.single("image"), (req, res) => {
-  db.insert({
-    User_ID: req.body.User_ID,
-    Title: req.body.Title,
-    Text: req.body.Text,
-    Visibility: req.body.Visibility,
-    Image: req.file !== undefined ? req.file.filename : null,
+router.post(
+  "/",
+  authMiddleware,
+  upload.single("image"),
+  asyncHandler(async (req, res) => {
+    db.insert({
+      User_ID: req.body.User_ID,
+      Title: req.body.Title,
+      Text: req.body.Text,
+      Visibility: req.body.Visibility,
+      Image: req.file !== undefined ? req.file.filename : null,
+    })
+      .into("Post")
+      .then(function () {
+        res.end();
+      });
+    return res.end("Inserting OK");
   })
-    .into("Post")
-    .then(function () {
-      res.end();
-    });
-  return res.end("Inserting OK");
-});
+);
 
-router.post("/:Post_ID/image", upload.single("image"), (req, res) => {
-  db.update({ Image: req.file.filename })
-    .from("Post")
-    .where({ Post_ID: req.params.Post_ID })
-    .then(function () {
-      console.log(req.file);
-      res.end("Your post image is changed");
-    });
-});
+router.post(
+  "/:Post_ID/image",
+  authMiddleware,
+  upload.single("image"),
+  asyncHandler(async (req, res) => {
+    db.update({ Image: req.file.filename })
+      .from("Post")
+      .where({ Post_ID: req.params.Post_ID })
+      .then(function () {
+        console.log(req.file);
+        res.end("Your post image is changed");
+      });
+  })
+);
 
-router.put("/:Post_ID", upload.single("image"), (req, res) => {
-  if (req.file !== undefined) {
-    db.where({
-      Post_ID: req.params.Post_ID,
-    })
+router.put(
+  "/:Post_ID",
+  authMiddleware,
+  upload.single("image"),
+  asyncHandler(async (req, res) => {
+    if (req.file !== undefined) {
+      db.where({
+        Post_ID: req.params.Post_ID,
+      })
+        .update({
+          User_ID: req.body.User_ID,
+          Title: req.body.Title,
+          Timestamp: req.body.Timestamp,
+          Text: req.body.Text,
+          Visibility: req.body.Visibility,
+          Image: req.file.filename,
+        })
+        .from("Post")
+        .then(function () {
+          res.end();
+        });
+    } else {
+      db.where({
+        Post_ID: req.params.Post_ID,
+      })
+        .update({
+          User_ID: req.body.User_ID,
+          Title: req.body.Title,
+          Timestamp: req.body.Timestamp,
+          Text: req.body.Text,
+          Visibility: req.body.Visibility,
+        })
+        .from("Post")
+        .then(function () {
+          res.end();
+        });
+    }
+    return res.end("Updating OK");
+  })
+);
+
+router.delete(
+  "/:Post_ID",
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    db.where({ Post_ID: req.params.Post_ID })
+      .del()
+      .from("Post")
+      .then(function () {
+        res.send({ success: true, message: "Deleting OK" });
+      });
+  })
+);
+
+router.delete(
+  "/:Post_ID/image",
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    db.where({ Post_ID: req.params.Post_ID })
       .update({
-        User_ID: req.body.User_ID,
-        Title: req.body.Title,
-        Timestamp: req.body.Timestamp,
-        Text: req.body.Text,
-        Visibility: req.body.Visibility,
-        Image: req.file.filename,
+        Image: null,
       })
       .from("Post")
       .then(function () {
-        res.end();
+        res.send({ success: true, message: "Deleting OK" });
       });
-  } else {
-    db.where({
-      Post_ID: req.params.Post_ID,
-    })
-      .update({
-        User_ID: req.body.User_ID,
-        Title: req.body.Title,
-        Timestamp: req.body.Timestamp,
-        Text: req.body.Text,
-        Visibility: req.body.Visibility,
-      })
-      .from("Post")
-      .then(function () {
-        res.end();
-      });
-  }
-  return res.end("Updating OK");
-});
-
-router.delete("/:Post_ID", (req, res) => {
-  db.where({ Post_ID: req.params.Post_ID })
-    .del()
-    .from("Post")
-    .then(function () {
-      res.send({ success: true, message: "Deleting OK" });
-    });
-});
-
-router.delete("/:Post_ID/image", (req, res) => {
-  db.where({ Post_ID: req.params.Post_ID })
-    .update({
-      Image: null,
-    })
-    .from("Post")
-    .then(function () {
-      res.send({ success: true, message: "Deleting OK" });
-    });
-});
+  })
+);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import GoogleLogin from 'react-google-login';
+// import FacebookLogin from 'react-facebook-login';
 import axios from 'axios';
 
 const parseJwt = (token) => {
@@ -10,7 +11,7 @@ const parseJwt = (token) => {
   }
 };
 
-const TestAuth = function () {
+const AuthForm = function () {
   const [auth, setAuth] = useState({});
   useEffect(() => {
     const localStorageAuth = localStorage.getItem('auth');
@@ -34,19 +35,24 @@ const TestAuth = function () {
         console.log(error);
       });
   });
+  console.log(auth);
 
   if (!auth.user) {
     return (
       <div>
         <GoogleLogin
           clientId="506687723240-a0oprpgj8bq076v7lts8fjiouvta1r4o.apps.googleusercontent.com"
-          buttonText="Login"
           onSuccess={handleGoogleAuth}
           onFailure={(errors) => {
             console.log(errors);
           }}
           cookiePolicy="single_host_origin"
         />
+        {/*<FacebookLogin*/}
+        {/*  appId="1088597931155576"*/}
+        {/*  autoLoad*/}
+        {/*  fields="name,email,picture"*/}
+        {/*/>*/}
       </div>
     );
   }
@@ -60,4 +66,4 @@ const TestAuth = function () {
   );
 };
 
-export default TestAuth;
+export default AuthForm;

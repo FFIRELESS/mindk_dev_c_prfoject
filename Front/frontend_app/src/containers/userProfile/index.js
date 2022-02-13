@@ -4,9 +4,9 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import UserProfile from '../../components/userProfile';
-import { getUser } from '../Users/api/crud';
+import { getUser } from '../users/api/crud';
 import ResponsiveAppBar from '../../components/header/navbar';
-import NotFound from '../../components/404/NotFound';
+import NotFound from '../../components/errors/notFound';
 
 const UserProfileContainer = function () {
   const { id } = useParams();

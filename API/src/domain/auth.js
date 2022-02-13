@@ -1,14 +1,14 @@
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const { getUserById, getUserByEmail } = require("../services/user");
+const { getUserById, getUserByEmail } = require("./user");
 const {
   create,
   getByToken,
   deleteByToken,
-} = require("./store/session.service");
+} = require("../services/store/session.service");
 const { checkPassword } = require("./user");
 
-const { appKey } = require("./config");
+const { appKey } = require("../services/config");
 
 module.exports = {
   authorize: async (email, password) => {

@@ -1,7 +1,7 @@
 const passport = require("passport");
 const GoogleTokenStrategy = require("passport-google-token").Strategy;
-const config = require("./config");
-const { createUser, getUserByEmail } = require("../services/user");
+const config = require("../services/config");
+const { createUser, getUserByEmail } = require("./user");
 
 module.exports = () => {
   const registerStrategy = () => {
@@ -13,6 +13,7 @@ module.exports = () => {
         },
         //  Passport verify callback
         async (accessToken, refreshToken, profile, done) => {
+          console.log(profile);
           const [{ value: email }] = profile.emails;
           let user = await getUserByEmail(email);
           if (!user) {

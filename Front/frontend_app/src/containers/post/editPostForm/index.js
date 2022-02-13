@@ -4,10 +4,10 @@ import { useMutation, useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { editPost, getPost } from '../api/crud';
-import AddEditForm from '../../../components/Post/AddEditForm';
-import NotFound from '../../../components/404/NotFound';
+import AddEditForm from '../../../components/post/addEditForm';
+import NotFound from '../../../components/errors/notFound';
 import ResponsiveAppBar from '../../../components/header/navbar';
-import CircleLoader from '../../../components/header/CircleLoader';
+import CircleLoader from '../../../components/header/circleLoader';
 
 const EditPostFormContainer = function () {
   const { id } = useParams();

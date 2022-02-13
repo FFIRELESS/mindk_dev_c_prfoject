@@ -3,8 +3,7 @@ const config = require("./services/config");
 const bodyParser = require("body-parser");
 const db = require("./services/db");
 const cors = require("cors");
-const googleStrategy = require("./services/google.strategy");
-const { registerStrategy, passport } = googleStrategy();
+const googleStrategy = require("./domain/google.strategy");
 
 const usersRoutes = require("./routes/users");
 const postsRoutes = require("./routes/posts");
@@ -19,10 +18,10 @@ const syncErrorHandler = require("./middlewares/syncErrorHandler");
 const app = express();
 const port = config.appPort;
 
-registerStrategy();
+googleStrategy().registerStrategy();
 
 app.use(cors());
-app.use(passport.initialize());
+app.use(googleStrategy().passport.initialize());
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
 

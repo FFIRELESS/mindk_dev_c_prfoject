@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { getUsers } from './api/crud';
-import Users from '../../components/Users';
+import Users from '../../components/users';
 import ResponsiveAppBar from '../../components/header/navbar';
 
 const UsersContainer = function () {

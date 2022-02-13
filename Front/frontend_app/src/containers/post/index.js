@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query';
 import { styled } from '@mui/material/styles';
-import { Post } from '../../components/Post';
+import { Post } from '../../components/post';
 import { getPosts } from './api/crud';
 import ResponsiveAppBar from '../../components/header/navbar';
-import CircleLoader from '../../components/header/CircleLoader';
+import CircleLoader from '../../components/header/circleLoader';
 
 const PostContainer = function () {
   const { isFetching: isFetchingPosts, data: dataPosts } = useQuery('posts', () => getPosts());

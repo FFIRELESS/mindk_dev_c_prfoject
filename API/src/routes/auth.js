@@ -1,12 +1,7 @@
 const router = require("express").Router();
 const asyncHandler = require("express-async-handler");
 const passport = require("passport");
-const {
-  authorize,
-  refresh,
-  logout,
-  authorizeById,
-} = require("../services/auth");
+const { authorize, refresh, logout, authorizeById } = require("../domain/auth");
 
 router.post(
   "/login",

@@ -1,5 +1,5 @@
-const passwordHasher = require("../services/passwordHasher");
-const config = require("./config");
+const passwordHasher = require("../utils/passwordHasher");
+const config = require("../services/config");
 
 const {
   getAllUsers,

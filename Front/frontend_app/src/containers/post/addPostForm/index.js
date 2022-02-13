@@ -3,9 +3,9 @@ import React from 'react';
 import { useMutation } from 'react-query';
 import { styled } from '@mui/material/styles';
 import { createPost } from '../api/crud';
-import AddEditForm from '../../../components/Post/AddEditForm';
+import AddEditForm from '../../../components/post/addEditForm';
 import ResponsiveAppBar from '../../../components/header/navbar';
-import CircleLoader from '../../../components/header/CircleLoader';
+import CircleLoader from '../../../components/header/circleLoader';
 
 const AddPostContainer = function () {
   const postData = {};

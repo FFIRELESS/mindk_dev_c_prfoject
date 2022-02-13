@@ -9,13 +9,13 @@ import './index.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
-import PostContainer from './containers/Post';
+import PostContainer from './containers/post';
 import UserProfileContainer from './containers/userProfile';
-import UsersContainer from './containers/Users';
-import AddPostContainer from './containers/Post/AddPostForm';
-import EditPostFormContainer from './containers/Post/EditPostForm';
+import UsersContainer from './containers/users';
+import AddPostContainer from './containers/post/addPostForm';
+import EditPostFormContainer from './containers/post/editPostForm';
 import EditProfileContainer from './containers/userProfile/editProfileForm';
-import NotFound from './components/404/NotFound';
+import NotFound from './components/errors/notFound';
 import TestAuth from './components/testAuth';
 
 const queryClient = new QueryClient();

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Avatar, Box, Card, CardContent, CardHeader, IconButton, Typography,
+  Avatar, Box, Card, CardContent, CardHeader, IconButton, Tooltip, Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -19,28 +19,30 @@ const UserProfile = function ({ user }) {
         <CardHeader
           avatar={(
             <Avatar
-              src={require(`../../../../../API/uploads/${user.Image}`)}
+              src={`http://localhost:3003/users/${user.User_ID}/avatar`}
               sx={{ width: '20vh', height: '20vh' }}
               aria-label="username"
             >
               U
             </Avatar>
-                          )}
+          )}
           action={(
             <div>
-              <IconButton aria-label="edit" href={`${user.User_ID}/edit`}>
-                <EditIcon />
-              </IconButton>
+              <Tooltip title="Edit">
+                <IconButton aria-label="edit" href={`${user.User_ID}/edit`}>
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
               <IconButton aria-label="settings" disabled>
                 <MoreVertIcon />
               </IconButton>
             </div>
-                          )}
+          )}
           title={(
             <Typography variant="h4" component="div" color="text.primary">
               {user.Username}
             </Typography>
-                          )}
+          )}
           subheader={`UNIVERSITY #${user.University_ID}`}
         />
         <CardContent>
@@ -48,19 +50,10 @@ const UserProfile = function ({ user }) {
             {user.Fullname}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Email:
-            {' '}
-            {user.Email}
+            {`Email: ${user.Email}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Phone:
-            {' '}
-            {user.Phone}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Image path:
-            {' '}
-            {user.Image}
+            {`Phone: ${user.Phone}`}
           </Typography>
         </CardContent>
       </Card>

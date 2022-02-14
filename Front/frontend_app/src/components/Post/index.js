@@ -7,7 +7,7 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardHeader, Collapse,
+  CardHeader, CardMedia, Collapse,
   IconButton,
   Typography,
 } from '@mui/material';
@@ -20,6 +20,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { styled } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
+import { handleImageError } from '../../config/componentHandlers';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -39,6 +40,8 @@ export const Post = function ({ posts }) {
     setExpanded(!expanded);
   };
 
+  const postImage = `http://localhost:3003/posts/${posts.Post_ID}/image`;
+
   return (
     <Box
       margin={3}
@@ -46,13 +49,13 @@ export const Post = function ({ posts }) {
       justifyContent="center"
       alignItems="center"
     >
-      <Card sx={{ width: '80vh', maxWidth: 800 }}>
+      <Card sx={{ width: '80vh', maxWidth: 620 }}>
         <CardHeader
           avatar={(
             <Avatar sx={{ bgcolor: red[500] }} aria-label="username">
               U
             </Avatar>
-                        )}
+          )}
           action={(
             <div>
               <IconButton aria-label="edit" href={`posts/${posts.Post_ID}/edit`}>
@@ -62,7 +65,7 @@ export const Post = function ({ posts }) {
                 <MoreVertIcon />
               </IconButton>
             </div>
-                        )}
+          )}
           title={`User #${posts.User_ID}`}
           subheader={`${posts.Timestamp} • ${posts.Visibility}`}
         />
@@ -70,9 +73,20 @@ export const Post = function ({ posts }) {
           <Typography variant="h6" gutterBottom component="div" color="text.primary">
             {posts.Title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography textAlign="justify" variant="body2" color="text.secondary">
             {posts.Text}
           </Typography>
+          {posts.Image && (
+          <Box
+            paddingTop={3}
+          >
+            <CardMedia
+              component="img"
+              image={postImage}
+              onError={handleImageError}
+            />
+          </Box>
+          )}
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
@@ -112,5 +126,6 @@ Post.propTypes = {
     Text: PropTypes.string.isRequired,
     Timestamp: PropTypes.string.isRequired,
     Visibility: PropTypes.string.isRequired,
+    Image: PropTypes.string,
   }).isRequired,
 };

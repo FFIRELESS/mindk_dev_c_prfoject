@@ -7,9 +7,6 @@ const NotFound = function () {
   return (
     <div className="App-header">
       <img src={Img} alt="" width={400} />
-      {' '}
-      <br />
-      <br />
       <Link to="/"><Button>GO TO MAIN PAGE</Button></Link>
     </div>
   );

@@ -13,25 +13,25 @@ const Users = function ({ user }) {
           <CardHeader
             avatar={(
               <Avatar
-                src={require(`../../../../../API/uploads/${user.Image}`)}
+                src={`http://localhost:3003/users/${user.User_ID}/avatar`}
                 sx={{ width: '10vh', height: '10vh' }}
                 aria-label="username"
               >
                 U
               </Avatar>
-                    )}
+            )}
             action={(
               <div>
                 <IconButton aria-label="edit" href={`users/${user.User_ID}/edit`}>
                   <EditIcon />
                 </IconButton>
               </div>
-                    )}
+            )}
             title={(
               <Typography variant="h6" component="div" color="text.primary">
                 {user.Username}
               </Typography>
-                    )}
+            )}
             subheader={`UNIVERSITY #${user.University_ID}`}
           />
           <CardContent>
@@ -43,9 +43,6 @@ const Users = function ({ user }) {
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {`Phone: ${user.Phone}`}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {`Image: ${user.Image}`}
             </Typography>
           </CardContent>
           <Box margin={2}>
@@ -61,7 +58,7 @@ const Users = function ({ user }) {
         </Card>
       </Grid>
     </Box
-      >
+>
   );
 };
 

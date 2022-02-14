@@ -4,8 +4,14 @@ export const getPosts = async () => apiClient.get('/posts');
 
 export const getPost = async (id) => apiClient.get(`/posts/${id}`);
 
-export const createPost = async (post) => apiClient.post('/posts', post);
+export const createPost = async (postFormData) => apiClient.post('/posts', postFormData, {
+  headers: { 'Content-Type': 'multipart/form-data' },
+});
 
-export const editPost = async (id, post) => apiClient.put(`/posts/${id}`, post);
+export const editPost = async (id, postFormData) => apiClient.put(`/posts/${id}`, postFormData, {
+  headers: { 'Content-Type': 'multipart/form-data' },
+});
 
 export const deletePost = async (id) => apiClient.delete(`/posts/${id}`);
+
+export const removePostImage = async (id) => apiClient.delete(`/posts/${id}/image`);

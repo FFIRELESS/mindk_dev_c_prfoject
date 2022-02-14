@@ -1,14 +1,20 @@
 import PropTypes from 'prop-types';
 import {
+  Avatar,
   Box, Button, Grid, MenuItem,
 } from '@mui/material';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import React from 'react';
+import React, { useState } from 'react';
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
+import CircleLoader from '../../header/CircleLoader';
+
+const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
 const EditProfileForm = function ({
-  userData, mutate, isLoading, id,
+  userData, mutateUser, mutateAvatar, removeAvatar, isLoadingUser, isLoadingAvatar, id,
 }) {
   const schema = Yup.object().shape({
     University_ID: Yup.number().typeError('University_ID must be a number').required(),
@@ -39,22 +45,57 @@ const EditProfileForm = function ({
     },
   ];
 
+  const [image, setImage] = useState();
+  const [cropper, setCropper] = useState();
+  const [croppedImage, setCroppedImage] = useState();
+  const [filename, setFilename] = useState();
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+
+    if (file.type.match('image.*') && file.size < 10000000) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setFilename(file.name);
+    } else {
+      console.error('Image error');
+    }
+  };
+
+  const cropImage = () => {
+    if (typeof cropper !== 'undefined') {
+      setCroppedImage(cropper.getCroppedCanvas().toDataURL());
+      setImage(null);
+    }
+  };
+
+  const deleteImage = () => {
+    setCroppedImage(null);
+    setImage(null);
+  };
+
+  const rmUserAvatar = () => {
+    setImage(null);
+    removeAvatar();
+    // in deployment
+  };
+
   const onFormSubmit = (data, actions) => {
     actions.setSubmitting(true);
-    mutate({ id, data });
+    mutateUser(data);
+    if (croppedImage) {
+      const formData = new FormData();
+      formData.append('avatar', dataURLtoBlob(croppedImage), filename);
+      mutateAvatar(formData);
+    }
     actions.setSubmitting(false);
   };
 
   return (
-    // <div className="card">
-    //   <p><b>THIS IS YOUR PROFILE</b></p>
-    //   Choose avatar:
-    //   <form action={`http://localhost:3003/users/${id}/avatar`} method="post" encType="multipart/form-data">
-    //     <input type="file" name="avatar" />
-    //     <button type="submit">SEND</button>
-    //   </form>
-    //   <Link to="/"><Button>GO TO MAIN PAGE</Button></Link>
-    // </div>
     <Grid
       container
       spacing={0}
@@ -64,7 +105,7 @@ const EditProfileForm = function ({
       style={{ minHeight: '100vh' }}
     >
       <Grid>
-        {isLoading && <div>Loading...</div>}
+        {isLoadingUser && isLoadingAvatar && <CircleLoader />}
 
         <Box margin={1}><h1>EDIT PROFILE</h1></Box>
 
@@ -76,17 +117,81 @@ const EditProfileForm = function ({
           {({ isSubmitting, isValid }) => (
             <Form>
               <Box margin={1}>
-                <Grid container columnSpacing={{ xs: 2 }}>
-                  <Grid item xs={3}>
-                    <Field
-                      component={TextField}
-                      fullWidth
-                      type="integer"
-                      name="University_ID"
-                      label="University_ID"
-                      helperText=" "
-                    />
+                <Grid container>
+                  <Grid item xs={4}>
+                    <Avatar
+                      src={!croppedImage ? `http://localhost:3003/users/${userData.User_ID}/avatar` : croppedImage}
+                      sx={{ width: '15vh', height: '15vh' }}
+                      aria-label="username"
+                    >
+                      U
+                    </Avatar>
                   </Grid>
+                  <Grid item xs={8}>
+                    <Grid
+                      container
+                      minHeight="100%"
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="center"
+                      columnSpacing={{ xs: 1 }}
+                    >
+                      <Grid item>
+                        {!image
+                        && (
+                        <Button variant="contained" component="label">
+                          Choose image
+                          <input type="file" hidden onChange={handleChange} />
+                        </Button>
+                        )}
+                      </Grid>
+                      <Grid item>
+                        <Button variant="contained" onClick={rmUserAvatar} disabled>
+                          Delete image
+                        </Button>
+                      </Grid>
+                      {image
+                        && (
+                        <Grid item>
+                          <Button variant="contained" onClick={deleteImage}>
+                            Clear image
+                          </Button>
+                        </Grid>
+                        )}
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              {image && (
+              <Grid
+                margin={1}
+                container
+                alignItems="center"
+                justifyContent="center"
+                maxWidth="50vh"
+                rowSpacing={3}
+              >
+                <Grid item>
+                  <Cropper
+                    src={image}
+                    minCropBoxWidth={200}
+                    minCropBoxHeight={200}
+                    zoomable={false}
+                    onInitialized={(instance) => setCropper(instance)}
+                    viewMode={1}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button fullWidth variant="contained" onClick={cropImage}>
+                    Crop
+                  </Button>
+                </Grid>
+              </Grid>
+              )}
+
+              <Box margin={1}>
+                <Grid container marginTop={4} columnSpacing={{ xs: 2 }}>
                   <Grid item xs={9}>
                     <Field
                       component={TextField}
@@ -94,6 +199,16 @@ const EditProfileForm = function ({
                       type="text"
                       name="Username"
                       label="Username"
+                      helperText=" "
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Field
+                      component={TextField}
+                      fullWidth
+                      type="integer"
+                      name="University_ID"
+                      label="University_ID"
                       helperText=" "
                     />
                   </Grid>
@@ -250,7 +365,10 @@ EditProfileForm.propTypes = {
     Email: PropTypes.string.isRequired,
     Phone: PropTypes.string,
   }).isRequired,
-  id: PropTypes.number.isRequired,
-  mutate: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  id: PropTypes.string.isRequired,
+  mutateUser: PropTypes.func.isRequired,
+  mutateAvatar: PropTypes.func.isRequired,
+  removeAvatar: PropTypes.func.isRequired,
+  isLoadingUser: PropTypes.bool.isRequired,
+  isLoadingAvatar: PropTypes.bool.isRequired,
 };

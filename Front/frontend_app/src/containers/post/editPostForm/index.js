@@ -19,7 +19,7 @@ const EditPostFormContainer = function () {
   }
 
   const { isFetching, data } = useQuery('post', () => getPost(id));
-  const post = data?.data[0];
+  const post = data?.data.post;
 
   if (post === undefined || post.length === 0) {
     return <NotFound />;

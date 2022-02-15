@@ -4,12 +4,13 @@ const db = require("../services/db");
 const multer = require("multer");
 
 const {
-  getAllPosts,
-  getPostById,
   getPostComments,
   getPostLikes,
   getPostImage,
 } = require("../services/store/posts.service");
+
+const { getPostById, getAllPosts } = require("../domain/posts");
+
 const authMiddleware = require("../middlewares/authMiddleware");
 
 const storage = multer.diskStorage({

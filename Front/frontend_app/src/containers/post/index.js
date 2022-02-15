@@ -8,7 +8,6 @@ import CircleLoader from '../../components/header/circleLoader';
 const PostContainer = function () {
   const { isFetching: isFetchingPosts, data: dataPosts } = useQuery('posts', () => getPosts());
   // const {isFetching: isFetchingUsers, data: dataUsers} = useQuery('users', () => getUsers());
-
   const posts = dataPosts?.data || [];
   // const users = dataUsers?.data || [];
 
@@ -19,7 +18,7 @@ const PostContainer = function () {
       <ResponsiveAppBar />
       <Offset />
       {isFetchingPosts && <CircleLoader />}
-      {posts.map((post) => <div key={post.Post_ID}><Post posts={post} /></div>)}
+      {posts.map((post) => <div key={post.Post_ID}><Post post={post} /></div>)}
     </>
   );
 };

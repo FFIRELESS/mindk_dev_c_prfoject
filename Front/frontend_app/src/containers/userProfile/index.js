@@ -17,7 +17,7 @@ const UserProfileContainer = function () {
   }
 
   const { isFetching, data } = useQuery('user', () => getUser(id));
-  const user = data?.data[0];
+  const user = data?.data;
 
   if (user === undefined || user.length === 0) {
     return <NotFound />;

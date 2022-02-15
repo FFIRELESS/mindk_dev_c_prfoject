@@ -8,7 +8,6 @@ const FormikAutocomplete = function (props) {
   const { form: { setTouched, setFieldValue } } = props;
   const { error, helperText, ...field } = fieldToTextField(props);
   const { name, label, value } = field;
-  console.log(props);
 
   return (
     <Autocomplete

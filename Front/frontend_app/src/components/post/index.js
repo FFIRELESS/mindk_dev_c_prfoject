@@ -20,6 +20,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { styled } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
+import { useNavigate } from 'react-router-dom';
 import { handleImageError } from '../../config/componentHandlers';
 
 const ExpandMore = styled((props) => {
@@ -33,14 +34,23 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export const Post = function ({ posts }) {
+export const Post = function ({ post }) {
   const [expanded, setExpanded] = React.useState(false);
+  const navigate = useNavigate();
+
+  // const { isFetching, data } = useQuery('user', () => getUser(post.User_ID));
+  // console.log(data);
+  // const userData = data.data;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const postImage = `http://localhost:3003/posts/${posts.Post_ID}/image`;
+  const handleAvatarClick = () => {
+    navigate(`/users/${post.User_ID}`);
+  };
+
+  const postImage = `http://localhost:3003/posts/${post.Post_ID}/image`;
 
   return (
     <Box
@@ -52,31 +62,36 @@ export const Post = function ({ posts }) {
       <Card sx={{ width: '80vh', maxWidth: 620 }}>
         <CardHeader
           avatar={(
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="username">
+            <Avatar
+              src={`http://localhost:3003/users/${post.User_ID}/avatar`}
+              sx={{ bgcolor: red[500] }}
+              aria-label="username"
+              onClick={handleAvatarClick}
+            >
               U
             </Avatar>
-          )}
+                    )}
           action={(
             <div>
-              <IconButton aria-label="edit" href={`posts/${posts.Post_ID}/edit`}>
+              <IconButton aria-label="edit" href={`posts/${post.Post_ID}/edit`}>
                 <EditIcon />
               </IconButton>
               <IconButton aria-label="settings" disabled>
                 <MoreVertIcon />
               </IconButton>
             </div>
-          )}
-          title={`User #${posts.User_ID}`}
-          subheader={`${posts.Timestamp} • ${posts.Visibility}`}
+                    )}
+          title={`User #${post.User_ID}`}
+          subheader={`${post.Timestamp} • ${post.Visibility}`}
         />
         <CardContent>
           <Typography variant="h6" gutterBottom component="div" color="text.primary">
-            {posts.Title}
+            {post.Title}
           </Typography>
           <Typography textAlign="justify" variant="body2" color="text.secondary">
-            {posts.Text}
+            {post.Text}
           </Typography>
-          {posts.Image && (
+          {post.Image && (
           <Box
             paddingTop={3}
           >
@@ -119,7 +134,7 @@ export const Post = function ({ posts }) {
 export default Post;
 
 Post.propTypes = {
-  posts: PropTypes.shape({
+  post: PropTypes.shape({
     Post_ID: PropTypes.number.isRequired,
     User_ID: PropTypes.number.isRequired,
     Title: PropTypes.string.isRequired,

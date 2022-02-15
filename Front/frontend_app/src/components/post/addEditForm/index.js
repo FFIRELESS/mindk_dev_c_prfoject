@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 
@@ -67,6 +68,8 @@ const AddEditForm = function ({
   const [image, setImage] = useState();
   const [filename, setFilename] = useState();
 
+  const navigate = useNavigate();
+
   let postImagePath;
 
   if (isAddPostForm) {
@@ -79,7 +82,7 @@ const AddEditForm = function ({
     e.preventDefault();
     const file = e.target.files[0];
 
-    if (file.type.match('image.*') && file.size < 10000000) {
+    if (file.type.match('image.*') && file.size < 100000000) {
       const reader = new FileReader();
       reader.onload = () => {
         setImage(reader.result);
@@ -100,6 +103,7 @@ const AddEditForm = function ({
     }
     mutate(formData);
     actions.setSubmitting(false);
+    navigate('/posts');
   };
 
   return (

@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import Container from '@mui/material/Container';
@@ -51,6 +52,7 @@ const EditProfileForm = function ({
   const [cropper, setCropper] = useState();
   const [croppedImage, setCroppedImage] = useState();
   const [filename, setFilename] = useState();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -95,6 +97,7 @@ const EditProfileForm = function ({
       mutateAvatar(formData);
     }
     actions.setSubmitting(false);
+    navigate(`/users/${id}`);
   };
 
   return (

@@ -1,12 +1,11 @@
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const { getUserById, getUserByEmail } = require("./user");
+const { getUserById, getUserByEmail, checkPassword } = require("./user");
 const {
   create,
   getByToken,
   deleteByToken,
 } = require("../services/store/session.service");
-const { checkPassword } = require("./user");
 
 const config = require("../services/config");
 

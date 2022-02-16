@@ -2,6 +2,8 @@ const router = require("express").Router();
 const asyncHandler = require("express-async-handler");
 const passport = require("passport");
 const { authorize, refresh, logout, authorizeById } = require("../domain/auth");
+const UnauthorizedException = require("../exceptions/UnauthorizedException");
+const ForbiddenException = require("../exceptions/ForbiddenException");
 
 router.post(
   "/login",
@@ -17,7 +19,7 @@ router.post(
         success: true,
       });
     }
-    res.sendStatus(401);
+    throw UnauthorizedException;
   })
 );
 
@@ -32,7 +34,7 @@ router.post(
         success: true,
       });
     }
-    res.sendStatus(401);
+    throw ForbiddenException;
   })
 );
 
@@ -58,7 +60,7 @@ router.post(
         success: true,
       });
     }
-    res.sendStatus(401);
+    throw UnauthorizedException;
   })
 );
 

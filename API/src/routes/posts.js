@@ -12,6 +12,7 @@ const {
 const { getPostById, getAllPosts } = require("../domain/posts");
 
 const authMiddleware = require("../middlewares/authMiddleware");
+const NotFoundException = require("../exceptions/NotFoundException");
 
 const storage = multer.diskStorage({
   destination: "uploads/postImages",
@@ -37,7 +38,11 @@ router.get(
 router.get(
   "/:Post_ID",
   asyncHandler(async (req, res) => {
-    res.send(await getPostById(req.params.Post_ID));
+    const post = await getPostById(req.params.Post_ID);
+    if (post) {
+      return res.send(post);
+    }
+    throw new NotFoundException("post not found");
   })
 );
 
@@ -78,7 +83,7 @@ router.post(
   upload.single("image"),
   asyncHandler(async (req, res) => {
     db.insert({
-      User_ID: req.body.User_ID,
+      User_ID: req.auth.User_ID,
       Title: req.body.Title,
       Text: req.body.Text,
       Visibility: req.body.Visibility,

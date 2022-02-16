@@ -7,6 +7,8 @@ import UserProfile from '../../components/userProfile';
 import { getUser } from '../users/api/crud';
 import ResponsiveAppBar from '../../components/header/navbar';
 import NotFound from '../../components/errors/notFound';
+import UserFriendsContainer from '../friends';
+import CircleLoader from '../../components/header/circleLoader';
 
 const UserProfileContainer = function () {
   const { id } = useParams();
@@ -26,8 +28,9 @@ const UserProfileContainer = function () {
     <>
       <ResponsiveAppBar />
       <Offset />
-      {isFetching && <div>Loading...</div>}
+      {isFetching && <CircleLoader />}
       <UserProfile user={user} />
+      <UserFriendsContainer />
     </>
   );
 };

@@ -8,6 +8,9 @@ const {
   updateUserById,
   deleteUserById,
   getUserByEmail,
+  getAllUsersWithUniv,
+  getUsersValue,
+  getUserWithUnivById,
 } = require("../services/store/users.service");
 
 module.exports = {
@@ -21,14 +24,29 @@ module.exports = {
     return newUserId;
   },
   getAllUsers: async () => {
-    const users = await getAllUsers();
-    // some additional logic
-    return users;
+    let userData = [];
+    const userValue = await getUsersValue();
+    const user = await getAllUsers();
+    const university = await getAllUsersWithUniv();
+
+    for (let i = 0; i < userValue.count; i++) {
+      userData[i] = {
+        user: {
+          ...user[i],
+          university: university[i],
+        },
+      };
+    }
+
+    return userData;
   },
   getUserById: async (User_ID) => {
     const user = await getUserById(User_ID);
-    // some additional logic
-    return user;
+    const university = await getUserWithUnivById(user.User_ID);
+    return {
+      ...user,
+      university,
+    };
   },
   updateUserById: async (User_ID, data) => {
     await updateUserById(User_ID, data);

@@ -2,6 +2,8 @@ const {
   getPostById,
   getPostWithUserById,
   getAllPosts,
+  getAllPostsWithUsers,
+  getPostsValue,
 } = require("../services/store/posts.service");
 
 module.exports = {
@@ -12,14 +14,27 @@ module.exports = {
   //     return newPostId;
   // },
   getAllPosts: async () => {
-    ////////
-    return await getAllPosts();
+    let postData = [];
+    const postValue = await getPostsValue();
+    const post = await getAllPosts();
+    const user = await getAllPostsWithUsers();
+
+    for (let i = 0; i < postValue.count; i++) {
+      postData[i] = {
+        post: {
+          ...post[i],
+          user: user[i],
+        },
+      };
+    }
+
+    return postData;
   },
   getPostById: async (id) => {
     const post = await getPostById(id);
     const user = await getPostWithUserById(post.User_ID);
     return {
-      post,
+      ...post,
       user,
     };
   },

@@ -4,13 +4,12 @@ const asyncHandler = require("express-async-handler");
 const authMiddleware = require("../middlewares/authMiddleware");
 const multer = require("multer");
 const {
-  getAllUsers,
   getUserAvatar,
-  getUserById,
   createUser,
   updateUserById,
   deleteUserById,
 } = require("../services/store/users.service");
+const { getAllUsers, getUserById } = require("../domain/user");
 
 const storage = multer.diskStorage({
   destination: "uploads/avatars",

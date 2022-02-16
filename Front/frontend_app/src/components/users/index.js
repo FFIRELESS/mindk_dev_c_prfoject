@@ -6,6 +6,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import React from 'react';
 
 const Users = function ({ user }) {
+  const userData = user.user;
+  const universityData = user.user.university;
+
   return (
     <Box margin={1}>
       <Grid item xs={3}>
@@ -13,7 +16,7 @@ const Users = function ({ user }) {
           <CardHeader
             avatar={(
               <Avatar
-                src={`http://localhost:3003/users/${user.User_ID}/avatar`}
+                src={`http://localhost:3003/users/${userData.User_ID}/avatar`}
                 sx={{ width: '10vh', height: '10vh' }}
                 aria-label="username"
               >
@@ -22,32 +25,32 @@ const Users = function ({ user }) {
             )}
             action={(
               <div>
-                <IconButton aria-label="edit" href={`users/${user.User_ID}/edit`}>
+                <IconButton aria-label="edit" href={`users/${userData.User_ID}/edit`}>
                   <EditIcon />
                 </IconButton>
               </div>
             )}
             title={(
               <Typography variant="h6" component="div" color="text.primary">
-                {user.Username}
+                {userData.Username}
               </Typography>
             )}
-            subheader={`UNIVERSITY #${user.University_ID}`}
+            subheader={universityData.University_Title}
           />
           <CardContent>
             <Typography variant="h6" gutterBottom component="div" color="text.primary">
-              {user.Fullname}
+              {userData.Fullname}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {`Email: ${user.Email}`}
+              {`Email: ${userData.Email}`}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {`Phone: ${user.Phone}`}
+              {`Phone: ${userData.Phone}`}
             </Typography>
           </CardContent>
           <Box margin={2}>
             <Button
-              href={`users/${user.User_ID}`}
+              href={`users/${userData.User_ID}`}
               variant="contained"
               color="primary"
               fullWidth
@@ -66,13 +69,18 @@ export default Users;
 
 Users.propTypes = {
   user: PropTypes.shape({
-    User_ID: PropTypes.number.isRequired,
-    University_ID: PropTypes.number.isRequired,
-    Username: PropTypes.string.isRequired,
-    Fullname: PropTypes.string.isRequired,
-    Image: PropTypes.string.isRequired,
-    Email: PropTypes.string.isRequired,
-    Phone: PropTypes.string,
+    user: PropTypes.shape({
+      User_ID: PropTypes.number.isRequired,
+      University_ID: PropTypes.number.isRequired,
+      Username: PropTypes.string.isRequired,
+      Fullname: PropTypes.string.isRequired,
+      Image: PropTypes.string.isRequired,
+      Email: PropTypes.string.isRequired,
+      Phone: PropTypes.string,
+      university: PropTypes.shape({
+        University_Title: PropTypes.string.isRequired,
+      }),
+    }),
   }),
 };
 

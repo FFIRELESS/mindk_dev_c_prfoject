@@ -38,19 +38,18 @@ export const Post = function ({ post }) {
   const [expanded, setExpanded] = React.useState(false);
   const navigate = useNavigate();
 
-  // const { isFetching, data } = useQuery('user', () => getUser(post.User_ID));
-  // console.log(data);
-  // const userData = data.data;
+  const postData = post.post;
+  const userData = post.post.user;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const handleAvatarClick = () => {
-    navigate(`/users/${post.User_ID}`);
+    navigate(`/users/${postData.User_ID}`);
   };
 
-  const postImage = `http://localhost:3003/posts/${post.Post_ID}/image`;
+  const postImage = `http://localhost:3003/posts/${postData.Post_ID}/image`;
 
   return (
     <Box
@@ -63,7 +62,7 @@ export const Post = function ({ post }) {
         <CardHeader
           avatar={(
             <Avatar
-              src={`http://localhost:3003/users/${post.User_ID}/avatar`}
+              src={`http://localhost:3003/users/${postData.User_ID}/avatar`}
               sx={{ bgcolor: red[500] }}
               aria-label="username"
               onClick={handleAvatarClick}
@@ -73,7 +72,7 @@ export const Post = function ({ post }) {
                     )}
           action={(
             <div>
-              <IconButton aria-label="edit" href={`posts/${post.Post_ID}/edit`}>
+              <IconButton aria-label="edit" href={`posts/${postData.Post_ID}/edit`}>
                 <EditIcon />
               </IconButton>
               <IconButton aria-label="settings" disabled>
@@ -81,17 +80,21 @@ export const Post = function ({ post }) {
               </IconButton>
             </div>
                     )}
-          title={`User #${post.User_ID}`}
-          subheader={`${post.Timestamp} • ${post.Visibility}`}
+          title={(
+            <Typography>
+              {userData.Username}
+            </Typography>
+        )}
+          subheader={`${postData.Timestamp} • ${postData.Visibility}`}
         />
         <CardContent>
           <Typography variant="h6" gutterBottom component="div" color="text.primary">
-            {post.Title}
+            {postData.Title}
           </Typography>
           <Typography textAlign="justify" variant="body2" color="text.secondary">
-            {post.Text}
+            {postData.Text}
           </Typography>
-          {post.Image && (
+          {postData.Image && (
           <Box
             paddingTop={3}
           >
@@ -135,12 +138,18 @@ export default Post;
 
 Post.propTypes = {
   post: PropTypes.shape({
-    Post_ID: PropTypes.number.isRequired,
-    User_ID: PropTypes.number.isRequired,
-    Title: PropTypes.string.isRequired,
-    Text: PropTypes.string.isRequired,
-    Timestamp: PropTypes.string.isRequired,
-    Visibility: PropTypes.string.isRequired,
-    Image: PropTypes.string,
+    post: PropTypes.shape({
+      Post_ID: PropTypes.number.isRequired,
+      User_ID: PropTypes.number.isRequired,
+      Title: PropTypes.string.isRequired,
+      Text: PropTypes.string.isRequired,
+      Timestamp: PropTypes.string.isRequired,
+      Visibility: PropTypes.string.isRequired,
+      Image: PropTypes.string,
+      user: PropTypes.shape({
+        Username: PropTypes.string.isRequired,
+        Fullname: PropTypes.string.isRequired,
+      }),
+    }),
   }).isRequired,
 };

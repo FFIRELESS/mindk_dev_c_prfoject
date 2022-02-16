@@ -34,7 +34,7 @@ module.exports = {
     if (session) {
       const user = await getUserById(session.User_ID);
       const accessToken = jwt.sign(
-        { User_id: user.User_ID, Fullname: user.Fullname },
+        { User_ID: user.User_ID, Fullname: user.Fullname },
         config.appKey
       );
       const refreshToken = uuidv4();

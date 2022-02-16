@@ -32,7 +32,12 @@ module.exports = {
   },
   getPostById: async (id) => {
     const post = await getPostById(id);
+
+    if (!post) {
+      return null;
+    }
     const user = await getPostWithUserById(post.User_ID);
+
     return {
       ...post,
       user,

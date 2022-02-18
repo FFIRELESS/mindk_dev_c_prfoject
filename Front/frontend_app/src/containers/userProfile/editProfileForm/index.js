@@ -6,7 +6,6 @@ import {
   editUser, getUser, removeUserAvatar, setUserAvatar,
 } from '../../users/api/crud';
 import NotFound from '../../../components/errors/notFound';
-import ResponsiveAppBar from '../../../components/header/navbar';
 import CircleLoader from '../../../components/header/circleLoader';
 
 const EditProfileContainer = function () {
@@ -39,10 +38,9 @@ const EditProfileContainer = function () {
 
   return (
     <>
-      <ResponsiveAppBar />
       {isFetching && <CircleLoader />}
       <EditProfileForm
-        userData={user}
+        user={user}
         mutateUser={mutateUserData}
         isLoadingUser={loadingUserData}
         mutateAvatar={mutateUserAvatar}

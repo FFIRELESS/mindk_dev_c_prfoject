@@ -43,7 +43,11 @@ const UserProfile = function ({ user }) {
               {user.Username}
             </Typography>
           )}
-          subheader={`UNIVERSITY #${user.University_ID}`}
+          subheader={(
+            <Typography color="text.secondary">
+              {user.university.University_Title}
+            </Typography>
+          )}
         />
         <CardContent>
           <Typography variant="h6" gutterBottom component="div" color="text.primary">
@@ -72,6 +76,9 @@ UserProfile.propTypes = {
     Image: PropTypes.string.isRequired,
     Email: PropTypes.string.isRequired,
     Phone: PropTypes.string,
+    university: PropTypes.shape({
+      University_Title: PropTypes.string.isRequired,
+    }),
   }),
 };
 

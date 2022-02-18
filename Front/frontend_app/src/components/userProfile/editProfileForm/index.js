@@ -2,14 +2,17 @@ import PropTypes from 'prop-types';
 import {
   Avatar,
   Box, Button, Grid, MenuItem,
+  Modal,
 } from '@mui/material';
 import * as Yup from 'yup';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import CircleLoader from '../../header/CircleLoader';
+import Container from '@mui/material/Container';
+import CircleLoader from '../../header/circleLoader';
 
 const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
@@ -49,6 +52,7 @@ const EditProfileForm = function ({
   const [cropper, setCropper] = useState();
   const [croppedImage, setCroppedImage] = useState();
   const [filename, setFilename] = useState();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -93,6 +97,7 @@ const EditProfileForm = function ({
       mutateAvatar(formData);
     }
     actions.setSubmitting(false);
+    navigate(`/users/${id}`);
   };
 
   return (
@@ -164,31 +169,44 @@ const EditProfileForm = function ({
               </Box>
 
               {image && (
-              <Grid
-                margin={1}
-                container
-                alignItems="center"
-                justifyContent="center"
-                maxWidth="50vh"
-                rowSpacing={3}
+              // <Grid
+              //   margin={1}
+              //   container
+              //   alignItems="center"
+              //   justifyContent="center"
+              //   maxWidth="50vh"
+              //   rowSpacing={3}
+              // >
+              //   <Grid item>
+              <Modal
+                open
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
               >
-                <Grid item>
-                  <Cropper
-                    src={image}
-                    minCropBoxWidth={200}
-                    minCropBoxHeight={200}
-                    zoomable={false}
-                    onInitialized={(instance) => setCropper(instance)}
-                    viewMode={1}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button fullWidth variant="contained" onClick={cropImage}>
-                    Crop
-                  </Button>
-                </Grid>
-              </Grid>
+                <Container component="main">
+                  <Grid container justifyContent="center" direction="row" rowSpacing={1}>
+                    <Cropper
+                      src={image}
+                      style={{ maxWidth: '50%' }}
+                      initialAspectRatio={1}
+                      minCropBoxWidth={200}
+                      minCropBoxHeight={200}
+                      zoomable={false}
+                      onInitialized={(instance) => setCropper(instance)}
+                      viewMode={1}
+                    />
+                    <Button fullWidth variant="contained" onClick={cropImage}>
+                      Crop
+                    </Button>
+                    <Button fullWidth variant="contained" onClick={deleteImage}>
+                      Cancel
+                    </Button>
+                  </Grid>
+                </Container>
+              </Modal>
               )}
+              {/* </Grid> */}
+              {/* </Grid> */}
 
               <Box margin={1}>
                 <Grid container marginTop={4} columnSpacing={{ xs: 2 }}>
@@ -255,6 +273,7 @@ const EditProfileForm = function ({
                   <Grid item xs={9}>
                     <Field
                       component={TextField}
+                      disabled
                       fullWidth
                       type="email"
                       name="Email"

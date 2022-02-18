@@ -1,11 +1,11 @@
 import './App.css';
-import { HeaderContainer } from './containers/header';
+import Auth from './containers/auth';
 
 const App = function () {
   return (
     <div className="App">
       <header className="App-header">
-        <HeaderContainer />
+        <Auth />
       </header>
     </div>
   );

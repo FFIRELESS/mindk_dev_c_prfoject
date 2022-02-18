@@ -4,10 +4,10 @@ import React from 'react';
 import EditProfileForm from '../../../components/userProfile/editProfileForm';
 import {
   editUser, getUser, removeUserAvatar, setUserAvatar,
-} from '../../Users/api/crud';
-import NotFound from '../../../components/404/NotFound';
+} from '../../users/api/crud';
+import NotFound from '../../../components/errors/notFound';
 import ResponsiveAppBar from '../../../components/header/navbar';
-import CircleLoader from '../../../components/header/CircleLoader';
+import CircleLoader from '../../../components/header/circleLoader';
 
 const EditProfileContainer = function () {
   const { id } = useParams();
@@ -31,7 +31,7 @@ const EditProfileContainer = function () {
   }
 
   const { isFetching, data } = useQuery('user', () => getUser(id));
-  const user = data?.data[0];
+  const user = data?.data;
 
   if (user === undefined || user.length === 0) {
     return <NotFound />;

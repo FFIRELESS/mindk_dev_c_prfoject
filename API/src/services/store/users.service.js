@@ -23,8 +23,15 @@ module.exports = {
     db
       .select("User.*")
       .from("Friends_n_requests")
-      .join("User", { "User.User_ID": "Friends_n_requests.Out_User_ID" })
-      .where({ In_User_ID: id, Status: "friend" }),
+      .join("User", { "User.User_ID": "Friends_n_requests.In_User_ID" })
+      .where({ Out_User_ID: id, Status: "friend" })
+      .union(
+        db
+          .select("User.*")
+          .from("Friends_n_requests")
+          .join("User", { "User.User_ID": "Friends_n_requests.Out_User_ID" })
+          .where({ In_User_ID: id, Status: "friend" })
+      ),
   updateUserById: (id, data) => db("User").where("User_ID", id).update(data),
   deleteUserById: (id) => db("User").where("User_ID", id).del(),
   getUserByEmail: (email) =>

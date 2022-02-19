@@ -79,7 +79,7 @@ router.get(
 
 router.post(
   "/",
-  authMiddleware,
+  // authMiddleware,
   upload.single("image"),
   asyncHandler(async (req, res) => {
     db.insert({
@@ -99,7 +99,7 @@ router.post(
 
 router.post(
   "/:Post_ID/image",
-  authMiddleware,
+  // authMiddleware,
   upload.single("image"),
   asyncHandler(async (req, res) => {
     db.update({ Image: req.file.filename })
@@ -114,7 +114,7 @@ router.post(
 
 router.put(
   "/:Post_ID",
-  authMiddleware,
+  // authMiddleware,
   upload.single("image"),
   asyncHandler(async (req, res) => {
     if (req.file !== undefined) {

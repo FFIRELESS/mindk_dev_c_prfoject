@@ -9,8 +9,12 @@ const {
   updateUserById,
   deleteUserById,
 } = require("../services/store/users.service");
-const { getAllUsers, getUserById, getUserFriends } = require("../domain/user");
-const NotFoundException = require("../exceptions/NotFoundException");
+const {
+  getAllUsers,
+  getUserById,
+  getUserFriends,
+  getRequests,
+} = require("../domain/user");
 
 const storage = multer.diskStorage({
   destination: "uploads/avatars",
@@ -37,10 +41,7 @@ router.get(
   "/:User_ID",
   asyncHandler(async (req, res) => {
     const user = await getUserById(req.params.User_ID);
-    if (user) {
-      return res.send(user);
-    }
-    throw NotFoundException;
+    return res.send(user);
   })
 );
 
@@ -48,10 +49,15 @@ router.get(
   "/:User_ID/friends",
   asyncHandler(async (req, res) => {
     const friends = await getUserFriends(req.params.User_ID);
-    if (friends[0]) {
-      return res.send(friends);
-    }
-    return null;
+    return res.send(friends);
+  })
+);
+
+router.get(
+  "/:User_ID/requests",
+  asyncHandler(async (req, res) => {
+    const requests = await getRequests(req.params.User_ID);
+    return res.send(requests);
   })
 );
 

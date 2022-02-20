@@ -11,6 +11,7 @@ const {
   getAllUsersWithUniv,
   getUsersValue,
   getUserWithUnivById,
+  getUserFriends,
 } = require("../services/store/users.service");
 
 module.exports = {
@@ -47,6 +48,9 @@ module.exports = {
       ...user,
       university,
     };
+  },
+  getUserFriends: async (User_ID) => {
+    return await getUserFriends(User_ID);
   },
   updateUserById: async (User_ID, data) => {
     await updateUserById(User_ID, data);

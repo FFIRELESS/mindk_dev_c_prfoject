@@ -19,6 +19,12 @@ module.exports = {
       .from("User")
       .join("University", { "User.University_ID": "University.University_ID" })
       .where({ User_ID: id }),
+  getUserFriends: async (id) =>
+    db
+      .select("User.*")
+      .from("Friends_n_requests")
+      .join("User", { "User.User_ID": "Friends_n_requests.Out_User_ID" })
+      .where({ In_User_ID: id, Status: "friend" }),
   updateUserById: (id, data) => db("User").where("User_ID", id).update(data),
   deleteUserById: (id) => db("User").where("User_ID", id).del(),
   getUserByEmail: (email) =>

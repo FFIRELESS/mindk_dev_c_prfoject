@@ -27,7 +27,6 @@ module.exports = {
         },
       };
     }
-
     return postData;
   },
   getPostById: async (id) => {

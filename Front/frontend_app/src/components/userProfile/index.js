@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import {
   Avatar, Box, Card, CardContent, CardHeader, IconButton, Modal, Tooltip, Typography,
@@ -10,10 +10,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditProfileContainer from '../../containers/userProfile/editProfileForm';
 import { modalBoxStyle } from '../../styles/modalStyle';
 import { userProfilePropTypes } from '../../propTypes/userProfilePT';
+import authContext from '../../authContext';
 
 const UserProfile = function ({ user }) {
   const userData = user.user;
   const universityData = user.university;
+
+  const { isLogged, userContext } = useContext(authContext);
+  console.log(isLogged);
+  console.log(userContext);
 
   const [open, setOpen] = useState(false);
 

@@ -20,6 +20,7 @@ module.exports = () => {
             await createUser({
               Fullname: profile.displayName,
               Email: email,
+              Image: profile._json.picture,
             });
             user = await getUserByEmail(email);
           }

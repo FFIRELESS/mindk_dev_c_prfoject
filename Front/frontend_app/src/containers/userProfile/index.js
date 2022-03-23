@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
@@ -10,8 +10,14 @@ import NotFound from '../../components/errors/notFound';
 import UserFriendsContainer from '../friends';
 import CircleLoader from '../../components/header/circleLoader';
 
+import AuthContext from '../../authContext';
+
 const UserProfileContainer = function () {
   const { id } = useParams();
+
+  const [userData, setUserData] = useState({ isLogged: false, user: { id: 2, username: 'username' } });
+  setUserData({ isLogged: true, user: { id: 3, username: 'default' } });
+
   const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
   if (!id.match(/^\d+$/)) {
@@ -25,13 +31,13 @@ const UserProfileContainer = function () {
     return <NotFound />;
   }
   return (
-    <>
+    <AuthContext.Provider value={userData}>
       <ResponsiveAppBar />
       <Offset />
       {isFetching && <CircleLoader />}
       <UserProfile user={user} />
       <UserFriendsContainer />
-    </>
+    </AuthContext.Provider>
   );
 };
 

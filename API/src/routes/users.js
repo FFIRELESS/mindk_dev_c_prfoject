@@ -75,7 +75,7 @@ router.get(
 
 router.post(
   "/:User_ID/avatar",
-  authMiddleware,
+  // authMiddleware,
   upload.single("avatar"),
   asyncHandler(async (req, res) => {
     await db
@@ -91,7 +91,7 @@ router.post(
 
 router.post(
   "/",
-  authMiddleware,
+  // authMiddleware,
   asyncHandler(async (req, res) => {
     await createUser(req.body);
     return res.status(201).send("Created successfully");
@@ -100,7 +100,7 @@ router.post(
 
 router.put(
   "/:User_ID",
-  authMiddleware,
+  // authMiddleware,
   asyncHandler(async (req, res) => {
     await updateUserById(req.params.User_ID, req.body);
     return res.status(201).send("Updated successfully");

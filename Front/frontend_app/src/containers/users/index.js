@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import { getUsers } from './api/crud';
 import Users from '../../components/users';
 import ResponsiveAppBar from '../../components/header/navbar';
+import CircleLoader from '../../components/header/circleLoader';
 
 const UsersContainer = function () {
   const { isFetching, data } = useQuery('users', () => getUsers());
@@ -16,7 +17,7 @@ const UsersContainer = function () {
     <>
       <ResponsiveAppBar />
       <Offset />
-      {isFetching && <div>Loading...</div>}
+      {isFetching && <CircleLoader />}
       <Grid
         container
         direction="row"

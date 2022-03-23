@@ -34,8 +34,8 @@ module.exports = {
       userData[i] = {
         user: {
           ...user[i],
-          university: university[i],
         },
+        university: university[i],
       };
     }
 
@@ -45,7 +45,7 @@ module.exports = {
     const user = await getUserById(User_ID);
     const university = await getUserWithUnivById(user.User_ID);
     return {
-      ...user,
+      user,
       university,
     };
   },

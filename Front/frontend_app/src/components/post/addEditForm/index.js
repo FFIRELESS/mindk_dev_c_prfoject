@@ -1,73 +1,26 @@
 import React, { useState } from 'react';
-import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { serialize } from 'object-to-formdata';
+
+import {
+  Box, Button, CardMedia, Grid, MenuItem,
+} from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 
-import {
-  Box, Button, CardMedia, Grid,
-} from '@mui/material';
-import PropTypes from 'prop-types';
-// import CircleLoader from '../../header/CircleLoader';
-import { serialize } from 'object-to-formdata';
 import { handleImageError } from '../../../config/componentHandlers';
-import FormikAutocomplete from '../../FormikAutocomplete';
+// import FormikAutocomplete from '../../FormikAutocomplete';
+import { visibilityVars } from '../../userProfile/editProfileForm/visibilityOptions';
+import { postFormSchema } from './yup.validation.schema';
+import { postFormPropTypes } from '../../../propTypes/postFormPT';
 
 const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
 const AddEditForm = function ({
   postData, mutate, isAddPostForm,
 }) {
-  const schema = Yup.object().shape({
-    User_ID: Yup.number().typeError('User must be a number').required(),
-    Title: Yup.string('Title must not be empty').max(125, 'Too Long!').required(),
-    Text: Yup.string('Text must not be empty').required(),
-    Visibility: Yup.string('Visibility must not be empty').required(),
-    // Visibility: Yup.object().shape({
-    //   value: Yup.string(),
-    //   label: Yup.string(),
-    // }).typeError('Visibility must not be empty').required(),
-  });
-
-  // const visibilityVars = [
-  //   {
-  //     value: 'none',
-  //     label: 'None',
-  //   },
-  //   {
-  //     value: 'friends',
-  //     label: 'Friends',
-  //   },
-  //   {
-  //     value: 'all',
-  //     label: 'All',
-  //   },
-  // ];
-
-  const optionsAutocomplete = [
-    {
-      value: 'None',
-      label: 'None',
-    },
-    {
-      value: 'Friends',
-      label: 'Friends',
-    },
-    {
-      value: 'All',
-      label: 'All',
-    },
-  ];
-
-  // in deployment
-  // const
-  //   {
-  //     mutate: rmPostImage,
-  //   } = useMutation(() => removePostImage(id));
-
   const [image, setImage] = useState();
   const [filename, setFilename] = useState();
-
   const navigate = useNavigate();
 
   let postImagePath;
@@ -77,6 +30,11 @@ const AddEditForm = function ({
   } else {
     postImagePath = `http://localhost:3003/posts/${postData.Post_ID}/image`;
   }
+  // in deployment
+  // const
+  //   {
+  //     mutate: rmPostImage,
+  //   } = useMutation(() => removePostImage(id));
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -113,17 +71,13 @@ const AddEditForm = function ({
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ minHeight: '90vh' }}
     >
       <Grid>
-        {/* {isLoading && <CircleLoader />} */}
-
         <Box margin={1}><h1>{isAddPostForm ? 'ADD POST' : 'EDIT POST'}</h1></Box>
-
         <Formik
           onSubmit={onFormSubmit}
           initialValues={postData}
-          validationSchema={schema}
+          validationSchema={postFormSchema}
           validateOnBlur={false}
         >
           {({ isSubmitting, isValid }) => (
@@ -140,32 +94,32 @@ const AddEditForm = function ({
                     />
                   </Grid>
                   <Grid item xs={6}>
-                    {/* <Field */}
-                    {/* component={TextField} */}
-                    {/* fullWidth */}
-                    {/* type="text" */}
-                    {/* name="Visibility" */}
-                    {/* label="Visibility" */}
-                    {/* helperText="Please Enter Visibility" */}
-                    {/* select */}
-                    {/* variant="standard" */}
-                    {/* InputLabelProps={{ */}
-                    {/*   shrink: true, */}
-                    {/* }} */}
-                    {/* > */}
-                    {/* {visibilityVars.map((option) => ( */}
-                    {/*   <MenuItem key={option.value} value={option.value}> */}
-                    {/*     {option.label} */}
-                    {/*   </MenuItem> */}
-                    {/* ))} */}
-                    {/* </Field> */}
                     <Field
-                      component={FormikAutocomplete}
+                      component={TextField}
+                      fullWidth
+                      type="text"
                       name="Visibility"
                       label="Visibility"
                       helperText="Please Enter Visibility"
-                      options={optionsAutocomplete}
-                    />
+                      select
+                      variant="standard"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    >
+                      {visibilityVars.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                    {/* <Field */}
+                    {/*  component={FormikAutocomplete} */}
+                    {/*  name="Visibility" */}
+                    {/*  label="Visibility" */}
+                    {/*  helperText="Please Enter Visibility" */}
+                    {/*  options={visibilityVars} */}
+                    {/* /> */}
                   </Grid>
                 </Grid>
               </Box>
@@ -179,13 +133,7 @@ const AddEditForm = function ({
                   helperText="Please Enter Post Title"
                 />
               </Box>
-              <Box
-                margin={1}
-                sx={{
-                  width: 500,
-                  maxWidth: '100%',
-                }}
-              >
+              <Box margin={1}>
                 <Field
                   component={TextField}
                   fullWidth
@@ -203,7 +151,7 @@ const AddEditForm = function ({
                 </Box>
               ) : (
                 <Box margin={1}>
-                  <Grid container maxWidth="20vh">
+                  <Grid container maxWidth="10vh">
                     <CardMedia
                       component="img"
                       image={postImagePath}
@@ -219,31 +167,17 @@ const AddEditForm = function ({
                 </Button>
               </Box>
 
-              <Grid container columnSpacing={{ xs: 1 }}>
-                <Grid item xs={8}>
-                  <Button
-                    sx={{ margin: 1 }}
-                    variant="contained"
-                    color="primary"
-                    disabled={isSubmitting || !isValid}
-                    type="submit"
-                    fullWidth
-                  >
-                    Submit
-                  </Button>
-                </Grid>
-                <Grid item xs={3.6}>
-                  <Button
-                    href="/posts"
-                    sx={{ margin: 1 }}
-                    variant="contained"
-                    color="secondary"
-                    fullWidth
-                  >
-                    Back
-                  </Button>
-                </Grid>
-              </Grid>
+              <Box margin={1}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={isSubmitting || !isValid}
+                  type="submit"
+                  fullWidth
+                >
+                  Submit
+                </Button>
+              </Box>
             </Form>
           )}
         </Formik>
@@ -254,15 +188,4 @@ const AddEditForm = function ({
 
 export default AddEditForm;
 
-AddEditForm.propTypes = {
-  postData: PropTypes.shape({
-    Post_ID: PropTypes.number,
-    User_ID: PropTypes.number,
-    Title: PropTypes.string,
-    Text: PropTypes.string,
-    Timestamp: PropTypes.string,
-    Visibility: PropTypes.string,
-  }).isRequired,
-  isAddPostForm: PropTypes.bool.isRequired,
-  mutate: PropTypes.func.isRequired,
-};
+AddEditForm.propTypes = postFormPropTypes;

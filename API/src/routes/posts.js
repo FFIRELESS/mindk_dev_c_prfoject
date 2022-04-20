@@ -12,6 +12,7 @@ const {
 const { getPostById, getAllPosts } = require("../domain/posts");
 
 const authMiddleware = require("../middlewares/authMiddleware");
+const aclMiddleware = require("../middlewares/aclMiddleware");
 const NotFoundException = require("../exceptions/NotFoundException");
 
 const storage = multer.diskStorage({
@@ -114,7 +115,16 @@ router.post(
 
 router.put(
   "/:Post_ID",
-  // authMiddleware,
+  authMiddleware,
+  aclMiddleware([
+    {
+      resource: "post",
+      action: "update",
+      possession: "own",
+      getResource: (req) => getPostById(req.params.Post_ID),
+      isOwn: (resource, userId) => resource.User_ID === userId,
+    },
+  ]),
   upload.single("image"),
   asyncHandler(async (req, res) => {
     if (req.file !== undefined) {

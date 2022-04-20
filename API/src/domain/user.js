@@ -38,7 +38,6 @@ module.exports = {
         university: university[i],
       };
     }
-
     return userData;
   },
   getUserById: async (User_ID) => {

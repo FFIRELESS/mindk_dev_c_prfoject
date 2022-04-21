@@ -12,7 +12,6 @@ import ErrorBoundary from './components/ErrorBoundary';
 import PostContainer from './containers/post';
 import UserProfileContainer from './containers/userProfile';
 import UsersContainer from './containers/users';
-import AddPostContainer from './containers/post/addPostForm';
 import EditPostFormContainer from './containers/post/editPostForm';
 import EditProfileContainer from './containers/userProfile/editProfileForm';
 import NotFound from './components/errors/notFound';
@@ -32,7 +31,6 @@ ReactDOM.render(
             <Route path="/users" element={<UsersContainer />} />
             <Route path="/users/:id" element={<UserProfileContainer />} />
             <Route path="/users/:id/edit" element={<EditProfileContainer />} />
-            <Route path="/add_post" element={<AddPostContainer />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

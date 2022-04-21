@@ -14,11 +14,27 @@ const parseJwt = (token) => {
 
 const AuthForm = function () {
   const [auth, setAuth] = useState({});
+
   useEffect(() => {
     const localStorageAuth = localStorage.getItem('auth');
     if (localStorageAuth) {
       setAuth(JSON.parse(localStorageAuth));
     }
+  });
+
+  // not working
+  const handleFacebookAuth = useCallback((data) => {
+    axios.post('http://localhost:3003/auth/facebook', {
+      access_token: data.accessToken,
+    }).then((response) => {
+      setAuth({
+        accessToken: response.accessToken,
+        user: parseJwt(response.accessToken),
+      });
+    })
+      .catch((error) => {
+        console.log(error);
+      });
   });
 
   const handleGoogleAuth = useCallback((data) => {
@@ -59,9 +75,10 @@ const AuthForm = function () {
           </Grid>
           <Grid item xs={6}>
             <FacebookLogin
-              appId="1088597931155576"
+              appId="939712300251372"
               fields="name,email,picture"
               size="small"
+              callback={handleFacebookAuth}
             />
           </Grid>
         </Grid>

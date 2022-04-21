@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const { getUserById, getUserByEmail, checkPassword } = require("./user");
+const { getUserByEmail, checkPassword } = require("./user");
 const {
   create,
   getByToken,
@@ -8,6 +8,7 @@ const {
 } = require("../services/store/session.service");
 
 const config = require("../services/config");
+const { getUserById } = require("../services/store/users.service");
 
 module.exports = {
   authorize: async (email, password) => {
@@ -15,7 +16,7 @@ module.exports = {
     if (user) {
       if (checkPassword(password, user.password)) {
         const accessToken = jwt.sign(
-          { User_id: user.User_ID, Fullname: user.Fullname },
+          { User_ID: user.User_ID, Fullname: user.Fullname },
           config.appKey
         );
         const refreshToken = uuidv4();

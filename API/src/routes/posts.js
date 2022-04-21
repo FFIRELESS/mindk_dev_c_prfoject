@@ -84,6 +84,7 @@ router.post(
   upload.single("image"),
   asyncHandler(async (req, res) => {
     db.insert({
+      // auth может вызывать проблему при создании поста через приложение!
       User_ID: req.auth.User_ID,
       Title: req.body.Title,
       Text: req.body.Text,
@@ -165,7 +166,7 @@ router.put(
 
 router.delete(
   "/:Post_ID",
-  authMiddleware,
+  // authMiddleware,
   asyncHandler(async (req, res) => {
     db.where({ Post_ID: req.params.Post_ID })
       .del()
@@ -178,7 +179,7 @@ router.delete(
 
 router.delete(
   "/:Post_ID/image",
-  authMiddleware,
+  // authMiddleware,
   asyncHandler(async (req, res) => {
     db.where({ Post_ID: req.params.Post_ID })
       .update({

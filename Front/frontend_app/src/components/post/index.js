@@ -3,19 +3,19 @@ import { useNavigate } from 'react-router-dom';
 
 import {
   Avatar,
-  Box,
+  Box, Button,
   Card,
   CardActions,
   CardContent,
   CardHeader, CardMedia, Collapse,
-  IconButton, Modal,
+  IconButton, Menu, MenuItem, Modal, Snackbar,
   Typography,
 } from '@mui/material';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import IosShareIcon from '@mui/icons-material/IosShare';
+import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { red } from '@mui/material/colors';
@@ -26,13 +26,36 @@ import { postPropTypes } from '../../propTypes/postPT';
 import EditPostFormContainer from '../../containers/post/editPostForm';
 import { modalBoxStyle } from '../../styles/modalStyle';
 
-export const Post = function ({ post }) {
-  const [expanded, setExpanded] = React.useState(false);
+export const Post = function ({ post, mutate }) {
+  const [expanded, setExpanded] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [isPostDeleted, setPostDeleted] = useState(false);
+
+  const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
 
   const postData = post.post;
   const userData = post.post.user;
+  const likes = post.post.totalLikes;
+
+  const postImage = `http://localhost:3003/posts/${postData.Post_ID}/image`;
+
+  const handleClickSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  const handleReloadPage = () => {
+    window.location.reload();
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -50,7 +73,36 @@ export const Post = function ({ post }) {
     navigate(`/users/${postData.User_ID}`);
   };
 
-  const postImage = `http://localhost:3003/posts/${postData.Post_ID}/image`;
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMenuDelete = () => {
+    handleCloseMenu();
+    handleClickSnackbar();
+    setPostDeleted(true);
+    mutate(postData.Post_ID);
+  };
+
+  const actionSnackbar = (
+    <>
+      <Button size="small" onClick={handleReloadPage}>
+        RELOAD PAGE
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnackbar}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   return (
     <>
@@ -74,12 +126,45 @@ export const Post = function ({ post }) {
                     )}
             action={(
               <div>
-                <IconButton aria-label="edit" onClick={handleEditClick}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton aria-label="settings" disabled>
-                  <MoreVertIcon />
-                </IconButton>
+                {!isPostDeleted
+                && (
+                <div>
+                  <IconButton aria-label="share">
+                    <SendIcon />
+                  </IconButton>
+                  <IconButton aria-label="edit" onClick={handleEditClick}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="settings"
+                    id="basic-button"
+                    aria-controls={openMenu ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={openMenu ? 'true' : undefined}
+                    onClick={handleClickMenu}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={openMenu}
+                    onClose={handleCloseMenu}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                    }}
+                  >
+                    <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
+                  </Menu>
+                </div>
+                )}
+                <Snackbar
+                  open={openSnackbar}
+                  autoHideDuration={6000}
+                  onClose={handleCloseSnackbar}
+                  message="Post deleted"
+                  action={actionSnackbar}
+                />
               </div>
                     )}
             title={(
@@ -108,29 +193,32 @@ export const Post = function ({ post }) {
               </Box>
             )}
           </CardContent>
-          <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <FavoriteBorderIcon />
-            </IconButton>
-            <IconButton aria-label="share">
-              <IosShareIcon />
-            </IconButton>
-            <ExpandMore
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more"
-            >
-              <ExpandMoreIcon />
-            </ExpandMore>
-          </CardActions>
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography paragraph>
-                Comments
-              </Typography>
-            </CardContent>
-          </Collapse>
+          {!isPostDeleted
+              && (
+              <div>
+                <CardActions disableSpacing>
+                  <IconButton aria-label="add to favorites">
+                    <FavoriteBorderIcon />
+                  </IconButton>
+                  {likes}
+                  <ExpandMore
+                    expand={expanded}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
+                    aria-label="show more"
+                  >
+                    <ExpandMoreIcon />
+                  </ExpandMore>
+                </CardActions>
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                  <CardContent>
+                    <Typography paragraph>
+                      Comments
+                    </Typography>
+                  </CardContent>
+                </Collapse>
+              </div>
+              )}
         </Card>
       </Box>
       <Modal open={open}>

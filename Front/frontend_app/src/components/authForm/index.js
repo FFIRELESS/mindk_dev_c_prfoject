@@ -2,7 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 import axios from 'axios';
-import { Box, Grid } from '@mui/material';
+import {
+  Box, Grid, IconButton, Modal,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { modalBoxStyle } from '../../styles/modalStyle';
 
 const parseJwt = (token) => {
   try {
@@ -14,6 +18,7 @@ const parseJwt = (token) => {
 
 const AuthForm = function () {
   const [auth, setAuth] = useState({});
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const localStorageAuth = localStorage.getItem('auth');
@@ -21,6 +26,10 @@ const AuthForm = function () {
       setAuth(JSON.parse(localStorageAuth));
     }
   });
+
+  const handleModalClose = () => {
+    setOpen(false);
+  };
 
   // not working
   const handleFacebookAuth = useCallback((data) => {
@@ -38,6 +47,7 @@ const AuthForm = function () {
   });
 
   const handleGoogleAuth = useCallback((data) => {
+    setOpen(true);
     axios.post('http://localhost:3003/auth/google', {
       access_token: data.accessToken,
     })
@@ -91,6 +101,21 @@ const AuthForm = function () {
       <div>authorized</div>
       <div>{auth.user.User_ID}</div>
       <div>{auth.user.name}</div>
+      <Modal open={open}>
+        <Box sx={modalBoxStyle}>
+          <Box sx={{
+            position: 'absolute',
+            left: '89%',
+            top: '2%',
+          }}
+          >
+            <IconButton onClick={handleModalClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          {/* <EditProfileContainer /> */}
+        </Box>
+      </Modal>
     </div>
   );
 };

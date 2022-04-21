@@ -22,6 +22,14 @@ const UserProfile = function ({ user }) {
 
   const [open, setOpen] = useState(false);
 
+  let avatarUrl;
+
+  if (!userData.Image.match(/^(https:\/\/)/)) {
+    avatarUrl = `http://localhost:3003/users/${userData.User_ID}/avatar`;
+  } else {
+    avatarUrl = userData.Image;
+  }
+
   const handleEditClick = () => {
     setOpen(true);
   };
@@ -42,7 +50,7 @@ const UserProfile = function ({ user }) {
           <CardHeader
             avatar={(
               <Avatar
-                src={`http://localhost:3003/users/${userData.User_ID}/avatar`}
+                src={avatarUrl}
                 sx={{ width: '20vh', height: '20vh' }}
                 aria-label="username"
               >

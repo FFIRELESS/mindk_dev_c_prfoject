@@ -5,11 +5,14 @@ const multer = require("multer");
 
 const {
   getPostComments,
-  getPostLikes,
   getPostImage,
 } = require("../services/store/posts.service");
 
-const { getPostById, getAllPosts } = require("../domain/posts");
+const {
+  getPostById,
+  getAllPosts,
+  getPostLikesById,
+} = require("../domain/posts");
 
 const authMiddleware = require("../middlewares/authMiddleware");
 const aclMiddleware = require("../middlewares/aclMiddleware");
@@ -74,7 +77,7 @@ router.get(
 router.get(
   "/:Post_ID/likes",
   asyncHandler(async (req, res) => {
-    res.send(await getPostLikes(req.params.Post_ID));
+    res.send(await getPostLikesById(req.params.Post_ID));
   })
 );
 

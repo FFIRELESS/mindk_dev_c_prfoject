@@ -15,7 +15,7 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import IosShareIcon from '@mui/icons-material/IosShare';
+import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { red } from '@mui/material/colors';
@@ -38,6 +38,7 @@ export const Post = function ({ post, mutate }) {
 
   const postData = post.post;
   const userData = post.post.user;
+  const likes = post.post.totalLikes;
 
   const postImage = `http://localhost:3003/posts/${postData.Post_ID}/image`;
 
@@ -128,6 +129,9 @@ export const Post = function ({ post, mutate }) {
                 {!isPostDeleted
                 && (
                 <div>
+                  <IconButton aria-label="share">
+                    <SendIcon />
+                  </IconButton>
                   <IconButton aria-label="edit" onClick={handleEditClick}>
                     <EditIcon />
                   </IconButton>
@@ -151,7 +155,6 @@ export const Post = function ({ post, mutate }) {
                     }}
                   >
                     <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
-                    <MenuItem onClick={handleCloseMenu}>Item 2</MenuItem>
                   </Menu>
                 </div>
                 )}
@@ -190,29 +193,32 @@ export const Post = function ({ post, mutate }) {
               </Box>
             )}
           </CardContent>
-          <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <FavoriteBorderIcon />
-            </IconButton>
-            <IconButton aria-label="share">
-              <IosShareIcon />
-            </IconButton>
-            <ExpandMore
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more"
-            >
-              <ExpandMoreIcon />
-            </ExpandMore>
-          </CardActions>
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography paragraph>
-                Comments
-              </Typography>
-            </CardContent>
-          </Collapse>
+          {!isPostDeleted
+              && (
+              <div>
+                <CardActions disableSpacing>
+                  <IconButton aria-label="add to favorites">
+                    <FavoriteBorderIcon />
+                  </IconButton>
+                  {likes}
+                  <ExpandMore
+                    expand={expanded}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
+                    aria-label="show more"
+                  >
+                    <ExpandMoreIcon />
+                  </ExpandMore>
+                </CardActions>
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                  <CardContent>
+                    <Typography paragraph>
+                      Comments
+                    </Typography>
+                  </CardContent>
+                </Collapse>
+              </div>
+              )}
         </Card>
       </Box>
       <Modal open={open}>

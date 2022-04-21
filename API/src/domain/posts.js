@@ -4,6 +4,7 @@ const {
   getAllPosts,
   getAllPostsWithUsers,
   getPostsValue,
+  countPostLikes,
 } = require("../services/store/posts.service");
 
 module.exports = {
@@ -24,6 +25,8 @@ module.exports = {
         post: {
           ...post[i],
           user: user[i],
+          // BAD PERFORMANCE!!!
+          totalLikes: (await countPostLikes(i)).count,
         },
       };
     }
@@ -36,11 +39,18 @@ module.exports = {
       return null;
     }
     const user = await getPostWithUserById(post.User_ID);
+    const likesTotal = await countPostLikes(post.Post_ID);
 
     return {
       ...post,
       user,
+      likesTotal: likesTotal.count,
     };
+  },
+  getPostLikesById: async (id) => {
+    const likesTotal = await countPostLikes(id);
+
+    return likesTotal.count;
   },
   // updateById: async (id, data) => {
   //     await updateById(id, data);

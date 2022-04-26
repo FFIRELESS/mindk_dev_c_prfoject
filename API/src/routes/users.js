@@ -9,7 +9,11 @@ const {
   updateUserById,
   deleteUserById,
 } = require("../services/store/users.service");
-const { getAllUsers, getUserById, getUserFriends } = require("../domain/user");
+const {
+  getAllUsers,
+  getUserById,
+  getUserFriends,
+} = require("../controller/user");
 const NotFoundException = require("../exceptions/NotFoundException");
 
 const storage = multer.diskStorage({

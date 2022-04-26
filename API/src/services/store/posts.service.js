@@ -1,14 +1,14 @@
 const db = require("../db");
 
 module.exports = {
-  getAllPosts: async () => db.select().from("Post").orderBy("Post_ID"),
+  getAllPosts: async () => db.select().from("Post").orderBy("Post_ID", "desc"),
   getPostsValue: async () => db.select().first().count("Post_ID").from("Post"),
   getAllPostsWithUsers: async () =>
     db
       .select("User.Username", "User.Fullname")
       .from("Post")
       .join("User", { "User.User_ID": "Post.User_ID" })
-      .orderBy("Post_ID"),
+      .orderBy("Post_ID", "desc"),
   getPostById: async (id) =>
     db.select().first().from("Post").where({ Post_ID: id }),
   getPostWithUserById: async (id) =>
@@ -32,8 +32,8 @@ module.exports = {
   countPostLikes: async (id) =>
     db
       .select()
-      .first()
       .count("Like_User_ID")
+      .first()
       .from("Post_likes")
       .where({ Post_ID: id }),
 };

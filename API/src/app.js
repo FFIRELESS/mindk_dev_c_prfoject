@@ -1,9 +1,10 @@
+const cors = require("cors");
 const express = require("express");
 const config = require("./services/config");
 const bodyParser = require("body-parser");
-const db = require("./services/db");
-const cors = require("cors");
-const googleStrategy = require("./domain/google.strategy");
+const sequelize = require("./services/db_orm");
+const models = require("./models/modelsRel"); // eslint-disable-line no-unused-vars
+const googleStrategy = require("./services/google.strategy");
 
 const usersRoutes = require("./routes/users");
 const postsRoutes = require("./routes/posts");
@@ -25,12 +26,7 @@ app.use(googleStrategy().passport.initialize());
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
 
-app.use(
-  loggerMiddleware({
-    logTableName: "logs",
-    db,
-  })
-);
+app.use(loggerMiddleware);
 
 app.use("/users", usersRoutes);
 app.use("/posts", postsRoutes);
@@ -41,5 +37,16 @@ app.use("/auth", authRoutes);
 
 app.use(syncErrorHandler);
 
-app.listen(port);
-console.log("Server started at /localhost:" + port);
+const start = async () => {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync({ alter: true });
+
+    app.listen(port);
+    console.log("Server started at /localhost:" + port);
+  } catch (e) {
+    console.log(`Exception: ${e.message}`);
+  }
+};
+
+start();

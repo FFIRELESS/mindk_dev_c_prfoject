@@ -1,5 +1,5 @@
 const ForbiddenException = require("../exceptions/ForbiddenException");
-const { getUserById } = require("../domain/user");
+const { getUserById } = require("../controller/user");
 const { Possession, aclRules } = require("../services/acl.config");
 
 module.exports = (rule) => async (req, res, next) => {

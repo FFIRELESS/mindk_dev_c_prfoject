@@ -1,7 +1,12 @@
 const router = require("express").Router();
 const asyncHandler = require("express-async-handler");
 const passport = require("passport");
-const { authorize, refresh, logout, authorizeById } = require("../domain/auth");
+const {
+  authorize,
+  refresh,
+  logout,
+  authorizeById,
+} = require("../controller/auth");
 const UnauthorizedException = require("../exceptions/UnauthorizedException");
 const ForbiddenException = require("../exceptions/ForbiddenException");
 

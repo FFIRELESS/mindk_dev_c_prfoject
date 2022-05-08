@@ -4,7 +4,7 @@ export const getPosts = async () => apiClient.get('/posts');
 
 export const getPost = async (id) => apiClient.get(`/posts/${id}`);
 
-export const getPostLikes = async (id) => apiClient.get(`/posts/${id}/likes`);
+export const getPostComments = async (id) => apiClient.get(`/comments/${id}/post`);
 
 export const createPost = async (postFormData) => apiClient.post('/posts', postFormData, {
   headers: { 'Content-Type': 'multipart/form-data' },

@@ -1,14 +1,13 @@
 import React from 'react';
 
 import {
-  Avatar, Box, Button, Card, CardContent, CardHeader, Grid, IconButton, Typography,
+  Avatar, Box, Button, Card, CardHeader, Typography,
 } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { userProfilePropTypes } from '../../propTypes/userProfilePT';
 
 const Users = function ({ user }) {
-  const userData = user.user;
-  const universityData = user.university;
+  const userData = { ...user };
+  const universityData = user.University;
 
   let avatarUrl;
 
@@ -19,56 +18,43 @@ const Users = function ({ user }) {
   }
 
   return (
-    <Box margin={1}>
-      <Grid item xs={3}>
-        <Card sx={{ width: '40vh' }}>
-          <CardHeader
-            avatar={(
-              <Avatar
-                src={avatarUrl}
-                sx={{ width: '10vh', height: '10vh' }}
-                aria-label="username"
-              >
-                U
-              </Avatar>
-            )}
-            action={(
-              <div>
-                <IconButton aria-label="edit" disabled>
-                  <MoreVertIcon />
-                </IconButton>
-              </div>
-            )}
-            title={(
-              <Typography variant="h6" component="div" color="text.primary">
-                {userData.Username}
-              </Typography>
-            )}
-            subheader={universityData.University_Title}
-          />
-          <CardContent>
-            <Typography variant="h6" gutterBottom component="div" color="text.primary">
-              {userData.Fullname}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {`Email: ${userData.Email}`}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {`Phone: ${userData.Phone}`}
-            </Typography>
-          </CardContent>
-          <Box margin={2}>
-            <Button
-              href={`users/${userData.User_ID}`}
-              variant="contained"
-              color="primary"
-              fullWidth
+    <Box
+      margin={3}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Card sx={{ width: '80vh', maxWidth: 620 }}>
+        <CardHeader
+          avatar={(
+            <Avatar
+              src={avatarUrl}
+              sx={{ width: '10vh', height: '10vh' }}
+              aria-label="username"
             >
-              GO TO PROFILE
-            </Button>
-          </Box>
-        </Card>
-      </Grid>
+              U
+            </Avatar>
+            )}
+          action={(
+            <Box border={1} justifyContent="center" margin={2}>
+              <Button
+                href={`users/${userData.User_ID}`}
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
+                GO TO PROFILE
+              </Button>
+            </Box>
+            )}
+          title={(
+            <Typography variant="h6" component="div" color="text.primary">
+              {userData.Username}
+            </Typography>
+            )}
+          subheader={universityData.University_Title}
+        />
+      </Card>
     </Box
 >
   );

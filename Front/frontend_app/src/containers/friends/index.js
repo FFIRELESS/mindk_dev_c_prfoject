@@ -40,7 +40,7 @@ const UserFriendsContainer = function () {
                 container
               >
                 {friends.map((friend) => (
-                  <div key={friend.User_ID}>
+                  <div key={friend.id}>
                     <UserFriends friend={friend} />
                   </div>
                 ))}

@@ -8,7 +8,7 @@ const PostLikes = require("./postLikes");
 const Sessions = require("./sessions");
 
 Sessions.belongsTo(User, { as: "User", foreignKey: "User_ID" });
-University.hasMany(User, { as: "Users", foreignKey: "University_ID" });
+University.hasMany(User, { foreignKey: "University_ID" });
 
 Comment.belongsTo(Comment, {
   as: "Repl_to_Comment",
@@ -32,6 +32,7 @@ Post.belongsTo(User, { foreignKey: "User_ID" });
 PostLikes.belongsTo(Post, { foreignKey: "Post_ID" });
 PostLikes.belongsTo(User, { as: "Like_User", foreignKey: "Like_User_ID" });
 
+User.belongsTo(University, { foreignKey: "University_ID" });
 User.hasMany(Comment, { foreignKey: "User_ID" });
 User.hasMany(CommentLikes, {
   as: "Comment_likes",
@@ -42,7 +43,7 @@ User.hasMany(UserFriends, {
   foreignKey: "In_User_ID",
 });
 User.hasMany(UserFriends, {
-  as: "Out_User_Friends_n_requests",
+  as: "Out_Friends_n_requests",
   foreignKey: "Out_User_ID",
 });
 User.hasMany(Post, { foreignKey: "User_ID" });

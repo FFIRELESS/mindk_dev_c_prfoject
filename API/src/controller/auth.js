@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const { getUserByEmail, checkPassword } = require("./user");
+const { getUserByEmail, checkPassword } = require("./users");
 const {
   create,
   getByToken,

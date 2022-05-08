@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { serialize } from 'object-to-formdata';
 
 import {
@@ -9,7 +8,6 @@ import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 
 import { handleImageError } from '../../../config/componentHandlers';
-// import FormikAutocomplete from '../../FormikAutocomplete';
 import { visibilityVars } from '../../userProfile/editProfileForm/visibilityOptions';
 import { postFormSchema } from './yup.validation.schema';
 import { postFormPropTypes } from '../../../propTypes/postFormPT';
@@ -21,7 +19,6 @@ const AddEditForm = function ({
 }) {
   const [image, setImage] = useState();
   const [filename, setFilename] = useState();
-  const navigate = useNavigate();
 
   let postImagePath;
 
@@ -61,7 +58,6 @@ const AddEditForm = function ({
     }
     mutate(formData);
     actions.setSubmitting(false);
-    navigate('/posts');
   };
 
   return (

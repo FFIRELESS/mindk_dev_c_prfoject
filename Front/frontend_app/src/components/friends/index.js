@@ -9,8 +9,12 @@ import { userFriendsPropTypes } from '../../propTypes/userFriendsPT';
 const UserFriends = function ({ friend }) {
   const navigate = useNavigate();
 
+  const friendUser = {
+    ...friend.In_User || friend.Out_User,
+  };
+
   const handleAvatarClick = () => {
-    navigate(`/users/${friend.User_ID}`);
+    navigate(`/users/${friendUser.User_ID}`);
     window.location.reload();
   };
 
@@ -18,7 +22,7 @@ const UserFriends = function ({ friend }) {
     <Box margin={0.5}>
       <Grid container justifyContent="center">
         <Avatar
-          src={`http://localhost:3003/users/${friend.User_ID}/avatar`}
+          src={`http://localhost:3003/users/${friendUser.User_ID}/avatar`}
           sx={{ width: '10vh', height: '10vh' }}
           aria-label="username"
           onClick={handleAvatarClick}
@@ -36,7 +40,7 @@ const UserFriends = function ({ friend }) {
         color="text.primary"
         sx={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
       >
-        {friend.Username}
+        {friendUser.Username}
       </Typography>
     </Box>
   );

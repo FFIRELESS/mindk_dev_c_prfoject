@@ -13,8 +13,8 @@ import { userProfilePropTypes } from '../../propTypes/userProfilePT';
 import authContext from '../../authContext';
 
 const UserProfile = function ({ user }) {
-  const userData = user.user;
-  const universityData = user.university;
+  const userData = { ...user };
+  const universityData = user.University;
 
   const { isLogged, userContext } = useContext(authContext);
   console.log(isLogged);

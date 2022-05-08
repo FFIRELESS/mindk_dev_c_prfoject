@@ -1,25 +1,18 @@
 const router = require("express").Router();
 const db = require("../services/db");
 const asyncHandler = require("express-async-handler");
-const {
-  getAllComments,
-  getCommentLikes,
-} = require("../services/store/comments.service");
+
 const authMiddleware = require("../middlewares/authMiddleware");
+const commentsController = require("../controller/comments");
 
+router.get("/", asyncHandler(commentsController.getAllComments));
+router.get("/:Comment_ID", asyncHandler(commentsController.getCommentById));
 router.get(
-  "/",
-  asyncHandler(async (req, res) => {
-    res.send(await getAllComments());
-  })
+  "/:Post_ID/post",
+  asyncHandler(commentsController.getCommentsByPostId)
 );
 
-router.get(
-  "/:Comment_ID/likes",
-  asyncHandler(async (req, res) => {
-    res.send(await getCommentLikes(req.params.Comment_ID));
-  })
-);
+// TODO: implement methods below into commentsController
 
 router.post(
   "/",

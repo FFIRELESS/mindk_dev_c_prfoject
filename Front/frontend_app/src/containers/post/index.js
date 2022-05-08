@@ -18,7 +18,7 @@ const PostContainer = function () {
       <ResponsiveAppBar />
       <Offset />
       {isFetchingPosts && isLoading && <CircleLoader />}
-      {posts.map((post) => <div key={post.post.Post_ID}><Post post={post} mutate={mutate} /></div>)}
+      {posts.map((post) => <div key={post.Post_ID}><Post post={post} mutate={mutate} /></div>)}
     </>
   );
 };

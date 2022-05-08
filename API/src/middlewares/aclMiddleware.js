@@ -1,5 +1,5 @@
 const ForbiddenException = require("../exceptions/ForbiddenException");
-const { getUserById } = require("../controller/user");
+const { getUserById } = require("../controller/users");
 const { Possession, aclRules } = require("../services/acl.config");
 
 module.exports = (rule) => async (req, res, next) => {
@@ -26,7 +26,7 @@ module.exports = (rule) => async (req, res, next) => {
               isAllow = true;
             } else {
               const resource = await checkRule.getResource(req);
-              if (checkRule.isOwn(resource, user.id)) {
+              if (checkRule.isOwn(resource, user.User_ID)) {
                 isAllow = true;
               }
             }

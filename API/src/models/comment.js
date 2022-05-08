@@ -38,6 +38,10 @@ const Comment = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    created: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   {
     sequelize,

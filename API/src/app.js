@@ -7,6 +7,7 @@ const models = require("./models/modelsRel"); // eslint-disable-line no-unused-v
 const googleStrategy = require("./services/google.strategy");
 
 const usersRoutes = require("./routes/users");
+const userFriendsRoutes = require("./routes/userFriends");
 const postsRoutes = require("./routes/posts");
 const commentsRoutes = require("./routes/comments");
 const commLikesRoutes = require("./routes/commentLikes");
@@ -29,6 +30,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(loggerMiddleware);
 
 app.use("/users", usersRoutes);
+app.use("/user_friends", userFriendsRoutes);
 app.use("/posts", postsRoutes);
 app.use("/comments", commentsRoutes);
 app.use("/comm_likes", commLikesRoutes);

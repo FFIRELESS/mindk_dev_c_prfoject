@@ -8,7 +8,8 @@ import {
   CardActions,
   CardContent,
   CardHeader, CardMedia, Collapse,
-  IconButton, Menu, MenuItem, Modal, Snackbar,
+  IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText,
+  Menu, MenuItem, Modal, Snackbar,
   Typography,
 } from '@mui/material';
 
@@ -36,11 +37,118 @@ export const Post = function ({ post, mutate }) {
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
 
-  const postData = post.post;
-  const userData = post.post.user;
-  const likes = post.post.totalLikes;
+  const postData = { ...post };
+  const userData = post.User;
+
+  const commentsCount = post.Comments.length;
+  let commentsCounter = 0;
+  const likesCount = post.Post_likes.length;
+  const isComments = commentsCount > 0;
 
   const postImage = `http://localhost:3003/posts/${postData.Post_ID}/image`;
+
+  const commentsData = post.Comments.map((comment) => {
+    if (comment === undefined) {
+      return 0;
+    }
+    const commentLikes = comment.Comment_likes.length;
+    const isLastComment = commentsCount === commentsCounter + 1;
+    const isReplied = !!comment.Repl_to_Comment_ID;
+
+    commentsCounter += 1;
+
+    return (
+      <div key={comment.Comment_ID}>
+        <Box>
+          <ListItem dense alignItems="flex-start" key={comment.Comment_ID}>
+            <ListItemAvatar>
+              <Avatar src={`http://localhost:3003/users/${comment.User.User_ID}/avatar`} />
+            </ListItemAvatar>
+            <ListItemText
+              sx={{ width: '60%' }}
+              primary={(
+                <Typography
+                  sx={{ display: 'block' }}
+                  variant="subtitle1"
+                  color="text.primary"
+                >
+                  {comment.User.Username}
+                </Typography>
+              )}
+              secondary={(
+                <Typography
+                  sx={{ display: 'inline' }}
+                  component="span"
+                  variant="body2"
+                  color="text.primary"
+                >
+                  {comment.Text}
+                </Typography>
+                )}
+            />
+            <Box>
+              <IconButton aria-label="like comment">
+                <FavoriteBorderIcon />
+              </IconButton>
+              {commentLikes}
+            </Box>
+          </ListItem>
+          <Box margin={2}>
+            {isReplied && (
+            <Box marginLeft={7}>
+              <Typography
+                variant="subtitle2"
+                color="text.secondary"
+              >
+                Replied to:
+              </Typography>
+              <Box
+                sx={{
+                  overflow: 'hidden',
+                }}
+                maxHeight={54}
+                border={1}
+                borderColor="silver"
+                borderRadius={2}
+              >
+                <ListItemButton disableGutters dense alignItems="flex-start">
+                  <ListItemAvatar>
+                    <Avatar
+                      src={`http://localhost:3003/users/${comment.Repl_to_Comment.User.User_ID}/avatar`}
+                      sx={{ transform: 'scale(0.7)' }}
+                    />
+                  </ListItemAvatar>
+                  <ListItemText
+                    sx={{ width: '60%' }}
+                    primary={(
+                      <Typography
+                        sx={{ display: 'block' }}
+                        variant="subtitle2"
+                        color="text.primary"
+                      >
+                        {comment.Repl_to_Comment.User.Username}
+                      </Typography>
+                          )}
+                    secondary={(
+                      <Typography
+                        sx={{ display: 'inline' }}
+                        variant="caption"
+                        color="text.primary"
+                      >
+                        {comment.Repl_to_Comment.Text}
+                      </Typography>
+                  )}
+                  />
+                </ListItemButton>
+              </Box>
+            </Box>
+            )}
+          </Box>
+          {!isLastComment && (<hr style={{ width: '94%' }} />)}
+        </Box>
+      </div>
+    );
+  });
 
   const handleClickSnackbar = () => {
     setOpenSnackbar(true);
@@ -200,21 +308,42 @@ export const Post = function ({ post, mutate }) {
                   <IconButton aria-label="add to favorites">
                     <FavoriteBorderIcon />
                   </IconButton>
-                  {likes}
-                  <ExpandMore
-                    expand={expanded}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                  >
-                    <ExpandMoreIcon />
-                  </ExpandMore>
+                  {likesCount}
+                  {isComments
+                      && (
+                        <ExpandMore
+                          expand={expanded}
+                          onClick={handleExpandClick}
+                          aria-expanded={expanded}
+                          aria-label="show more"
+                        >
+                          <Typography>
+                            Comments (
+                            {commentsCount}
+                            ):
+                          </Typography>
+                          <ExpandMoreIcon />
+                        </ExpandMore>
+                      )}
                 </CardActions>
+
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                   <CardContent>
-                    <Typography paragraph>
-                      Comments
-                    </Typography>
+                    <Box marginTop="-5%"><h3>Comments:</h3></Box>
+                    <Box
+                      border={1}
+                      borderColor="silver"
+                      borderRadius={2}
+                      maxHeight={300}
+                      alignItems="center"
+                      sx={{
+                        overflow: 'auto',
+                      }}
+                    >
+                      <List>
+                        {commentsData}
+                      </List>
+                    </Box>
                   </CardContent>
                 </Collapse>
               </div>

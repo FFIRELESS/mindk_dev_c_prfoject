@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { useQuery } from 'react-query';
-import { Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { getUsers } from './api/crud';
 import Users from '../../components/users';
@@ -18,13 +17,7 @@ const UsersContainer = function () {
       <ResponsiveAppBar />
       <Offset />
       {isFetching && <CircleLoader />}
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-      >
-        {users.map((user) => <div key={user.user.User_ID}><Users user={user} /></div>)}
-      </Grid>
+      {users.map((user) => <div key={user.User_ID}><Users user={user} /></div>)}
     </>
   );
 };

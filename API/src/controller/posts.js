@@ -3,24 +3,43 @@ const User = require("../models/user");
 const PostLikes = require("../models/postLikes");
 const Comment = require("../models/comment");
 const CommentLikes = require("../models/commentLikes");
+const NotFoundException = require("../exceptions/NotFoundException");
 
 module.exports = {
-  createPost: async (req) => {
+  createPost: async (req, res) => {
+    if (!req.body.User_ID) {
+      return res.send("User_ID does not set");
+    }
+    if (req.body.Title < 1 || !req.body.Title) {
+      return res.send("Short title");
+    }
+    if (
+      !(
+        req.body.Visibility === "all" ||
+        req.body.Visibility === "friends" ||
+        req.body.Visibility === "none"
+      )
+    ) {
+      return res.send("Visibility error");
+    }
+
     const post = new Post({
+      // TODO: if using authMiddleware, req.auth.User_ID needed
+
       User_ID: req.body.User_ID,
       Title: req.body.Title,
       Text: req.body.Text,
       Visibility: req.body.Visibility,
       Image: req.file !== undefined ? req.file.filename : null,
     });
-    return await post.save();
+    await post.save().then(() => {
+      res.send("Post inserting OK");
+    });
   },
-
-  updatePost: async (req) => {
+  updatePost: async (req, res) => {
     let data;
     if (req.file !== undefined) {
       data = {
-        // User_ID: req.body.User_ID,
         Title: req.body.Title,
         Text: req.body.Text,
         Visibility: req.body.Visibility,
@@ -28,42 +47,103 @@ module.exports = {
       };
     } else {
       data = {
-        // User_ID: req.body.User_ID,
         Title: req.body.Title,
         Text: req.body.Text,
         Visibility: req.body.Visibility,
       };
     }
-    return await Post.update(data, { where: { Post_ID: req.params.Post_ID } });
+    await Post.update(data, {
+      where: { Post_ID: req.params.Post_ID },
+    }).then((success) => {
+      if (success[0]) {
+        res.send("Post updating OK");
+      } else {
+        throw new NotFoundException("Post does not exist");
+      }
+    });
   },
-
-  deletePost: async (id) => {
-    return await Post.destroy({ where: { Post_ID: id } });
+  deletePost: async (req, res) => {
+    await Post.destroy({ where: { Post_ID: req.params.Post_ID } }).then(
+      (success) => {
+        if (success) {
+          res.send("Post deleting OK");
+        } else {
+          throw new NotFoundException("Post does not exist");
+        }
+      }
+    );
   },
-
-  deletePostImage: async (id) => {
-    return await Post.update({ Image: null }, { where: { Post_ID: id } });
+  deletePostImage: async (req, res) => {
+    await Post.update(
+      { Image: null },
+      { where: { Post_ID: req.params.Post_ID } }
+    ).then((success) => {
+      if (success[0]) {
+        res.send("Image deleting OK");
+      } else {
+        throw new NotFoundException("Post does not exist");
+      }
+    });
   },
-
-  getAllPosts: async () => {
-    return await Post.findAll({
+  getAllPosts: async (req, res) => {
+    await Post.findAll({
       include: [
         {
           model: User,
           attributes: ["Username", "Fullname", "Image"],
         },
         {
+          model: PostLikes,
+          attributes: ["id"],
+          include: {
+            model: User,
+            as: "Like_User",
+            attributes: ["User_ID", "Username", "Image"],
+          },
+        },
+        {
           model: Comment,
           include: [
             {
               model: User,
-              attributes: ["Username", "Fullname", "Image"],
+              attributes: ["User_ID", "Username", "Image"],
+            },
+            {
+              model: Comment,
+              as: "Repl_to_Comment",
+              attributes: ["Comment_ID", "Text"],
+              include: [
+                {
+                  model: User,
+                  attributes: ["User_ID", "Username", "Image"],
+                },
+              ],
             },
             {
               model: CommentLikes,
-              attributes: ["Liked_by_User_ID"],
+              attributes: ["id"],
+              include: {
+                model: User,
+                as: "Liked_by_User",
+                attributes: ["User_ID", "Username", "Image"],
+              },
             },
           ],
+          order: [["created", "ASC"]],
+        },
+      ],
+      order: [["Timestamp", "DESC"]],
+    }).then((data) => {
+      res.send(data);
+    });
+  },
+  getPostsByUserId: async (req, res) => {
+    await Post.findAll({
+      where: { User_ID: req.params.User_ID },
+      include: [
+        {
+          model: User,
+          attributes: ["Username", "Fullname", "Image"],
         },
         {
           model: PostLikes,
@@ -71,70 +151,48 @@ module.exports = {
         },
       ],
       order: [["Timestamp", "DESC"]],
+    }).then((data) => {
+      res.send(data);
     });
   },
-
-  getPostsByUserId: async (id) => {
-    return await Post.findAll({
-      where: { User_ID: id },
+  getPostById: async (req, res) => {
+    await Post.findByPk(req.params.Post_ID, {
       include: [
         {
           model: User,
           attributes: ["Username", "Fullname", "Image"],
         },
         {
-          model: Comment,
+          model: PostLikes,
+          attributes: ["id"],
           include: [
             {
               model: User,
+              as: "Like_User",
               attributes: ["Username", "Fullname", "Image"],
-            },
-            {
-              model: CommentLikes,
-              attributes: ["Liked_by_User_ID"],
             },
           ],
         },
-        {
-          model: PostLikes,
-          attributes: ["Like_User_ID"],
-        },
       ],
-      order: [["Timestamp", "DESC"]],
+    }).then((data) => {
+      if (data) {
+        return res.send(data);
+      }
+      throw new NotFoundException("post not found");
     });
   },
-
-  getPostById: async (id) => {
-    return await Post.findByPk(id, {
-      include: [
-        {
-          model: User,
-          attributes: ["Username", "Fullname", "Image"],
-        },
-        {
-          model: Comment,
-          include: [
-            {
-              model: User,
-              attributes: ["Username", "Fullname", "Image"],
-            },
-            {
-              model: CommentLikes,
-              attributes: ["Liked_by_User_ID"],
-            },
-          ],
-        },
-        {
-          model: PostLikes,
-          attributes: ["Like_User_ID"],
-        },
-      ],
-    });
-  },
-
-  getPostImage: async (id) => {
-    return await Post.findByPk(id, {
+  getPostImage: async (req, res) => {
+    await Post.findByPk(req.params.Post_ID, {
       attributes: ["Image"],
+    }).then((data) => {
+      if (data === undefined) {
+        res.send("Error");
+        return;
+      }
+      if (data === null || !data.Image) {
+        throw new NotFoundException("Image does not exist");
+      }
+      res.sendFile(data.Image, { root: "uploads/postImages" });
     });
   },
 };

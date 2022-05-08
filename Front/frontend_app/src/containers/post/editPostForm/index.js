@@ -4,8 +4,8 @@ import { useMutation, useQuery } from 'react-query';
 import { editPost, getPost } from '../api/crud';
 import AddEditForm from '../../../components/post/addEditForm';
 import NotFound from '../../../components/errors/notFound';
-import CircleLoader from '../../../components/header/circleLoader';
 import { editPostFormContainerPropTypes } from '../../../propTypes/editPostFormContainerPT';
+import BackDrop from '../../../components/header/backdrop';
 
 const EditPostFormContainer = function ({ id }) {
   const { mutate, isLoading } = useMutation((postFormData) => editPost(id, postFormData));
@@ -20,8 +20,8 @@ const EditPostFormContainer = function ({ id }) {
 
   return (
     <>
-      {isFetching && <CircleLoader />}
-      {isLoading && <CircleLoader />}
+      {isFetching && <BackDrop />}
+      {isLoading && <BackDrop />}
       <AddEditForm
         isAddPostForm={isAddPostForm}
         postData={post}

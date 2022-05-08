@@ -1,20 +1,7 @@
 const router = require("express").Router();
-const db = require("../services/db");
 const asyncHandler = require("express-async-handler");
-const authMiddleware = require("../middlewares/authMiddleware");
 const multer = require("multer");
-const {
-  getUserAvatar,
-  createUser,
-  updateUserById,
-  deleteUserById,
-} = require("../services/store/users.service");
-const {
-  getAllUsers,
-  getUserById,
-  getUserFriends,
-} = require("../controller/user");
-const NotFoundException = require("../exceptions/NotFoundException");
+const usersController = require("../controller/users");
 
 const storage = multer.diskStorage({
   destination: "uploads/avatars",
@@ -30,109 +17,24 @@ const upload = multer({
   },
 });
 
-router.get(
-  "/",
-  asyncHandler(async (req, res) => {
-    res.send(await getAllUsers());
-  })
-);
+router.get("/", asyncHandler(usersController.getAllUsers));
+router.get("/:User_ID", asyncHandler(usersController.getUserById));
+router.get("/:User_ID/avatar", asyncHandler(usersController.getUserAvatar));
 
-router.get(
-  "/:User_ID",
-  asyncHandler(async (req, res) => {
-    const user = await getUserById(req.params.User_ID);
-    if (user) {
-      return res.send(user);
-    }
-    throw NotFoundException;
-  })
-);
-
-router.get(
-  "/:User_ID/friends",
-  asyncHandler(async (req, res) => {
-    const friends = await getUserFriends(req.params.User_ID);
-    if (friends[0]) {
-      return res.send(friends);
-    }
-    return null;
-  })
-);
-
-router.get(
-  "/:User_ID/avatar",
-  asyncHandler(async (req, res) => {
-    const img = await getUserAvatar(req.params.User_ID);
-
-    if (img === undefined) {
-      res.send("Error");
-      return;
-    }
-
-    if (img.Image === null) {
-      res.sendFile("icon.png", { root: "uploads/default" });
-    } else {
-      res.sendFile(img.Image, { root: "uploads/avatars" });
-    }
-  })
-);
+// TODO: needed aclMiddleware and authMiddleware at methods below
 
 router.post(
   "/:User_ID/avatar",
-  // authMiddleware,
   upload.single("avatar"),
-  asyncHandler(async (req, res) => {
-    await db
-      .update({ Image: req.file.filename })
-      .from("User")
-      .where({ User_ID: req.params.User_ID })
-      .then(function () {
-        console.log(req.file);
-        res.end("You new avatar is uploaded");
-      });
-  })
+  asyncHandler(usersController.setUserAvatar)
 );
 
-router.post(
-  "/",
-  // authMiddleware,
-  asyncHandler(async (req, res) => {
-    await createUser(req.body);
-    return res.status(201).send("Created successfully");
-  })
-);
-
-router.put(
-  "/:User_ID",
-  // authMiddleware,
-  asyncHandler(async (req, res) => {
-    await updateUserById(req.params.User_ID, req.body);
-    return res.status(201).send("Updated successfully");
-  })
-);
-
-router.delete(
-  "/:User_ID",
-  authMiddleware,
-  asyncHandler(async (req, res) => {
-    await deleteUserById(req.params.User_ID);
-    return res.status(201).send("Deleted successfully");
-  })
-);
-
+router.post("/", asyncHandler(usersController.createUser));
+router.put("/:User_ID", asyncHandler(usersController.updateUserById));
+router.delete("/:User_ID", asyncHandler(usersController.deleteUserById));
 router.delete(
   "/:User_ID/avatar",
-  authMiddleware,
-  asyncHandler(async (req, res) => {
-    db.where({ User_ID: req.params.User_ID })
-      .update({
-        Image: "default/icon.png",
-      })
-      .from("User")
-      .then(function () {
-        res.send({ success: true, message: "Deleting OK" });
-      });
-  })
+  asyncHandler(usersController.deleteUserAvatarById)
 );
 
 module.exports = router;

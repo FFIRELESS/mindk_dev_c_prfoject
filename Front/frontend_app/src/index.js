@@ -9,13 +9,13 @@ import './index.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
-import PostContainer from './containers/Post';
+import PostContainer from './containers/post';
 import UserProfileContainer from './containers/userProfile';
-import UsersContainer from './containers/Users';
-import AddPostContainer from './containers/Post/AddPostForm';
-import EditPostFormContainer from './containers/Post/EditPostForm';
+import UsersContainer from './containers/users';
+import EditPostFormContainer from './containers/post/editPostForm';
 import EditProfileContainer from './containers/userProfile/editProfileForm';
-import NotFound from './components/404/NotFound';
+import NotFound from './components/errors/notFound';
+import Auth from './containers/auth';
 
 const queryClient = new QueryClient();
 
@@ -31,7 +31,7 @@ ReactDOM.render(
             <Route path="/users" element={<UsersContainer />} />
             <Route path="/users/:id" element={<UserProfileContainer />} />
             <Route path="/users/:id/edit" element={<EditProfileContainer />} />
-            <Route path="/add_post" element={<AddPostContainer />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

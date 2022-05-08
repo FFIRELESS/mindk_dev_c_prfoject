@@ -1,8 +1,10 @@
-module.exports = (options) => (req, res, next) => {
-  const { db, logTableName } = options;
-  db(logTableName)
-    .insert({ method: req.method, path: req.url })
-    .then(() => {
-      next();
-    });
+const Logs = require("../models/logs");
+
+module.exports = (req, res, next) => {
+  const log = new Logs();
+  log.method = req.method;
+  log.path = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+  log.save().then(() => {
+    next();
+  });
 };

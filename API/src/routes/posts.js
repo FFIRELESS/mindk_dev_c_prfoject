@@ -1,79 +1,44 @@
 const router = require("express").Router();
 const asyncHandler = require("express-async-handler");
-const db = require("../services/db");
+const multer = require("multer");
 
-const {
-  getAllPosts,
-  getPostById,
-  getPostComments,
-  getPostLikes,
-} = require("../services/store/posts.service");
+const postsController = require("../controller/posts");
 
-router.get(
+const storage = multer.diskStorage({
+  destination: "uploads/postImages",
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10000000,
+  },
+});
+
+// router.use(authMiddleware);
+// router.use(aclMiddleware);
+
+router.get("/", asyncHandler(postsController.getAllPosts));
+router.get("/:User_ID/user", asyncHandler(postsController.getPostsByUserId));
+router.get("/:Post_ID", asyncHandler(postsController.getPostById));
+router.get("/:Post_ID/image", asyncHandler(postsController.getPostImage));
+
+// TODO: needed aclMiddleware and authMiddleware at methods below
+
+router.post(
   "/",
-  asyncHandler(async (req, res) => {
-    res.send(await getAllPosts());
-  })
+  upload.single("image"),
+  asyncHandler(postsController.createPost)
 );
-
-router.get(
+router.put(
   "/:Post_ID",
-  asyncHandler(async (req, res) => {
-    res.send(await getPostById(req.params.Post_ID));
-  })
+  upload.single("image"),
+  asyncHandler(postsController.updatePost)
 );
-
-router.get(
-  "/:Post_ID/comments",
-  asyncHandler(async (req, res) => {
-    res.send(await getPostComments(req.params.Post_ID));
-  })
-);
-
-router.get(
-  "/:Post_ID/likes",
-  asyncHandler(async (req, res) => {
-    res.send(await getPostLikes(req.params.Post_ID));
-  })
-);
-
-router.post("/", (req, res) => {
-  db.insert({
-    User_ID: req.body.User_ID,
-    Title: req.body.Title,
-    Text: req.body.Text,
-    Visibility: req.body.Visibility,
-  })
-    .into("Post")
-    .then(function () {
-      res.send({ success: true, message: "Inserting OK" });
-    });
-});
-
-router.put("/:Post_ID", (req, res) => {
-  db.where({
-    Post_ID: req.params.Post_ID,
-  })
-    .update({
-      User_ID: req.body.User_ID,
-      Title: req.body.Title,
-      Timestamp: req.body.Timestamp,
-      Text: req.body.Text,
-      Visibility: req.body.Visibility,
-    })
-    .from("Post")
-    .then(function () {
-      res.send({ success: true, message: "Updating OK" });
-    });
-});
-
-router.delete("/:Post_ID", (req, res) => {
-  db.where({ Post_ID: req.params.Post_ID })
-    .del()
-    .from("Post")
-    .then(function () {
-      res.send({ success: true, message: "Deleting OK" });
-    });
-});
+router.delete("/:Post_ID", asyncHandler(postsController.deletePost));
+router.delete("/:Post_ID/image", asyncHandler(postsController.deletePostImage));
 
 module.exports = router;

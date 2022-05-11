@@ -16,7 +16,11 @@ module.exports = {
     const user = new Users(req.body);
 
     await user.save().then(() => {
-      res.send("Created successfully");
+      if (res) {
+        res.send("Created successfully");
+      } else {
+        return 1;
+      }
     });
   },
   getAllUsers: async (req, res) => {
@@ -45,6 +49,22 @@ module.exports = {
         return res.send(data);
       }
       throw new NotFoundException("User not found");
+    });
+  },
+  getUserByEmail: async (email) => {
+    return await Users.findOne({
+      where: { Email: email },
+      include: [
+        {
+          model: University,
+          attributes: ["University_Title"],
+        },
+      ],
+    }).then((data) => {
+      if (data) {
+        return data;
+      }
+      return 0;
     });
   },
   getUserAvatar: async (req, res) => {

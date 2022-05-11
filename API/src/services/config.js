@@ -10,5 +10,8 @@ module.exports = {
   dbDatabase: process.env.DB_DATABASE,
 
   googleClientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+
+  facebookClientID: process.env.FACEBOOK_CLIENT_ID,
+  facebookClientSecret: process.env.FACEBOOK_CLIENT_SECRET,
 };

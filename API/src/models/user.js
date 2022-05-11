@@ -54,6 +54,10 @@ const User = sequelize.define(
       type: DataTypes.STRING(7),
       allowNull: true,
     },
+    role: {
+      type: DataTypes.STRING(5),
+      allowNull: true,
+    },
   },
   {
     sequelize,

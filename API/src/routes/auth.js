@@ -43,30 +43,18 @@ router.post(
   })
 );
 
-router.post(
-  "/logout",
-  asyncHandler(async (req, res) => {
-    await logout(req.body.refreshToken);
-    return res.send({
-      success: true,
-    });
-  })
-);
+router.post("/logout", asyncHandler(logout));
 
 router.post(
   "/google",
   passport.authenticate("google-token", { session: false }),
-  asyncHandler(async (req, res) => {
-    const { accessToken, refreshToken } = await authorizeById(req.user.User_ID);
-    if (accessToken) {
-      return res.send({
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        success: true,
-      });
-    }
-    throw UnauthorizedException;
-  })
+  asyncHandler(authorizeById)
+);
+
+router.post(
+  "/facebook",
+  passport.authenticate("facebook-token", { session: false }),
+  asyncHandler(authorizeById)
 );
 
 module.exports = router;

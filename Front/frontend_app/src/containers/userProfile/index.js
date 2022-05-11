@@ -3,6 +3,7 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+import { Box } from '@mui/material';
 import UserProfile from '../../components/userProfile';
 import { getUser } from '../users/api/crud';
 import ResponsiveAppBar from '../../components/header/navbar';
@@ -39,6 +40,21 @@ const UserProfileContainer = function () {
       <ResponsiveAppBar />
       <Offset />
       {isFetching && <CircleLoader />}
+      <Box
+        marginTop={3}
+        marginBottom={-3}
+        marginLeft={3}
+        marginRight={3}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Box
+          sx={{ width: '80vh', maxWidth: 620 }}
+        >
+          <h1>Profile</h1>
+        </Box>
+      </Box>
       <UserProfile user={user} />
       <UserFriendsContainer />
     </>

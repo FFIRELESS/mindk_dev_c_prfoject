@@ -30,7 +30,7 @@ const EditProfileForm = function ({
   const [filename, setFilename] = useState();
   const navigate = useNavigate();
 
-  const userData = user.user;
+  const userData = { ...user };
   // const universityData = user.university;
 
   const handleChange = (e) => {

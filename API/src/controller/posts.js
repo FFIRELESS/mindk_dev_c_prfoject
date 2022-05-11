@@ -111,7 +111,7 @@ module.exports = {
             {
               model: Comment,
               as: "Repl_to_Comment",
-              attributes: ["Comment_ID", "Text"],
+              attributes: ["Comment_ID", "Text", "created"],
               include: [
                 {
                   model: User,

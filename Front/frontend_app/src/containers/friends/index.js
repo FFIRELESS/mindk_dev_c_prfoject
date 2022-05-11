@@ -27,8 +27,15 @@ const UserFriendsContainer = function () {
         justifyContent="center"
         alignItems="center"
       >
-        <Card sx={{ width: '80vh', maxWidth: 800 }}>
-          <Box marginLeft={3}><h1>Friends</h1></Box>
+        <Card sx={{ width: '80vh', maxWidth: 620 }}>
+          <Box marginLeft={3}>
+            <h1>Friends</h1>
+            <Box marginTop={-2}>
+              Friends total:
+              {' '}
+              { friends.length }
+            </Box>
+          </Box>
           <CardContent>
             <Box
               maxHeight={130}

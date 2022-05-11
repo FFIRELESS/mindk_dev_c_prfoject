@@ -46,7 +46,7 @@ const UserProfile = function ({ user }) {
         justifyContent="center"
         alignItems="center"
       >
-        <Card sx={{ width: '80vh', maxWidth: 800 }}>
+        <Card sx={{ width: '80vh', maxWidth: 620 }}>
           <CardHeader
             avatar={(
               <Avatar

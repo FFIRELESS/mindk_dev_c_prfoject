@@ -7,9 +7,9 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardHeader, CardMedia, Collapse,
+  CardHeader, CardMedia, Collapse, Grid,
   IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText,
-  Menu, MenuItem, Modal, Snackbar,
+  Menu, MenuItem, Modal, Popover, Snackbar,
   Typography,
 } from '@mui/material';
 
@@ -32,123 +32,32 @@ export const Post = function ({ post, mutate }) {
   const [open, setOpen] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElPopover, setAnchorElPopover] = useState(null);
   const [isPostDeleted, setPostDeleted] = useState(false);
 
+  const openPopover = Boolean(anchorElPopover);
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
 
   const postData = { ...post };
+  const postLikes = post.Post_likes;
   const userData = post.User;
 
   const commentsCount = post.Comments.length;
   let commentsCounter = 0;
-  const likesCount = post.Post_likes.length;
+  const likesCount = post.Post_likes.length ? post.Post_likes.length : null;
   const isComments = commentsCount > 0;
 
   const postImage = `http://localhost:3003/posts/${postData.Post_ID}/image`;
+  const postDate = new Date(postData.Timestamp.toString()).toLocaleString('ru');
 
-  const commentsData = post.Comments.map((comment) => {
-    if (comment === undefined) {
-      return 0;
-    }
-    const commentLikes = comment.Comment_likes.length;
-    const isLastComment = commentsCount === commentsCounter + 1;
-    const isReplied = !!comment.Repl_to_Comment_ID;
+  const handlePopoverOpen = (event) => {
+    setAnchorElPopover(event.currentTarget);
+  };
 
-    commentsCounter += 1;
-
-    return (
-      <div key={comment.Comment_ID}>
-        <Box>
-          <ListItem dense alignItems="flex-start" key={comment.Comment_ID}>
-            <ListItemAvatar>
-              <Avatar src={`http://localhost:3003/users/${comment.User.User_ID}/avatar`} />
-            </ListItemAvatar>
-            <ListItemText
-              sx={{ width: '60%' }}
-              primary={(
-                <Typography
-                  sx={{ display: 'block' }}
-                  variant="subtitle1"
-                  color="text.primary"
-                >
-                  {comment.User.Username}
-                </Typography>
-              )}
-              secondary={(
-                <Typography
-                  sx={{ display: 'inline' }}
-                  component="span"
-                  variant="body2"
-                  color="text.primary"
-                >
-                  {comment.Text}
-                </Typography>
-                )}
-            />
-            <Box>
-              <IconButton aria-label="like comment">
-                <FavoriteBorderIcon />
-              </IconButton>
-              {commentLikes}
-            </Box>
-          </ListItem>
-          <Box margin={2}>
-            {isReplied && (
-            <Box marginLeft={7}>
-              <Typography
-                variant="subtitle2"
-                color="text.secondary"
-              >
-                Replied to:
-              </Typography>
-              <Box
-                sx={{
-                  overflow: 'hidden',
-                }}
-                maxHeight={54}
-                border={1}
-                borderColor="silver"
-                borderRadius={2}
-              >
-                <ListItemButton disableGutters dense alignItems="flex-start">
-                  <ListItemAvatar>
-                    <Avatar
-                      src={`http://localhost:3003/users/${comment.Repl_to_Comment.User.User_ID}/avatar`}
-                      sx={{ transform: 'scale(0.7)' }}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{ width: '60%' }}
-                    primary={(
-                      <Typography
-                        sx={{ display: 'block' }}
-                        variant="subtitle2"
-                        color="text.primary"
-                      >
-                        {comment.Repl_to_Comment.User.Username}
-                      </Typography>
-                          )}
-                    secondary={(
-                      <Typography
-                        sx={{ display: 'inline' }}
-                        variant="caption"
-                        color="text.primary"
-                      >
-                        {comment.Repl_to_Comment.Text}
-                      </Typography>
-                  )}
-                  />
-                </ListItemButton>
-              </Box>
-            </Box>
-            )}
-          </Box>
-          {!isLastComment && (<hr style={{ width: '94%' }} />)}
-        </Box>
-      </div>
-    );
-  });
+  const handlePopoverClose = () => {
+    setAnchorElPopover(null);
+  };
 
   const handleClickSnackbar = () => {
     setOpenSnackbar(true);
@@ -211,6 +120,136 @@ export const Post = function ({ post, mutate }) {
       </IconButton>
     </>
   );
+
+  const commentsData = post.Comments.map((comment) => {
+    if (comment === undefined) {
+      return 0;
+    }
+    const commentLikes = comment.Comment_likes.length ? comment.Comment_likes.length : null;
+    const isLastComment = commentsCount === commentsCounter + 1;
+    const isReplied = !!comment.Repl_to_Comment_ID;
+    const commentDate = new Date(comment.created.toString()).toLocaleString('ru');
+    let repliedCommentDate = 'Date error';
+
+    if (isReplied) {
+      repliedCommentDate = new Date(comment.Repl_to_Comment.created.toString())
+        .toLocaleString('ru');
+    }
+
+    commentsCounter += 1;
+
+    return (
+      <div key={comment.Comment_ID}>
+        <Box>
+          <ListItem dense alignItems="flex-start" key={comment.Comment_ID}>
+            <ListItemAvatar>
+              <Avatar src={`http://localhost:3003/users/${comment.User.User_ID}/avatar`} />
+            </ListItemAvatar>
+            <ListItemText
+              sx={{ width: '60%' }}
+              primary={(
+                <div>
+                  <Typography
+                    sx={{ display: 'inline' }}
+                    variant="subtitle1"
+                    color="text.primary"
+                  >
+                    {comment.User.Username}
+                  </Typography>
+                  <Typography
+                    sx={{ display: 'inline' }}
+                    variant="caption"
+                    color="text.secondary"
+                  >
+                    {' • '}
+                    {commentDate}
+                  </Typography>
+                </div>
+                  )}
+              secondary={(
+                <Typography
+                  sx={{ display: 'inline' }}
+                  component="span"
+                  variant="body2"
+                  color="text.primary"
+                >
+                  {comment.Text}
+                </Typography>
+                  )}
+            />
+            <Box>
+              <IconButton aria-label="like comment">
+                <FavoriteBorderIcon />
+              </IconButton>
+              {commentLikes}
+            </Box>
+          </ListItem>
+          <Box margin={2}>
+            {isReplied && (
+              <Box marginLeft={7} marginTop={-2}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  Replied to:
+                </Typography>
+                <Box
+                  sx={{
+                    overflow: 'hidden',
+                  }}
+                  maxHeight={60}
+                  border={1}
+                  borderColor="silver"
+                  borderRadius={2}
+                >
+                  <ListItemButton disableGutters dense alignItems="flex-start">
+                    <ListItemAvatar>
+                      <Avatar
+                        src={`http://localhost:3003/users/${comment.Repl_to_Comment.User.User_ID}/avatar`}
+                        sx={{ transform: 'scale(0.7)' }}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      sx={{ width: '60%' }}
+                      primary={(
+                        <div>
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            variant="subtitle2"
+                            color="text.primary"
+                          >
+                            {comment.Repl_to_Comment.User.Username}
+                          </Typography>
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            variant="caption"
+                            color="text.secondary"
+                          >
+                            {' • '}
+                            {repliedCommentDate}
+                          </Typography>
+                        </div>
+                            )}
+                      secondary={(
+                        <Typography
+                          sx={{ display: 'inline' }}
+                          variant="caption"
+                          color="text.primary"
+                        >
+                          {comment.Repl_to_Comment.Text}
+                        </Typography>
+                            )}
+                    />
+                  </ListItemButton>
+                </Box>
+              </Box>
+            )}
+          </Box>
+          {!isLastComment && (<hr style={{ width: '94%' }} />)}
+        </Box>
+      </div>
+    );
+  });
 
   return (
     <>
@@ -280,7 +319,7 @@ export const Post = function ({ post, mutate }) {
                 {userData.Username}
               </Typography>
         )}
-            subheader={`${postData.Timestamp} • ${postData.Visibility}`}
+            subheader={`${postDate} • ${postData.Visibility}`}
           />
           <CardContent>
             <Typography variant="h6" gutterBottom component="div" color="text.primary">
@@ -305,10 +344,57 @@ export const Post = function ({ post, mutate }) {
               && (
               <div>
                 <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
+                  <IconButton
+                    aria-label="add to favorites"
+                    aria-owns={openPopover ? 'mouse-over-popover' : undefined}
+                    aria-haspopup="true"
+                    onMouseEnter={handlePopoverOpen}
+                    onMouseLeave={handlePopoverClose}
+                  >
                     <FavoriteBorderIcon />
                   </IconButton>
                   {likesCount}
+                  {likesCount && (
+                  <Popover
+                    id="mouse-over-popover"
+                    sx={{
+                      pointerEvents: 'none',
+                    }}
+                    open={openPopover}
+                    anchorEl={anchorElPopover}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                    onClose={handlePopoverClose}
+                    disableRestoreFocus
+                  >
+                    <Box
+                      sx={{
+                        overflow: 'hidden',
+                      }}
+                      maxWidth={303}
+                    >
+                      <Grid
+                        container
+                      >
+                        {postLikes.map((like) => (
+                          <Box key={like.id} margin={0.5}>
+                            <Avatar
+                              sx={{ width: 35, height: 35 }}
+                              src={`http://localhost:3003/users/${like.Like_User.User_ID}/avatar`}
+                            />
+                          </Box>
+                        ))}
+                      </Grid>
+                    </Box>
+                  </Popover>
+                  )}
+
                   {isComments
                       && (
                         <ExpandMore

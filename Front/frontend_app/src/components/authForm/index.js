@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { modalBoxStyle } from '../../styles/modalStyle';
+import config from '../../config/app.config';
 
 const parseJwt = (token) => {
   try {
@@ -65,34 +66,38 @@ const AuthForm = function () {
 
   if (!auth.user) {
     return (
-      <Box>
-        <h1>LOGIN</h1>
-        <Grid
-          container
-          justifyContent="center"
-          direction="row"
-          columnSpacing={{ xs: 2 }}
-        >
-          <Grid item xs={6}>
-            <GoogleLogin
-              clientId="506687723240-a0oprpgj8bq076v7lts8fjiouvta1r4o.apps.googleusercontent.com"
-              onSuccess={handleGoogleAuth}
-              onFailure={(errors) => {
-                console.log(errors);
-              }}
-              cookiePolicy="single_host_origin"
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <FacebookLogin
-              appId="939712300251372"
-              fields="name,email,picture"
-              size="small"
-              callback={handleFacebookAuth}
-            />
-          </Grid>
-        </Grid>
-      </Box>
+      <div className="App">
+        <header className="App-header">
+          <Box>
+            <h1>LOGIN</h1>
+            <Grid
+              container
+              justifyContent="center"
+              direction="row"
+              columnSpacing={{ xs: 2 }}
+            >
+              <Grid item xs={6}>
+                <GoogleLogin
+                  clientId={config.googleClientID}
+                  onSuccess={handleGoogleAuth}
+                  onFailure={(errors) => {
+                    console.log(errors);
+                  }}
+                  cookiePolicy="single_host_origin"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <FacebookLogin
+                  appId={config.facebookAppID}
+                  fields="name,email,picture"
+                  size="small"
+                  callback={handleFacebookAuth}
+                />
+              </Grid>
+            </Grid>
+          </Box>
+        </header>
+      </div>
     );
   }
 

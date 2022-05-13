@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 
 import { userFriendsPropTypes } from '../../propTypes/userFriendsPT';
+// import authContext from '../../authContext';
 
 const UserFriends = function ({ friend }) {
   const navigate = useNavigate();
@@ -13,10 +14,19 @@ const UserFriends = function ({ friend }) {
     ...friend.In_User || friend.Out_User,
   };
 
+  // const userContext = useContext(authContext);
+  // console.log(userContext);
+  //
+  // const isCurrentUser = userContext.id === friendUser.User_ID;
+
   const handleAvatarClick = () => {
     navigate(`/users/${friendUser.User_ID}`);
     window.location.reload();
   };
+
+  // if (isCurrentUser) {
+  //   return (<Box marginLeft={1}>User hide his friends</Box>);
+  // }
 
   return (
     <Box margin={0.5}>

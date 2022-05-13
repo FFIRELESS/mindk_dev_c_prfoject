@@ -11,16 +11,8 @@ import NotFound from '../../components/errors/notFound';
 import UserFriendsContainer from '../friends';
 import CircleLoader from '../../components/header/circleLoader';
 
-// import AuthContext from '../../authContext';
-
 const UserProfileContainer = function () {
   const { id } = useParams();
-
-  // const [userData, setUserData] = useState({
-  // isLogged: false,
-  // user: { id: 2, username: 'username' }
-  // });
-  // setUserData({ isLogged: true, user: { id: 3, username: 'default' } });
 
   const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
@@ -35,7 +27,6 @@ const UserProfileContainer = function () {
     return <NotFound />;
   }
   return (
-  // <AuthContext.Provider value={userData}>
     <>
       <ResponsiveAppBar />
       <Offset />
@@ -58,7 +49,6 @@ const UserProfileContainer = function () {
       <UserProfile user={user} />
       <UserFriendsContainer />
     </>
-  // </AuthContext.Provider>
   );
 };
 

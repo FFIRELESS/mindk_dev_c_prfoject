@@ -90,7 +90,7 @@ module.exports = {
       include: [
         {
           model: User,
-          attributes: ["Username", "Fullname", "Image"],
+          attributes: ["User_ID", "Username", "Image"],
         },
         {
           model: PostLikes,

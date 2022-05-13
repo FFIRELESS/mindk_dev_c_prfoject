@@ -27,7 +27,7 @@ const AddEditForm = function ({
   } else {
     postImagePath = `http://localhost:3003/posts/${postData.Post_ID}/image`;
   }
-  // in deployment
+  // TODO: add removing post image method
   // const
   //   {
   //     mutate: rmPostImage,
@@ -52,7 +52,7 @@ const AddEditForm = function ({
   const onFormSubmit = (data, actions) => {
     actions.setSubmitting(true);
     const formData = serialize(data);
-
+    console.log(data);
     if (image) {
       formData.append('image', dataURLtoBlob(image), filename);
     }
@@ -64,11 +64,11 @@ const AddEditForm = function ({
     <Grid
       container
       spacing={0}
-      direction="column"
+      direction="row"
       alignItems="center"
       justifyContent="center"
     >
-      <Grid>
+      <Grid item xs={20}>
         <Box margin={1}><h1>{isAddPostForm ? 'ADD POST' : 'EDIT POST'}</h1></Box>
         <Formik
           onSubmit={onFormSubmit}
@@ -79,47 +79,6 @@ const AddEditForm = function ({
           {({ isSubmitting, isValid }) => (
             <Form>
               <Box margin={1}>
-                <Grid container columnSpacing={{ xs: 1 }}>
-                  <Grid item xs={6}>
-                    <Field
-                      component={TextField}
-                      type="integer"
-                      name="User_ID"
-                      label="User_ID"
-                      helperText="Please Enter User_ID"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Field
-                      component={TextField}
-                      fullWidth
-                      type="text"
-                      name="Visibility"
-                      label="Visibility"
-                      helperText="Please Enter Visibility"
-                      select
-                      variant="standard"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    >
-                      {visibilityVars.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                    {/* <Field */}
-                    {/*  component={FormikAutocomplete} */}
-                    {/*  name="Visibility" */}
-                    {/*  label="Visibility" */}
-                    {/*  helperText="Please Enter Visibility" */}
-                    {/*  options={visibilityVars} */}
-                    {/* /> */}
-                  </Grid>
-                </Grid>
-              </Box>
-              <Box margin={1}>
                 <Field
                   component={TextField}
                   fullWidth
@@ -128,6 +87,13 @@ const AddEditForm = function ({
                   label="Title"
                   helperText="Please Enter Post Title"
                 />
+                {/* <Field */}
+                {/*  component={FormikAutocomplete} */}
+                {/*  name="Visibility" */}
+                {/*  label="Visibility" */}
+                {/*  helperText="Please Enter Visibility" */}
+                {/*  options={visibilityVars} */}
+                {/* /> */}
               </Box>
               <Box margin={1}>
                 <Field
@@ -140,6 +106,27 @@ const AddEditForm = function ({
                   label="Text"
                   helperText="Please Enter Post Text"
                 />
+              </Box>
+              <Box margin={1}>
+                <Field
+                  component={TextField}
+                  fullWidth
+                  type="text"
+                  name="Visibility"
+                  label="Visibility"
+                  helperText="Please Enter Visibility"
+                  select
+                  variant="standard"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                >
+                  {visibilityVars.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Field>
               </Box>
               {image ? (
                 <Box margin={1}>

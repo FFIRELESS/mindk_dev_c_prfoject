@@ -13,14 +13,14 @@ import { userProfilePropTypes } from '../../propTypes/userProfilePT';
 import authContext from '../../authContext';
 
 const UserProfile = function ({ user }) {
+  const userContext = useContext(authContext);
+
+  const [open, setOpen] = useState(false);
+
   const userData = { ...user };
   const universityData = user.University;
 
-  const { isLogged, userContext } = useContext(authContext);
-  console.log(isLogged);
-  console.log(userContext);
-
-  const [open, setOpen] = useState(false);
+  const isCurrentUser = userContext.id === userData.User_ID;
 
   let avatarUrl;
 
@@ -58,16 +58,18 @@ const UserProfile = function ({ user }) {
               </Avatar>
           )}
             action={(
-              <div>
-                <Tooltip title="Edit">
-                  <IconButton aria-label="edit" onClick={handleEditClick}>
-                    <EditIcon />
+                isCurrentUser && (
+                <div>
+                  <Tooltip title="Edit">
+                    <IconButton aria-label="edit" onClick={handleEditClick}>
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <IconButton aria-label="settings" disabled>
+                    <MoreVertIcon />
                   </IconButton>
-                </Tooltip>
-                <IconButton aria-label="settings" disabled>
-                  <MoreVertIcon />
-                </IconButton>
-              </div>
+                </div>
+                )
           )}
             title={(
               <Typography variant="h4" component="div" color="text.primary">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -16,20 +16,26 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { red } from '@mui/material/colors';
+import { pink, red } from '@mui/material/colors';
+import TextField from '@mui/material/TextField';
 
 import { handleImageError } from '../../config/componentHandlers';
 import { ExpandMore } from '../../styles/expandMoreAnimation';
 import { postPropTypes } from '../../propTypes/postPT';
 import EditPostFormContainer from '../../containers/post/editPostForm';
 import { modalBoxStyle } from '../../styles/modalStyle';
+import authContext from '../../authContext';
 
 export const Post = function ({ post, mutate }) {
+  const userContext = useContext(authContext);
+
   const [expanded, setExpanded] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openSendModal, setOpenSendModal] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElPopover, setAnchorElPopover] = useState(null);
@@ -43,13 +49,16 @@ export const Post = function ({ post, mutate }) {
   const postLikes = post.Post_likes;
   const userData = post.User;
 
-  const commentsCount = post.Comments.length;
-  let commentsCounter = 0;
-  const likesCount = post.Post_likes.length ? post.Post_likes.length : null;
-  const isComments = commentsCount > 0;
-
   const postImage = `http://localhost:3003/posts/${postData.Post_ID}/image`;
   const postDate = new Date(postData.Timestamp.toString()).toLocaleString('ru');
+
+  const commentsCount = post.Comments.length;
+  const likesCount = post.Post_likes.length ? post.Post_likes.length : null;
+  let commentsCounter = 0;
+
+  const isComments = commentsCount > 0;
+  const isCurrentUserLike = postLikes.find((like) => like.Like_User.User_ID === userContext.id);
+  const isCurrentUser = userData.User_ID === userContext.id;
 
   const handlePopoverOpen = (event) => {
     setAnchorElPopover(event.currentTarget);
@@ -79,15 +88,23 @@ export const Post = function ({ post, mutate }) {
   };
 
   const handleEditClick = () => {
-    setOpen(true);
+    setOpenEditModal(true);
   };
 
-  const handleModalClose = () => {
-    setOpen(false);
+  const handleEditModalClose = () => {
+    setOpenEditModal(false);
   };
 
   const handleAvatarClick = () => {
     navigate(`/users/${postData.User_ID}`);
+  };
+
+  const handleSendClick = () => {
+    setOpenSendModal(true);
+  };
+
+  const handleSendModalClose = () => {
+    setOpenSendModal(false);
   };
 
   const handleClickMenu = (event) => {
@@ -125,18 +142,23 @@ export const Post = function ({ post, mutate }) {
     if (comment === undefined) {
       return 0;
     }
-    const commentLikes = comment.Comment_likes.length ? comment.Comment_likes.length : null;
-    const isLastComment = commentsCount === commentsCounter + 1;
-    const isReplied = !!comment.Repl_to_Comment_ID;
+
+    const commentLikesCounter = comment.Comment_likes.length ? comment.Comment_likes.length : null;
+    const commentLikes = comment.Comment_likes;
     const commentDate = new Date(comment.created.toString()).toLocaleString('ru');
     let repliedCommentDate = 'Date error';
+
+    const isLastComment = commentsCount === commentsCounter + 1;
+    const isReplied = !!comment.Repl_to_Comment_ID;
+    const isLikedByCurrentUser = commentLikes
+      .find((like) => like.Liked_by_User.User_ID === userContext.id);
+
+    commentsCounter += 1;
 
     if (isReplied) {
       repliedCommentDate = new Date(comment.Repl_to_Comment.created.toString())
         .toLocaleString('ru');
     }
-
-    commentsCounter += 1;
 
     return (
       <div key={comment.Comment_ID}>
@@ -179,9 +201,14 @@ export const Post = function ({ post, mutate }) {
             />
             <Box>
               <IconButton aria-label="like comment">
+                {!isLikedByCurrentUser && (
                 <FavoriteBorderIcon />
+                )}
+                {isLikedByCurrentUser && (
+                <FavoriteIcon sx={{ color: pink.A400 }} />
+                )}
               </IconButton>
-              {commentLikes}
+              {commentLikesCounter}
             </Box>
           </ListItem>
           <Box margin={2}>
@@ -276,33 +303,37 @@ export const Post = function ({ post, mutate }) {
                 {!isPostDeleted
                 && (
                 <div>
-                  <IconButton aria-label="share">
+                  <IconButton aria-label="share" onClick={handleSendClick}>
                     <SendIcon />
                   </IconButton>
-                  <IconButton aria-label="edit" onClick={handleEditClick}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    aria-label="settings"
-                    id="basic-button"
-                    aria-controls={openMenu ? 'basic-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={openMenu ? 'true' : undefined}
-                    onClick={handleClickMenu}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={openMenu}
-                    onClose={handleCloseMenu}
-                    MenuListProps={{
-                      'aria-labelledby': 'basic-button',
-                    }}
-                  >
-                    <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
-                  </Menu>
+                  {isCurrentUser && (
+                    <>
+                      <IconButton aria-label="edit" onClick={handleEditClick}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="settings"
+                        id="basic-button"
+                        aria-controls={openMenu ? 'basic-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={openMenu ? 'true' : undefined}
+                        onClick={handleClickMenu}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                      <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={openMenu}
+                        onClose={handleCloseMenu}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}
+                      >
+                        <MenuItem onClick={handleMenuDelete}>Delete</MenuItem>
+                      </Menu>
+                    </>
+                  )}
                 </div>
                 )}
                 <Snackbar
@@ -346,14 +377,25 @@ export const Post = function ({ post, mutate }) {
                 <CardActions disableSpacing>
                   <IconButton
                     aria-label="add to favorites"
+                  >
+                    {!isCurrentUserLike && (
+                    <FavoriteBorderIcon />
+                    )}
+                    {isCurrentUserLike && (
+                    <FavoriteIcon sx={{ color: pink.A400 }} />
+                    )}
+                  </IconButton>
+
+                  <Typography
                     aria-owns={openPopover ? 'mouse-over-popover' : undefined}
                     aria-haspopup="true"
+                    variant="subtitle2"
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
                   >
-                    <FavoriteBorderIcon />
-                  </IconButton>
-                  {likesCount}
+                    {likesCount}
+                  </Typography>
+
                   {likesCount && (
                   <Popover
                     id="mouse-over-popover"
@@ -436,7 +478,7 @@ export const Post = function ({ post, mutate }) {
               )}
         </Card>
       </Box>
-      <Modal open={open}>
+      <Modal open={openEditModal}>
         <Box sx={modalBoxStyle}>
           <Box sx={{
             position: 'absolute',
@@ -444,11 +486,35 @@ export const Post = function ({ post, mutate }) {
             top: '2%',
           }}
           >
-            <IconButton onClick={handleModalClose}>
+            <IconButton onClick={handleEditModalClose}>
               <CloseIcon />
             </IconButton>
           </Box>
           <EditPostFormContainer id={postData.Post_ID} />
+        </Box>
+      </Modal>
+      <Modal open={openSendModal}>
+        <Box sx={modalBoxStyle}>
+          <Box sx={{
+            position: 'absolute',
+            left: '89%',
+            top: '2%',
+          }}
+          >
+            <IconButton onClick={handleSendModalClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <Box marginTop={-3}>
+            <h2>Share link:</h2>
+            <TextField
+              name="link"
+              label="Copy this link:"
+              value={`http://localhost:3000/posts/${postData.Post_ID}`}
+              readOnly
+              fullWidth
+            />
+          </Box>
         </Box>
       </Modal>
     </>

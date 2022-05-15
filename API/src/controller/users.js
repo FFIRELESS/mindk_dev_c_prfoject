@@ -78,7 +78,11 @@ module.exports = {
       if (data === null) {
         res.sendFile("icon.png", { root: "uploads/avatars/default" });
       } else {
-        res.sendFile(data.Image, { root: "uploads/avatars" });
+        if (data.Image.match(/^(https:\/\/)/)) {
+          res.send(data.Image);
+        } else {
+          res.sendFile(data.Image, { root: "uploads/avatars" });
+        }
       }
     });
   },

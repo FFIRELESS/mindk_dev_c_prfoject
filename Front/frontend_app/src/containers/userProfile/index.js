@@ -10,6 +10,7 @@ import ResponsiveAppBar from '../../components/header/navbar';
 import NotFound from '../../components/errors/notFound';
 import UserFriendsContainer from '../friends';
 import CircleLoader from '../../components/header/circleLoader';
+import UserRequestsContainer from '../requests';
 
 const UserProfileContainer = function () {
   const { id } = useParams();
@@ -48,6 +49,7 @@ const UserProfileContainer = function () {
       </Box>
       <UserProfile user={user} />
       <UserFriendsContainer />
+      <UserRequestsContainer />
     </>
   );
 };

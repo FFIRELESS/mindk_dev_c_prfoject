@@ -2,11 +2,12 @@ const cors = require("cors");
 const express = require("express");
 const config = require("./services/config");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const sequelize = require("./services/db_orm");
 const passport = require("passport");
 
 require("./models/modelsRel"); // eslint-disable-line no-unused-vars
-require("./services/google.strategy"); // eslint-disable-line no-unused-vars
+require("./services/strategies/google.strategy"); // eslint-disable-line no-unused-vars
 
 const usersRoutes = require("./routes/users");
 const userFriendsRoutes = require("./routes/userFriends");
@@ -22,7 +23,13 @@ const errorHandler = require("./middlewares/errorHandler");
 const app = express();
 const port = config.appPort;
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+  })
+);
+app.use(cookieParser());
 app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(bodyParser.json({ limit: "50mb" }));

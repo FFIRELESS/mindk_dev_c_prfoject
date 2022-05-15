@@ -1,7 +1,8 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { observer } from 'mobx-react-lite';
 import Auth from './containers/auth';
 import ErrorBoundary from './components/ErrorBoundary';
 import PostContainer from './containers/post';
@@ -10,23 +11,16 @@ import UsersContainer from './containers/users';
 import UserProfileContainer from './containers/userProfile';
 import EditProfileContainer from './containers/userProfile/editProfileForm';
 import NotFound from './components/errors/notFound';
-
-import AuthContext from './authContext';
+import Context from './authContext';
 
 const queryClient = new QueryClient();
 
 const App = function () {
-  // eslint-disable-next-line no-unused-vars
-  const [userData, setUserData] = useState({
-    isLogged: true,
-    id: 1,
-    setUserData: () => {},
-  });
+  const store = useContext(Context);
+
   return (
-    <AuthContext.Provider value={userData}>
-      <ErrorBoundary>
-        {/* <div className="App"> */}
-        {/*  <header className="App-header"> */}
+    <ErrorBoundary>
+      <Context.Provider value={store}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <Routes>
@@ -39,12 +33,10 @@ const App = function () {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
-          {/*  </header> */}
-          {/* </div> */}
         </QueryClientProvider>
-      </ErrorBoundary>
-    </AuthContext.Provider>
+      </Context.Provider>
+    </ErrorBoundary>
   );
 };
 
-export default App;
+export default observer(App);

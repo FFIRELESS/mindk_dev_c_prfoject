@@ -192,7 +192,7 @@ module.exports = {
       if (data === null || !data.Image) {
         throw new NotFoundException("Image does not exist");
       }
-      res.sendFile(data.Image, { root: "uploads/postImages" });
+      return res.sendFile(data.Image, { root: "uploads/postImages" });
     });
   },
 };

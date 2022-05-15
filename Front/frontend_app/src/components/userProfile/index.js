@@ -7,28 +7,24 @@ import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CloseIcon from '@mui/icons-material/Close';
 
+import { observer } from 'mobx-react-lite';
 import EditProfileContainer from '../../containers/userProfile/editProfileForm';
 import { modalBoxStyle } from '../../styles/modalStyle';
 import { userProfilePropTypes } from '../../propTypes/userProfilePT';
-import authContext from '../../authContext';
+import Context from '../../authContext';
+import { checkAvatarUrlData } from '../../services/avatarLinkChecker';
 
 const UserProfile = function ({ user }) {
-  const userContext = useContext(authContext);
+  const { store } = useContext(Context);
 
   const [open, setOpen] = useState(false);
 
   const userData = { ...user };
-  const universityData = user.University;
+  const universityData = user?.University;
 
-  const isCurrentUser = userContext.id === userData.User_ID;
+  const isCurrentUser = store.user.User_ID === userData.User_ID;
 
-  let avatarUrl;
-
-  if (!userData.Image.match(/^(https:\/\/)/)) {
-    avatarUrl = `http://localhost:3003/users/${userData.User_ID}/avatar`;
-  } else {
-    avatarUrl = userData.Image;
-  }
+  const avatarUrl = checkAvatarUrlData(userData);
 
   const handleEditClick = () => {
     setOpen(true);
@@ -45,6 +41,7 @@ const UserProfile = function ({ user }) {
         display="flex"
         justifyContent="center"
         alignItems="center"
+        // sx={{ color: 'text.secondary' }}
       >
         <Card sx={{ width: '80vh', maxWidth: 620 }}>
           <CardHeader
@@ -57,6 +54,11 @@ const UserProfile = function ({ user }) {
                 U
               </Avatar>
           )}
+            title={(
+              <Typography variant="h5" color="text.primary">
+                {userData.Username}
+              </Typography>
+            )}
             action={(
                 isCurrentUser && (
                 <div>
@@ -71,14 +73,9 @@ const UserProfile = function ({ user }) {
                 </div>
                 )
           )}
-            title={(
-              <Typography variant="h4" component="div" color="text.primary">
-                {userData.Username}
-              </Typography>
-          )}
             subheader={(
               <Typography color="text.secondary">
-                {universityData.University_Title}
+                {universityData?.University_Title}
               </Typography>
           )}
           />
@@ -89,9 +86,11 @@ const UserProfile = function ({ user }) {
             <Typography variant="body2" color="text.secondary">
               {`Email: ${userData.Email}`}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {`Phone: ${userData.Phone}`}
-            </Typography>
+            {userData.Phone && (
+              <Typography variant="body2" color="text.secondary">
+                {`Phone: ${userData.Phone}`}
+              </Typography>
+            )}
           </CardContent>
         </Card>
       </Box>
@@ -114,6 +113,6 @@ const UserProfile = function ({ user }) {
   );
 };
 
-export default UserProfile;
+export default observer(UserProfile);
 
 UserProfile.propTypes = userProfilePropTypes;

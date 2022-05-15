@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,30 +15,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { Modal, Slide, useScrollTrigger } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
+import { observer } from 'mobx-react-lite';
 import { modalBoxStyle } from '../../styles/modalStyle';
 import AddPostContainer from '../../containers/post/addPostForm';
-
-const pages = [
-  {
-    name: 'Users',
-    link: '/users',
-  },
-  {
-    name: 'Posts',
-    link: '/posts',
-  },
-];
-
-const settings = [
-  {
-    name: 'Profile',
-    link: '/users/1',
-  },
-  {
-    name: 'Logout',
-    link: '',
-  },
-];
+import Context from '../../authContext';
+import { checkAvatarUrlData } from '../../services/avatarLinkChecker';
 
 const HideOnScroll = function (props) {
   const { children, window } = props;
@@ -57,12 +39,35 @@ const ResponsiveAppBar = function (props) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
+  const navigate = useNavigate();
+
+  const { store } = useContext(Context);
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      store.checkAuth().then(() => {});
+    }
+  }, []);
+
+  const { isLogged } = store;
+  const currentUser = store.user;
+  let currentUserAvatar = '';
+
+  if (currentUser?.Image !== undefined && currentUser?.Image !== null) {
+    currentUserAvatar = checkAvatarUrlData(currentUser);
+  }
+
   const handleModalClose = () => {
     setOpen(false);
   };
 
   const handleNewPostClick = () => {
+    setAnchorElNav(null);
     setOpen(true);
+  };
+
+  const handleLogoutClick = () => {
+    store.logout().then(() => navigate('/'));
   };
 
   const handleOpenNavMenu = (event) => {
@@ -84,7 +89,7 @@ const ResponsiveAppBar = function (props) {
     <>
       <HideOnScroll {...props}>
         <AppBar position="fixed">
-          <Container maxWidth="xl">
+          <Container maxWidth="md">
             <Toolbar disableGutters>
               <Typography
                 variant="h6"
@@ -92,12 +97,12 @@ const ResponsiveAppBar = function (props) {
                 component="div"
                 sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
               >
-                LOGO
+                <b>LINE.network</b>
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                 <IconButton
-                  size="large"
+                  size="small"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
@@ -124,21 +129,14 @@ const ResponsiveAppBar = function (props) {
                     display: { xs: 'block', md: 'none' },
                   }}
                 >
-                  {pages.map((page) => (
-                    <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                      <Button
-                        key={page.name}
-                        href={page.link}
-                        onClick={handleCloseNavMenu}
-                      >
-                        {page.name}
-                      </Button>
-                    </MenuItem>
-                  ))}
-                  <MenuItem key="new_post" onClick={handleCloseNavMenu}>
-                    <Button onClick={handleNewPostClick}>
-                      NEW POST
-                    </Button>
+                  <MenuItem onClick={() => navigate('/users')}>
+                    Users
+                  </MenuItem>
+                  <MenuItem onClick={() => navigate('/posts')}>
+                    Posts
+                  </MenuItem>
+                  <MenuItem onClick={handleNewPostClick}>
+                    New post
                   </MenuItem>
                 </Menu>
               </Box>
@@ -148,28 +146,38 @@ const ResponsiveAppBar = function (props) {
                 component="div"
                 sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
               >
-                LOGO
+                <b>LINE.network</b>
               </Typography>
               <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                {pages.map((page) => (
-                  <Button
-                    key={page.name}
-                    href={page.link}
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
-                  >
-                    {page.name}
-                  </Button>
-                ))}
-                <Button onClick={handleNewPostClick} sx={{ my: 2, color: 'white', display: 'block' }}>
-                  NEW POST
+                <Button
+                  href="/users"
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Users
                 </Button>
+                <Button
+                  href="/posts"
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Posts
+                </Button>
+                {isLogged && (
+                <Button
+                  onClick={handleNewPostClick}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  New post
+                </Button>
+                )}
               </Box>
 
+              {isLogged && (
               <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
+                <Tooltip title="Settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                    <Avatar alt="Remy Sharp" src={currentUserAvatar} />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -188,19 +196,23 @@ const ResponsiveAppBar = function (props) {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting.name} onClick={handleCloseNavMenu}>
-                      <Button
-                        key={setting.name}
-                        href={setting.link}
-                        onClick={handleCloseNavMenu}
-                      >
-                        {setting.name}
-                      </Button>
-                    </MenuItem>
-                  ))}
+                  <MenuItem onClick={() => navigate(`/users/${currentUser.User_ID}`)}>
+                    Profile
+                  </MenuItem>
+                  <MenuItem key="logout" onClick={handleLogoutClick}>
+                    Logout
+                  </MenuItem>
                 </Menu>
               </Box>
+              )}
+              {!isLogged && (
+                <Button
+                  onClick={() => navigate('/')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Log in
+                </Button>
+              )}
             </Toolbar>
           </Container>
         </AppBar>
@@ -224,7 +236,7 @@ const ResponsiveAppBar = function (props) {
   );
 };
 
-export default ResponsiveAppBar;
+export default observer(ResponsiveAppBar);
 
 HideOnScroll.propTypes = {
   children: PropTypes.element.isRequired,

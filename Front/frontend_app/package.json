@@ -19,6 +19,8 @@
     "dotenv": "^16.0.1",
     "formik": "^2.2.9",
     "formik-mui": "^4.0.0-alpha.3",
+    "mobx": "^6.5.0",
+    "mobx-react-lite": "^3.4.0",
     "object-to-formdata": "^4.4.1",
     "path-to-regexp": "^6.2.0",
     "prop-types": "^15.8.1",

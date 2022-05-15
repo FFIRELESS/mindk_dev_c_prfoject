@@ -1,8 +1,8 @@
 import { createContext } from 'react';
+import Store from './store/store';
 
-const authContext = createContext({
-  isLogged: false,
-  id: 0,
-});
+const store = new Store();
 
-export default authContext;
+const Context = createContext({ store });
+
+export default Context;

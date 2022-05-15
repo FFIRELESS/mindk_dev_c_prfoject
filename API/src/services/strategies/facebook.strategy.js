@@ -1,8 +1,8 @@
 const passport = require("passport");
-const config = require("./config");
+const config = require("../config");
 
 const FacebookTokenStrategy = require("passport-facebook-token");
-const { getUserByEmail, createUser } = require("../controller/users");
+const { getUserByEmail, createUser } = require("../../controller/users");
 
 passport.use(
   new FacebookTokenStrategy(

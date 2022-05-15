@@ -80,14 +80,14 @@ module.exports = {
       ],
     }).then((data) => {
       if (!data[0] && !dataF[0]) {
-        throw new NotFoundException("Friends not found");
+        res.send([]);
       }
       res.send(data.concat(dataF));
     });
   },
   getInRequestsById: async (req, res) => {
     await UserFriends.findAll({
-      attributes: ["In_User_ID", "Out_User_ID", "Status"],
+      attributes: ["id", "In_User_ID", "Out_User_ID", "Status"],
       where: { In_User_ID: req.params.User_ID, Status: "request" },
       as: "Friends_n_requests",
       include: [
@@ -111,14 +111,14 @@ module.exports = {
       ],
     }).then((data) => {
       if (!data[0]) {
-        throw new NotFoundException("Requests not found");
+        return res.send([]);
       }
       res.send(data);
     });
   },
   getOutRequestsById: async (req, res) => {
     await UserFriends.findAll({
-      attributes: ["In_User_ID", "Out_User_ID", "Status"],
+      attributes: ["id", "In_User_ID", "Out_User_ID", "Status"],
       where: { Out_User_ID: req.params.User_ID, Status: "request" },
       as: "Friends_n_requests",
       include: [
@@ -142,7 +142,7 @@ module.exports = {
       ],
     }).then((data) => {
       if (!data[0]) {
-        throw new NotFoundException("Requests not found");
+        return res.send([]);
       }
       res.send(data);
     });

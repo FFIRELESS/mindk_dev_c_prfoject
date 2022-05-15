@@ -7,7 +7,7 @@ import { userProfilePropTypes } from '../../propTypes/userProfilePT';
 
 const Users = function ({ user }) {
   const userData = { ...user };
-  const universityData = user.University;
+  const universityData = user?.University;
 
   let avatarUrl;
 
@@ -52,7 +52,7 @@ const Users = function ({ user }) {
               {userData.Username}
             </Typography>
             )}
-          subheader={universityData.University_Title}
+          subheader={universityData?.University_Title}
         />
       </Card>
     </Box

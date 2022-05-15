@@ -1,16 +1,10 @@
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const { getUserByEmail, checkPassword } = require("./users");
-const {
-  create,
-  getByToken,
-  deleteByToken,
-} = require("../services/store/session.service");
 
 const config = require("../services/config");
-const { getUserById } = require("../services/store/users.service");
 const Users = require("../models/user");
-const { createSession } = require("./sessions");
+const { createSession, getByToken, deleteByToken } = require("./sessions");
 const UnauthorizedException = require("../exceptions/UnauthorizedException");
 
 module.exports = {
@@ -23,7 +17,7 @@ module.exports = {
           config.appKey
         );
         const refreshToken = uuidv4();
-        await create({
+        await createSession({
           User_ID: user.User_ID,
           token: refreshToken,
         });
@@ -32,23 +26,32 @@ module.exports = {
     }
     return {};
   },
-  refresh: async (refreshToken) => {
+  refresh: async (req, res) => {
+    let { refreshToken } = req.cookies;
+
     const session = await getByToken(refreshToken);
-    if (session) {
-      const user = await getUserById(session.User_ID);
-      const accessToken = jwt.sign(
-        { User_ID: user.User_ID, Fullname: user.Fullname },
-        config.appKey
-      );
-      const refreshToken = uuidv4();
-      await deleteByToken(session.token);
-      await create({
-        User_ID: session.User_ID,
-        token: refreshToken,
-      });
-      return { accessToken, refreshToken };
+
+    if (!session) {
+      throw UnauthorizedException;
     }
-    return {};
+
+    const user = (await Users.findByPk(session.User_ID)).dataValues;
+
+    const accessToken = jwt.sign(
+      { User_ID: user.User_ID, Fullname: user.Fullname },
+      config.appKey
+    );
+    refreshToken = uuidv4();
+    await deleteByToken(session.token);
+    await createSession({
+      User_ID: session.User_ID,
+      token: refreshToken,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    return res.send({ accessToken, refreshToken, user });
   },
 
   // TODO: rewrite methods above same as all at routes/controllers
@@ -68,6 +71,10 @@ module.exports = {
         });
 
         if (accessToken) {
+          res.cookie("refreshToken", refreshToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+          });
           return res.send({
             accessToken: accessToken,
             refreshToken: refreshToken,
@@ -80,7 +87,7 @@ module.exports = {
     });
   },
   logout: async (req, res) => {
-    await deleteByToken(req.body.refreshToken).then(() => {
+    await deleteByToken(req.cookies.refreshToken).then(() => {
       res.send({ success: true });
     });
   },

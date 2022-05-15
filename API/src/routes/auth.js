@@ -8,7 +8,6 @@ const {
   authorizeById,
 } = require("../controller/auth");
 const UnauthorizedException = require("../exceptions/UnauthorizedException");
-const ForbiddenException = require("../exceptions/ForbiddenException");
 
 router.post(
   "/login",
@@ -28,21 +27,7 @@ router.post(
   })
 );
 
-router.post(
-  "/refresh",
-  asyncHandler(async (req, res) => {
-    const { accessToken, refreshToken } = await refresh(req.body.refreshToken);
-    if (accessToken) {
-      return res.send({
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        success: true,
-      });
-    }
-    throw ForbiddenException;
-  })
-);
-
+router.get("/refresh", asyncHandler(refresh));
 router.post("/logout", asyncHandler(logout));
 
 router.post(

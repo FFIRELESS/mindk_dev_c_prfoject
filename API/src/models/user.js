@@ -40,23 +40,23 @@ const User = sequelize.define(
     },
     FName_Visibility: {
       type: DataTypes.STRING(7),
-      allowNull: true,
+      defaultValue: "all",
     },
     Email_Visibility: {
       type: DataTypes.STRING(7),
-      allowNull: true,
+      defaultValue: "all",
     },
     Phone_Visibility: {
       type: DataTypes.STRING(7),
-      allowNull: true,
+      defaultValue: "all",
     },
     University_Visibility: {
       type: DataTypes.STRING(7),
-      allowNull: true,
+      defaultValue: "all",
     },
     role: {
       type: DataTypes.STRING(5),
-      allowNull: true,
+      defaultValue: "user",
     },
   },
   {

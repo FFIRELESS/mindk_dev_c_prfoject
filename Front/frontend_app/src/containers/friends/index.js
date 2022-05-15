@@ -12,15 +12,16 @@ import CircleLoader from '../../components/header/circleLoader';
 const UserFriendsContainer = function () {
   const { id } = useParams();
 
-  const { isFetching, data } = useQuery('userFriends', () => getUserFriends(id));
-  const friends = data?.data;
+  const { isFetching: isFetchFriends, data: friendsData } = useQuery('userFriends', () => getUserFriends(id));
+
+  const friends = friendsData?.data;
 
   if (friends === undefined || friends.length === 0) {
     return null;
   }
   return (
     <>
-      {isFetching && <CircleLoader />}
+      {isFetchFriends && <CircleLoader />}
       <Box
         margin={3}
         display="flex"
@@ -53,21 +54,6 @@ const UserFriendsContainer = function () {
                 ))}
               </Grid>
             </Box>
-            {/* <ImageList */}
-            {/*  sx={{ */}
-            {/*    gridAutoFlow: 'column', */}
-            {/*    gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr)) !important', */}
-            {/*    gridAutoColumns: 'minmax(120px, 1fr)', */}
-            {/*  }} */}
-            {/* > */}
-            {/*  {friends.map((friend) => ( */}
-            {/*    <ImageListItem> */}
-            {/*      <div key={friend.User_ID}> */}
-            {/*        <UserFriends friend={friend} /> */}
-            {/*      </div> */}
-            {/*    </ImageListItem> */}
-            {/*  ))} */}
-            {/* </ImageList> */}
           </CardContent>
         </Card>
       </Box>

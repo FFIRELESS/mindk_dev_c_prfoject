@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const multer = require("multer");
 
 const postsController = require("../controller/posts");
+// const authMiddleware = require("../middlewares/authMiddleware");
 
 const storage = multer.diskStorage({
   destination: "uploads/postImages",
@@ -18,15 +19,14 @@ const upload = multer({
   },
 });
 
-// router.use(authMiddleware);
-// router.use(aclMiddleware);
-
 router.get("/", asyncHandler(postsController.getAllPosts));
 router.get("/:User_ID/user", asyncHandler(postsController.getPostsByUserId));
 router.get("/:Post_ID", asyncHandler(postsController.getPostById));
 router.get("/:Post_ID/image", asyncHandler(postsController.getPostImage));
 
 // TODO: needed aclMiddleware and authMiddleware at methods below
+// router.use(authMiddleware);
+// router.use(aclMiddleware);
 
 router.post(
   "/",

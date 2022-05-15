@@ -21,6 +21,7 @@ import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { pink, red } from '@mui/material/colors';
+import AvatarGroup from '@mui/material/AvatarGroup';
 import TextField from '@mui/material/TextField';
 
 import { handleImageError } from '../../config/componentHandlers';
@@ -424,14 +425,16 @@ export const Post = function ({ post, mutate }) {
                       <Grid
                         container
                       >
-                        {postLikes.map((like) => (
-                          <Box key={like.id} margin={0.5}>
+                        <AvatarGroup total={likesCount}>
+                          {postLikes.map((like) => (
                             <Avatar
+                              key={like.id}
                               sx={{ width: 35, height: 35 }}
                               src={`http://localhost:3003/users/${like.Like_User.User_ID}/avatar`}
+                              alt={like.Username}
                             />
-                          </Box>
-                        ))}
+                          ))}
+                        </AvatarGroup>
                       </Grid>
                     </Box>
                   </Popover>

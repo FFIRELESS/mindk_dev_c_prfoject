@@ -1,8 +1,8 @@
 const passport = require("passport");
-const config = require("./config");
+const config = require("../config");
 
 const GoogleTokenStrategy = require("passport-google-token").Strategy;
-const { createUser, getUserByEmail } = require("../controller/users");
+const { createUser, getUserByEmail } = require("../../controller/users");
 
 passport.use(
   new GoogleTokenStrategy(
@@ -18,6 +18,7 @@ passport.use(
           body: {
             Fullname: profile.displayName,
             Email: email,
+            Username: email,
             Image: profile._json.picture,
           },
         });
@@ -25,6 +26,7 @@ passport.use(
       }
       return done(null, {
         User_ID: user.User_ID,
+        Username: user.Username,
         Fullname: user.Fullname,
         Email: user.Email,
       });

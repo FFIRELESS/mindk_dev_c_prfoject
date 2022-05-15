@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-cropper';
 
 import {
-  Avatar,
-  Box, Button, Grid, MenuItem,
+  Avatar, Badge,
+  Box, Button, Grid, IconButton, MenuItem,
   Modal, Typography,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 
+import { styled } from '@mui/material/styles';
+import CloseIcon from '@mui/icons-material/Close';
 import CircleLoader from '../../header/circleLoader';
 import { modalBoxStyle } from '../../../styles/modalStyle';
 import { userFormSchema } from './yup.validation.schema';
@@ -18,19 +21,23 @@ import { visibilityVars } from './visibilityOptions';
 import { profileFormPropTypes } from '../../../propTypes/profileFormPT';
 
 import 'cropperjs/dist/cropper.css';
+import { checkAvatarUrlData } from '../../../services/avatarLinkChecker';
 
 const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
 const EditProfileForm = function ({
-  user, mutateUser, mutateAvatar, removeAvatar, isLoadingUser, isLoadingAvatar, id,
+  user, mutateUser, mutateAvatar, removeAvatar, isLoadingUser, isLoadingAvatar,
 }) {
   const [image, setImage] = useState();
   const [cropper, setCropper] = useState();
   const [croppedImage, setCroppedImage] = useState();
   const [filename, setFilename] = useState();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+
+  // TODO: needed changing university at autocomplete
 
   const userData = { ...user };
+  const userAvatar = checkAvatarUrlData(userData);
   // const universityData = user.university;
 
   const handleChange = (e) => {
@@ -49,6 +56,12 @@ const EditProfileForm = function ({
     }
   };
 
+  const SmallAvatar = styled(Avatar)(({ theme }) => ({
+    width: 35,
+    height: 35,
+    border: `2px solid ${theme.palette.background.paper}`,
+  }));
+
   const cropImage = () => {
     if (typeof cropper !== 'undefined') {
       setCroppedImage(cropper.getCroppedCanvas().toDataURL());
@@ -61,10 +74,10 @@ const EditProfileForm = function ({
     setImage(null);
   };
 
+  // TODO: needed implementing a method below
   const rmUserAvatar = () => {
     setImage(null);
     removeAvatar();
-    // in deployment
   };
 
   const onFormSubmit = (data, actions) => {
@@ -75,78 +88,71 @@ const EditProfileForm = function ({
       formData.append('avatar', dataURLtoBlob(croppedImage), filename);
       mutateAvatar(formData);
     }
-    actions.setSubmitting(false);
-    navigate(`/users/${id}`);
+    if (!isLoadingUser && !isLoadingAvatar) {
+      actions.setSubmitting(false);
+      actions.submitForm().then(() => window.location.reload());
+    }
   };
 
   return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Grid>
-        {isLoadingUser && isLoadingAvatar && <CircleLoader />}
+    <Box>
+      {isLoadingUser && isLoadingAvatar && <CircleLoader />}
 
-        <Box margin={1}><h1>EDIT PROFILE</h1></Box>
+      <Box margin={1}><h1>EDIT PROFILE</h1></Box>
 
-        <Formik
-          onSubmit={onFormSubmit}
-          initialValues={userData}
-          validationSchema={userFormSchema}
-        >
-          {({ isSubmitting, isValid }) => (
-            <Form>
-              <Box margin={1}>
-                <Grid container>
-                  <Grid item xs={4}>
-                    <Avatar
-                      src={!croppedImage ? `http://localhost:3003/users/${userData.User_ID}/avatar` : croppedImage}
-                      sx={{ width: '15vh', height: '15vh' }}
-                      aria-label="username"
-                    >
-                      U
-                    </Avatar>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Grid
-                      container
-                      minHeight="100%"
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="center"
-                      columnSpacing={{ xs: 1 }}
-                    >
-                      <Grid item>
-                        {!image
-                        && (
-                        <Button variant="contained" component="label">
-                          Choose image
+      <Formik
+        onSubmit={onFormSubmit}
+        initialValues={userData}
+        validationSchema={userFormSchema}
+      >
+        {({ isSubmitting, isValid }) => (
+          <Form>
+            <Box margin={1}>
+              <Grid container alignItems="center" direction="row">
+                <Grid item xs={4.7}>
+                  <Box>
+                    <Badge
+                      overlap="circular"
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      badgeContent={(
+                        <IconButton component="label">
                           <input type="file" hidden onChange={handleChange} />
-                        </Button>
-                        )}
-                      </Grid>
-                      <Grid item>
-                        <Button variant="contained" onClick={rmUserAvatar} disabled>
-                          Delete image
-                        </Button>
-                      </Grid>
-                      {image
-                        && (
-                        <Grid item>
-                          <Button variant="contained" onClick={deleteImage}>
-                            Clear image
-                          </Button>
-                        </Grid>
-                        )}
-                    </Grid>
-                  </Grid>
+                          <SmallAvatar><EditIcon /></SmallAvatar>
+                        </IconButton>
+                    )}
+                    >
+                      <Avatar
+                        src={!croppedImage ? userAvatar : croppedImage}
+                        sx={{ width: 100, height: 100 }}
+                        aria-label="username"
+                      />
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          left: '60%',
+                          top: '-12%',
+                        }}
+                      >
+                        <IconButton onClick={rmUserAvatar} disabled>
+                          <SmallAvatar><CloseIcon /></SmallAvatar>
+                        </IconButton>
+                      </Box>
+                    </Badge>
+                  </Box>
                 </Grid>
-              </Box>
+                <Grid item xs={7.3}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    type="text"
+                    name="Username"
+                    label="Username"
+                  />
+                </Grid>
+              </Grid>
+            </Box>
 
-              {image && (
+            {image && (
               <Modal
                 open
                 aria-labelledby="modal-modal-title"
@@ -174,155 +180,144 @@ const EditProfileForm = function ({
                   </Button>
                 </Box>
               </Modal>
-              )}
+            )}
 
-              <Box margin={1}>
-                <Grid container marginTop={4} columnSpacing={{ xs: 2 }}>
-                  <Grid item xs={9}>
-                    <Field
-                      component={TextField}
-                      fullWidth
-                      type="text"
-                      name="Username"
-                      label="Username"
-                      helperText=" "
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Field
-                      component={TextField}
-                      fullWidth
-                      type="integer"
-                      name="University_ID"
-                      label="University_ID"
-                      helperText=" "
-                    />
-                  </Grid>
+            <Box margin={1}>
+              <Grid container marginTop={4} columnSpacing={{ xs: 2 }}>
+                <Grid item xs={12}>
+                  {/* <Field */}
+                  {/*  component={TextField} */}
+                  {/*  fullWidth */}
+                  {/*  type="integer" */}
+                  {/*  name="University_ID" */}
+                  {/*  label="University_ID" */}
+                  {/*  helperText=" " */}
+                  {/* /> */}
                 </Grid>
-              </Box>
+              </Grid>
+            </Box>
 
-              <Box margin={1}>
-                <Grid container columnSpacing={{ xs: 2 }}>
-                  <Grid item xs={9}>
-                    <Field
-                      component={TextField}
-                      fullWidth
-                      type="text"
-                      name="Fullname"
-                      label="Fullname"
-                      helperText=" "
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Field
-                      component={TextField}
-                      fullWidth
-                      type="text"
-                      name="FName_Visibility"
-                      label="FName_Visibility"
-                      select
-                      variant="standard"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    >
-                      {visibilityVars.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                  </Grid>
+            <Box margin={1}>
+              <Grid container columnSpacing={{ xs: 2 }}>
+                <Grid item xs={8}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    type="text"
+                    name="Fullname"
+                    label="Fullname"
+                    helperText=" "
+                  />
                 </Grid>
-              </Box>
-
-              <Box margin={1}>
-                <Grid container columnSpacing={{ xs: 2 }}>
-                  <Grid item xs={9}>
-                    <Field
-                      component={TextField}
-                      disabled
-                      fullWidth
-                      type="email"
-                      name="Email"
-                      label="Email"
-                      helperText=" "
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Field
-                      component={TextField}
-                      fullWidth
-                      type="text"
-                      name="Email_Visibility"
-                      label="Email_Visibility"
-                      select
-                      variant="standard"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    >
-                      {visibilityVars.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                  </Grid>
+                <Grid item xs={4}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    type="text"
+                    name="FName_Visibility"
+                    label="Visibility"
+                    select
+                    variant="standard"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  >
+                    {visibilityVars.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Field>
                 </Grid>
-              </Box>
+              </Grid>
+            </Box>
 
-              <Box margin={1}>
-                <Grid container columnSpacing={{ xs: 2 }}>
-                  <Grid item xs={9}>
-                    <Field
-                      component={TextField}
-                      fullWidth
-                      type="text"
-                      name="Phone"
-                      label="Phone"
-                      helperText=" "
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Field
-                      component={TextField}
-                      fullWidth
-                      type="text"
-                      name="Phone_Visibility"
-                      label="Phone_Visibility"
-                      select
-                      variant="standard"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    >
-                      {visibilityVars.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                  </Grid>
+            <Box margin={1}>
+              <Grid container columnSpacing={{ xs: 2 }}>
+                <Grid item xs={8}>
+                  <Field
+                    component={TextField}
+                    disabled
+                    fullWidth
+                    type="email"
+                    name="Email"
+                    label="Email"
+                    helperText=" "
+                  />
                 </Grid>
-              </Box>
+                <Grid item xs={4}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    type="text"
+                    name="Email_Visibility"
+                    label="Visibility"
+                    select
+                    variant="standard"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  >
+                    {visibilityVars.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </Grid>
+              </Grid>
+            </Box>
 
-              <Box margin={1}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={isSubmitting || !isValid}
-                  type="submit"
-                  fullWidth
-                >
-                  Submit
-                </Button>
-              </Box>
-            </Form>
-          )}
-        </Formik>
-      </Grid>
-    </Grid>
+            <Box margin={1}>
+              <Grid container columnSpacing={{ xs: 2 }}>
+                <Grid item xs={8}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    type="text"
+                    name="Phone"
+                    label="Phone"
+                    helperText=" "
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    type="text"
+                    name="Phone_Visibility"
+                    label="Visibility"
+                    select
+                    variant="standard"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  >
+                    {visibilityVars.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </Grid>
+              </Grid>
+            </Box>
+
+            <Box margin={1}>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={isSubmitting || !isValid}
+                type="submit"
+                fullWidth
+              >
+                Submit
+              </Button>
+            </Box>
+          </Form>
+        )}
+      </Formik>
+    </Box>
   );
 };
 

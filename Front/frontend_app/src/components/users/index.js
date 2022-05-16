@@ -5,6 +5,8 @@ import {
 } from '@mui/material';
 import { userProfilePropTypes } from '../../propTypes/userProfilePT';
 
+const config = require('../../config/app.config');
+
 const Users = function ({ user }) {
   const userData = { ...user };
   const universityData = user?.University;
@@ -12,7 +14,7 @@ const Users = function ({ user }) {
   let avatarUrl;
 
   if (!userData.Image.match(/^(https:\/\/)/)) {
-    avatarUrl = `http://localhost:3003/users/${userData.User_ID}/avatar`;
+    avatarUrl = `${config.apiURL}/users/${userData.User_ID}/avatar`;
   } else {
     avatarUrl = userData.Image;
   }

@@ -7,6 +7,8 @@ import {
 import { userFriendsPropTypes } from '../../propTypes/userFriendsPT';
 // import authContext from '../../authContext';
 
+const config = require('../../config/app.config');
+
 const UserFriends = function ({ friend }) {
   const navigate = useNavigate();
 
@@ -32,7 +34,7 @@ const UserFriends = function ({ friend }) {
     <Box margin={0.5}>
       <Grid container justifyContent="center">
         <Avatar
-          src={`http://localhost:3003/users/${friendUser.User_ID}/avatar`}
+          src={`${config.apiURL}/users/${friendUser.User_ID}/avatar`}
           sx={{ width: '10vh', height: '10vh' }}
           aria-label="username"
           onClick={handleAvatarClick}

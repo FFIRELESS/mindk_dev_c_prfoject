@@ -31,6 +31,8 @@ import EditPostFormContainer from '../../containers/post/editPostForm';
 import { modalBoxStyle } from '../../styles/modalStyle';
 import authContext from '../../authContext';
 
+const config = require('../../config/app.config');
+
 export const Post = function ({ post, mutate }) {
   const userContext = useContext(authContext);
 
@@ -50,7 +52,7 @@ export const Post = function ({ post, mutate }) {
   const postLikes = post.Post_likes;
   const userData = post.User;
 
-  const postImage = `http://localhost:3003/posts/${postData.Post_ID}/image`;
+  const postImage = `${config.apiURL}/posts/${postData.Post_ID}/image`;
   const postDate = new Date(postData.Timestamp.toString()).toLocaleString('ru');
 
   const commentsCount = post.Comments.length;
@@ -166,7 +168,7 @@ export const Post = function ({ post, mutate }) {
         <Box>
           <ListItem dense alignItems="flex-start" key={comment.Comment_ID}>
             <ListItemAvatar>
-              <Avatar src={`http://localhost:3003/users/${comment.User.User_ID}/avatar`} />
+              <Avatar src={`${config.apiURL}/users/${comment.User.User_ID}/avatar`} />
             </ListItemAvatar>
             <ListItemText
               sx={{ width: '60%' }}
@@ -233,7 +235,7 @@ export const Post = function ({ post, mutate }) {
                   <ListItemButton disableGutters dense alignItems="flex-start">
                     <ListItemAvatar>
                       <Avatar
-                        src={`http://localhost:3003/users/${comment.Repl_to_Comment.User.User_ID}/avatar`}
+                        src={`${config.apiURL}/users/${comment.Repl_to_Comment.User.User_ID}/avatar`}
                         sx={{ transform: 'scale(0.7)' }}
                       />
                     </ListItemAvatar>
@@ -291,7 +293,7 @@ export const Post = function ({ post, mutate }) {
           <CardHeader
             avatar={(
               <Avatar
-                src={`http://localhost:3003/users/${postData.User_ID}/avatar`}
+                src={`${config.apiURL}/users/${postData.User_ID}/avatar`}
                 sx={{ bgcolor: red[500] }}
                 aria-label="username"
                 onClick={handleAvatarClick}
@@ -430,7 +432,7 @@ export const Post = function ({ post, mutate }) {
                             <Avatar
                               key={like.id}
                               sx={{ width: 35, height: 35 }}
-                              src={`http://localhost:3003/users/${like.Like_User.User_ID}/avatar`}
+                              src={`${config.apiURL}/users/${like.Like_User.User_ID}/avatar`}
                               alt={like.Username}
                             />
                           ))}
@@ -513,7 +515,7 @@ export const Post = function ({ post, mutate }) {
             <TextField
               name="link"
               label="Copy this link:"
-              value={`http://localhost:3000/posts/${postData.Post_ID}`}
+              value={`${config.clientURL}/posts/${postData.Post_ID}`}
               readOnly
               fullWidth
             />

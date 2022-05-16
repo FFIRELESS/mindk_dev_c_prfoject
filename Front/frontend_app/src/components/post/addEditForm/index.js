@@ -13,6 +13,7 @@ import { postFormSchema } from './yup.validation.schema';
 import { postFormPropTypes } from '../../../propTypes/postFormPT';
 
 const dataURLtoBlob = require('blueimp-canvas-to-blob');
+const config = require('../../../config/app.config');
 
 const AddEditForm = function ({
   postData, mutate, isAddPostForm,
@@ -25,7 +26,7 @@ const AddEditForm = function ({
   if (isAddPostForm) {
     postImagePath = null;
   } else {
-    postImagePath = `http://localhost:3003/posts/${postData.Post_ID}/image`;
+    postImagePath = `${config.apiURL}/posts/${postData.Post_ID}/image`;
   }
   // TODO: add removing post image method
   // const

@@ -19,11 +19,6 @@ const upload = multer({
   },
 });
 
-router.get("/", asyncHandler(postsController.getAllPosts));
-router.get("/:User_ID/user", asyncHandler(postsController.getPostsByUserId));
-router.get("/:Post_ID", asyncHandler(postsController.getPostById));
-router.get("/:Post_ID/image", asyncHandler(postsController.getPostImage));
-
 // TODO: needed aclMiddleware and authMiddleware at methods below
 // router.use(authMiddleware);
 // router.use(aclMiddleware);
@@ -33,12 +28,16 @@ router.post(
   upload.single("image"),
   asyncHandler(postsController.createPost)
 );
+router.get("/", asyncHandler(postsController.getAllPosts));
+router.get("/user/:id/", asyncHandler(postsController.getPostsByUserId));
+router.get("/:id", asyncHandler(postsController.getPostById));
+router.get("/:id/image", asyncHandler(postsController.getPostImage));
 router.put(
-  "/:Post_ID",
+  "/:id",
   upload.single("image"),
   asyncHandler(postsController.updatePost)
 );
-router.delete("/:Post_ID", asyncHandler(postsController.deletePost));
-router.delete("/:Post_ID/image", asyncHandler(postsController.deletePostImage));
+router.delete("/:id", asyncHandler(postsController.deletePost));
+router.delete("/:id/image", asyncHandler(postsController.deletePostImage));
 
 module.exports = router;

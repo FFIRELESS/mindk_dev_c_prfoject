@@ -1,17 +1,17 @@
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const { getUserByEmail, checkPassword } = require("./users");
-
 const config = require("../services/config");
 const Users = require("../models/user");
+
 const { createSession, getByToken, deleteByToken } = require("./sessions");
+const { getUserByEmail, checkPassword } = require("./users");
 const UnauthorizedException = require("../exceptions/UnauthorizedException");
 
 module.exports = {
-  authorize: async (email, password) => {
-    const user = await getUserByEmail(email);
+  authorize: async (req, res) => {
+    const user = await getUserByEmail(req.body.Email);
     if (user) {
-      if (checkPassword(password, user.password)) {
+      if (checkPassword(req.body.Password, user.password)) {
         const accessToken = jwt.sign(
           { User_ID: user.User_ID, Fullname: user.Fullname },
           config.appKey
@@ -21,11 +21,18 @@ module.exports = {
           User_ID: user.User_ID,
           token: refreshToken,
         });
-        return { accessToken, refreshToken };
+        if (accessToken) {
+          return res.send({
+            accessToken,
+            refreshToken,
+          });
+        }
+        throw UnauthorizedException;
       }
     }
     return {};
   },
+
   refresh: async (req, res) => {
     let { refreshToken } = req.cookies;
 
@@ -53,8 +60,6 @@ module.exports = {
     });
     return res.send({ accessToken, refreshToken, user });
   },
-
-  // TODO: rewrite methods above same as all at routes/controllers
 
   authorizeById: async (req, res) => {
     await Users.findByPk(req.user.User_ID).then((user) => {
@@ -86,6 +91,7 @@ module.exports = {
       return {};
     });
   },
+
   logout: async (req, res) => {
     await deleteByToken(req.cookies.refreshToken).then(() => {
       res.send({ success: true });

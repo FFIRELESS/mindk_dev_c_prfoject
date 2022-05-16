@@ -2,6 +2,7 @@ module.exports = {
   appPort: process.env.APP_PORT,
   salt: process.env.SALT,
   appKey: process.env.APP_KEY,
+  clientHost: process.env.CLIENT_HOST,
 
   dbHost: process.env.DB_HOST,
   dbPort: process.env.DB_PORT,

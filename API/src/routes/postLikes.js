@@ -1,44 +1,13 @@
 const router = require("express").Router();
-const db = require("../services/db");
 const asyncHandler = require("express-async-handler");
-const authMiddleware = require("../middlewares/authMiddleware");
+// const authMiddleware = require("../middlewares/authMiddleware");
+const likesController = require("../controller/postLikes");
 
-router.get(
-  "/",
-  asyncHandler(async (req, res) => {
-    res.send(await db.select().from("Post_likes"));
-  })
-);
-
-router.post(
-  "/",
-  authMiddleware,
-  asyncHandler(async (req, res) => {
-    db.insert({
-      Post_ID: req.body.Post_ID,
-      Like_User_ID: req.body.Like_User_ID,
-    })
-      .into("Post_likes")
-      .then(function () {
-        res.send({ success: true, message: "Inserting OK" });
-      });
-  })
-);
-
-router.delete(
-  "/:Post_ID/:Like_User_ID",
-  authMiddleware,
-  asyncHandler(async (req, res) => {
-    db.where({
-      Post_ID: req.params.Post_ID,
-      Like_User_ID: req.params.Like_User_ID,
-    })
-      .del()
-      .from("Post_likes")
-      .then(function () {
-        res.send({ success: true, message: "Deleting OK" });
-      });
-  })
-);
+router.get("/", asyncHandler(likesController.getAllPostLikes));
+router.get("/:id", asyncHandler(likesController.getPostLikeById));
+router.get("/post/:id", asyncHandler(likesController.getPostLikesByPostId));
+router.post("/", asyncHandler(likesController.createPostLike));
+router.put("/:id", asyncHandler(likesController.updatePostLike));
+router.delete("/:id", asyncHandler(likesController.deletePostLike));
 
 module.exports = router;

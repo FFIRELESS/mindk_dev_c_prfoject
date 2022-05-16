@@ -3,18 +3,18 @@ const asyncHandler = require("express-async-handler");
 
 const userFriendsController = require("../controller/userFriends");
 
+router.post("/", asyncHandler(userFriendsController.createFriend));
 router.get("/", asyncHandler(userFriendsController.getAllFriends));
-router.get("/:User_ID", asyncHandler(userFriendsController.getFriendsById));
+router.get("/:id", asyncHandler(userFriendsController.getFriendsById));
 router.get(
-  "/:User_ID/inReqs",
+  "/:id/inReqs",
   asyncHandler(userFriendsController.getInRequestsById)
 );
 router.get(
-  "/:User_ID/outReqs",
+  "/:id/outReqs",
   asyncHandler(userFriendsController.getOutRequestsById)
 );
-router.post("/", asyncHandler(userFriendsController.createFriend));
-router.put("/:User_ID", asyncHandler(userFriendsController.updateFriend));
-router.delete("/:User_ID", asyncHandler(userFriendsController.deleteFriend));
+router.put("/:id", asyncHandler(userFriendsController.updateFriend));
+router.delete("/:id", asyncHandler(userFriendsController.deleteFriend));
 
 module.exports = router;

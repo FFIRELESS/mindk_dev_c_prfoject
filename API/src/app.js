@@ -26,7 +26,7 @@ const port = config.appPort;
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: config.clientHost,
   })
 );
 app.use(cookieParser());
@@ -58,4 +58,4 @@ const start = async () => {
   }
 };
 
-start();
+start().then(() => {});

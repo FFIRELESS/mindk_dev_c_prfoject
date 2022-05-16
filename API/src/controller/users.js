@@ -23,6 +23,26 @@ module.exports = {
       }
     });
   },
+
+  // TODO: fix method below uploads avatar to the disk even when user doesn't exist
+
+  createUserAvatar: async (req, res) => {
+    if (!req.file) {
+      return res.send("File error");
+    }
+    await Users.update(
+      { Image: req.file.filename },
+      {
+        where: { User_ID: req.params.id },
+      }
+    ).then((success) => {
+      if (success[0]) {
+        res.send("Avatar updating OK");
+      } else {
+        throw new NotFoundException("User does not exist");
+      }
+    });
+  },
   getAllUsers: async (req, res) => {
     await Users.findAll({
       include: [
@@ -37,7 +57,7 @@ module.exports = {
     });
   },
   getUserById: async (req, res) => {
-    return await Users.findByPk(req.params.User_ID, {
+    return await Users.findByPk(req.params.id, {
       include: [
         {
           model: University,
@@ -68,7 +88,7 @@ module.exports = {
     });
   },
   getUserAvatar: async (req, res) => {
-    await Users.findByPk(req.params.User_ID, {
+    await Users.findByPk(req.params.id, {
       attributes: ["Image"],
     }).then((data) => {
       if (data === undefined) {
@@ -86,29 +106,9 @@ module.exports = {
       }
     });
   },
-
-  // TODO: fix method below uploads avatar to the disk even when user doesn't exist
-
-  setUserAvatar: async (req, res) => {
-    if (!req.file) {
-      return res.send("File error");
-    }
-    await Users.update(
-      { Image: req.file.filename },
-      {
-        where: { User_ID: req.params.User_ID },
-      }
-    ).then((success) => {
-      if (success[0]) {
-        res.send("Avatar updating OK");
-      } else {
-        throw new NotFoundException("User does not exist");
-      }
-    });
-  },
   updateUserById: async (req, res) => {
     await Users.update(req.body, {
-      where: { User_ID: req.params.User_ID },
+      where: { User_ID: req.params.id },
     }).then((success) => {
       if (success[0]) {
         res.send("User updating OK");
@@ -118,7 +118,7 @@ module.exports = {
     });
   },
   deleteUserById: async (req, res) => {
-    await Users.destroy({ where: { User_ID: req.params.User_ID } }).then(
+    await Users.destroy({ where: { User_ID: req.params.id } }).then(
       (success) => {
         if (success) {
           res.send("User deleting OK");
@@ -131,7 +131,7 @@ module.exports = {
   deleteUserAvatarById: async (req, res) => {
     await Users.update(
       { Image: "default/icon.png" },
-      { where: { User_ID: req.params.User_ID } }
+      { where: { User_ID: req.params.id } }
     ).then((success) => {
       if (success[0]) {
         res.send("User avatar deleting OK");

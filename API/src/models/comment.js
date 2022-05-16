@@ -40,7 +40,7 @@ const Comment = sequelize.define(
     },
     created: {
       type: DataTypes.DATE,
-      allowNull: true,
+      defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
     },
   },
   {

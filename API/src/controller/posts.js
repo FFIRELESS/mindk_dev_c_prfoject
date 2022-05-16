@@ -36,55 +36,6 @@ module.exports = {
       res.send("Post inserting OK");
     });
   },
-  updatePost: async (req, res) => {
-    let data;
-    if (req.file !== undefined) {
-      data = {
-        Title: req.body.Title,
-        Text: req.body.Text,
-        Visibility: req.body.Visibility,
-        Image: req.file.filename,
-      };
-    } else {
-      data = {
-        Title: req.body.Title,
-        Text: req.body.Text,
-        Visibility: req.body.Visibility,
-      };
-    }
-    await Post.update(data, {
-      where: { Post_ID: req.params.Post_ID },
-    }).then((success) => {
-      if (success[0]) {
-        res.send("Post updating OK");
-      } else {
-        throw new NotFoundException("Post does not exist");
-      }
-    });
-  },
-  deletePost: async (req, res) => {
-    await Post.destroy({ where: { Post_ID: req.params.Post_ID } }).then(
-      (success) => {
-        if (success) {
-          res.send("Post deleting OK");
-        } else {
-          throw new NotFoundException("Post does not exist");
-        }
-      }
-    );
-  },
-  deletePostImage: async (req, res) => {
-    await Post.update(
-      { Image: null },
-      { where: { Post_ID: req.params.Post_ID } }
-    ).then((success) => {
-      if (success[0]) {
-        res.send("Image deleting OK");
-      } else {
-        throw new NotFoundException("Post does not exist");
-      }
-    });
-  },
   getAllPosts: async (req, res) => {
     await Post.findAll({
       include: [
@@ -139,7 +90,7 @@ module.exports = {
   },
   getPostsByUserId: async (req, res) => {
     await Post.findAll({
-      where: { User_ID: req.params.User_ID },
+      where: { User_ID: req.params.id },
       include: [
         {
           model: User,
@@ -156,7 +107,7 @@ module.exports = {
     });
   },
   getPostById: async (req, res) => {
-    await Post.findByPk(req.params.Post_ID, {
+    await Post.findByPk(req.params.id, {
       include: [
         {
           model: User,
@@ -182,7 +133,7 @@ module.exports = {
     });
   },
   getPostImage: async (req, res) => {
-    await Post.findByPk(req.params.Post_ID, {
+    await Post.findByPk(req.params.id, {
       attributes: ["Image"],
     }).then((data) => {
       if (data === undefined) {
@@ -193,6 +144,55 @@ module.exports = {
         throw new NotFoundException("Image does not exist");
       }
       return res.sendFile(data.Image, { root: "uploads/postImages" });
+    });
+  },
+  updatePost: async (req, res) => {
+    let data;
+    if (req.file !== undefined) {
+      data = {
+        Title: req.body.Title,
+        Text: req.body.Text,
+        Visibility: req.body.Visibility,
+        Image: req.file.filename,
+      };
+    } else {
+      data = {
+        Title: req.body.Title,
+        Text: req.body.Text,
+        Visibility: req.body.Visibility,
+      };
+    }
+    await Post.update(data, {
+      where: { Post_ID: req.params.id },
+    }).then((success) => {
+      if (success[0]) {
+        res.send("Post updating OK");
+      } else {
+        throw new NotFoundException("Post does not exist");
+      }
+    });
+  },
+  deletePost: async (req, res) => {
+    await Post.destroy({ where: { Post_ID: req.params.id } }).then(
+      (success) => {
+        if (success) {
+          res.send("Post deleting OK");
+        } else {
+          throw new NotFoundException("Post does not exist");
+        }
+      }
+    );
+  },
+  deletePostImage: async (req, res) => {
+    await Post.update(
+      { Image: null },
+      { where: { Post_ID: req.params.id } }
+    ).then((success) => {
+      if (success[0]) {
+        res.send("Image deleting OK");
+      } else {
+        throw new NotFoundException("Post does not exist");
+      }
     });
   },
 };

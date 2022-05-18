@@ -8,6 +8,7 @@ const passport = require("passport");
 
 require("./models/modelsRel"); // eslint-disable-line no-unused-vars
 require("./services/strategies/google.strategy"); // eslint-disable-line no-unused-vars
+require("./services/strategies/facebook.strategy"); // eslint-disable-line no-unused-vars
 
 const usersRoutes = require("./routes/users");
 const userFriendsRoutes = require("./routes/userFriends");

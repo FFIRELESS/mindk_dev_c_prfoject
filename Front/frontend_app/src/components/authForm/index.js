@@ -23,23 +23,12 @@ const AuthForm = function () {
     }
   }, []);
 
-  // not working
-  const handleFacebookAuth = useCallback(() => {
-    // axios.post('http://localhost:3003/auth/facebook', {
-    //   access_token: data.accessToken,
-    // }).then((response) => {
-    //   setAuth({
-    //     accessToken: response.accessToken,
-    //     // user: parseJwt(response.accessToken),
-    //   });
-    // })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+  const handleFacebookAuth = useCallback((data) => {
+    store.loginFacebook(data).then(() => {});
   }, []);
 
   const handleGoogleAuth = useCallback((data) => {
-    store.login(data).then(() => {});
+    store.loginGoogle(data).then(() => {});
   }, []);
 
   if (!store.isLogged) {

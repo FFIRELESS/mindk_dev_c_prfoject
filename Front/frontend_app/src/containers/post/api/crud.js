@@ -1,6 +1,6 @@
 import apiClient from '../../../config/axios';
 
-export const getPosts = async () => apiClient.get('/posts');
+export const getPosts = async (offset) => apiClient.get(`/posts/?offset=${offset}`);
 
 export const getPost = async (id) => apiClient.get(`/posts/${id}`);
 

@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from 'react-query';
+import { useInfiniteQuery, useMutation } from 'react-query';
 import { styled } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import React from 'react';
 import { Post } from '../../components/post';
 import { deletePost, getPosts } from './api/crud';
@@ -8,8 +8,19 @@ import ResponsiveAppBar from '../../components/header/navbar';
 import CircleLoader from '../../components/header/circleLoader';
 
 const PostContainer = function () {
-  const { isFetching: isFetchingPosts, data: dataPosts } = useQuery('posts', () => getPosts());
-  const posts = dataPosts?.data || [];
+  const {
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+    data,
+  } = useInfiniteQuery(
+    'posts',
+    ({ pageParam = 0 }) => getPosts(pageParam),
+    {
+      getNextPageParam: (lastPage) => lastPage.data.nextOffset,
+    },
+  );
 
   const { mutate, isLoading } = useMutation(deletePost);
 
@@ -19,7 +30,7 @@ const PostContainer = function () {
     <>
       <ResponsiveAppBar />
       <Offset />
-      {isFetchingPosts && isLoading && <CircleLoader />}
+      {isFetching && isLoading && <CircleLoader />}
       <Box
         marginTop={3}
         marginBottom={-3}
@@ -35,7 +46,29 @@ const PostContainer = function () {
           <h1>All posts</h1>
         </Box>
       </Box>
-      {posts.map((post) => <div key={post.Post_ID}><Post post={post} mutate={mutate} /></div>)}
+      {data?.pages.map((group, i) => (
+        <div key={i}>
+          {group?.data?.data.map((post) => (
+            <div key={post.Post_ID}>
+              <Post post={post} mutate={mutate} />
+            </div>
+          ))}
+        </div>
+      ))}
+      <Box
+        margin={3}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Button
+          disabled={!hasNextPage || isFetchingNextPage}
+          onClick={() => fetchNextPage()}
+        >
+          {!hasNextPage ? 'there are nothing to load' : 'load more...'}
+        </Button>
+      </Box>
+      {isFetchingNextPage && <CircleLoader />}
     </>
   );
 };

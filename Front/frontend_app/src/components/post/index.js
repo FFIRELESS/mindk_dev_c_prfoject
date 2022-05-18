@@ -30,11 +30,12 @@ import { postPropTypes } from '../../propTypes/postPT';
 import EditPostFormContainer from '../../containers/post/editPostForm';
 import { modalBoxStyle } from '../../styles/modalStyle';
 import authContext from '../../authContext';
+import { checkAvatarUrlData } from '../../services/avatarLinkChecker';
 
 const config = require('../../config/app.config');
 
 export const Post = function ({ post, mutate }) {
-  const userContext = useContext(authContext);
+  const { store } = useContext(authContext);
 
   const [expanded, setExpanded] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -54,14 +55,15 @@ export const Post = function ({ post, mutate }) {
 
   const postImage = `${config.apiURL}/posts/${postData.Post_ID}/image`;
   const postDate = new Date(postData.Timestamp.toString()).toLocaleString('ru');
+  const postUserAvatar = checkAvatarUrlData(userData);
 
   const commentsCount = post.Comments.length;
   const likesCount = post.Post_likes.length ? post.Post_likes.length : null;
   let commentsCounter = 0;
 
   const isComments = commentsCount > 0;
-  const isCurrentUserLike = postLikes.find((like) => like.Like_User.User_ID === userContext.id);
-  const isCurrentUser = userData.User_ID === userContext.id;
+  const isCurrentUserLike = postLikes.find((like) => like.Like_User.User_ID === store.user.User_ID);
+  const isCurrentUser = userData.User_ID === store.user.User_ID;
 
   const handlePopoverOpen = (event) => {
     setAnchorElPopover(event.currentTarget);
@@ -151,10 +153,13 @@ export const Post = function ({ post, mutate }) {
     const commentDate = new Date(comment.created.toString()).toLocaleString('ru');
     let repliedCommentDate = 'Date error';
 
+    const commentUserAvatar = checkAvatarUrlData(comment.User);
+    const replCommentUserAvatar = checkAvatarUrlData(comment?.Repl_to_Comment?.User);
+
     const isLastComment = commentsCount === commentsCounter + 1;
     const isReplied = !!comment.Repl_to_Comment_ID;
     const isLikedByCurrentUser = commentLikes
-      .find((like) => like.Liked_by_User.User_ID === userContext.id);
+      .find((like) => like.Liked_by_User.User_ID === store.user.User_ID);
 
     commentsCounter += 1;
 
@@ -168,7 +173,7 @@ export const Post = function ({ post, mutate }) {
         <Box>
           <ListItem dense alignItems="flex-start" key={comment.Comment_ID}>
             <ListItemAvatar>
-              <Avatar src={`${config.apiURL}/users/${comment.User.User_ID}/avatar`} />
+              <Avatar src={commentUserAvatar} />
             </ListItemAvatar>
             <ListItemText
               sx={{ width: '60%' }}
@@ -235,7 +240,7 @@ export const Post = function ({ post, mutate }) {
                   <ListItemButton disableGutters dense alignItems="flex-start">
                     <ListItemAvatar>
                       <Avatar
-                        src={`${config.apiURL}/users/${comment.Repl_to_Comment.User.User_ID}/avatar`}
+                        src={replCommentUserAvatar}
                         sx={{ transform: 'scale(0.7)' }}
                       />
                     </ListItemAvatar>
@@ -293,7 +298,7 @@ export const Post = function ({ post, mutate }) {
           <CardHeader
             avatar={(
               <Avatar
-                src={`${config.apiURL}/users/${postData.User_ID}/avatar`}
+                src={postUserAvatar}
                 sx={{ bgcolor: red[500] }}
                 aria-label="username"
                 onClick={handleAvatarClick}
@@ -329,6 +334,14 @@ export const Post = function ({ post, mutate }) {
                         anchorEl={anchorEl}
                         open={openMenu}
                         onClose={handleCloseMenu}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'right',
+                        }}
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
                         MenuListProps={{
                           'aria-labelledby': 'basic-button',
                         }}

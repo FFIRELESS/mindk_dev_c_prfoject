@@ -37,6 +37,12 @@ module.exports = {
     });
   },
   getAllPosts: async (req, res) => {
+    let queryOffset;
+    if (req.query.offset === "undefined" || req.query.offset === "") {
+      queryOffset = 0;
+    } else {
+      queryOffset = req.query.offset;
+    }
     await Post.findAll({
       include: [
         {
@@ -84,8 +90,13 @@ module.exports = {
         },
       ],
       order: [["Timestamp", "DESC"]],
+      limit: 10,
+      offset: queryOffset,
     }).then((data) => {
-      res.send(data);
+      if (!data[0]) {
+        return res.send({ data });
+      }
+      res.send({ data, nextOffset: parseInt(queryOffset) + 10 });
     });
   },
   getPostsByUserId: async (req, res) => {

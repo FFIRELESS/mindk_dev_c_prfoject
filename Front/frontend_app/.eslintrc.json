@@ -23,6 +23,8 @@
         "src/components/FormikAutocomplete.jsx"
     ],
     "rules": {
+        "react/no-array-index-key": "off",
+        "no-return-assign": "warn",
         "react/require-default-props": "off",
         "import/no-dynamic-require": "off",
         "global-require": 0,

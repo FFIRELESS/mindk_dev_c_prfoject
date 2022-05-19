@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 import {
   Avatar,
-  Box, Button,
+  Box,
   Card,
   CardActions,
   CardContent,
   CardHeader, CardMedia, Collapse, Grid,
   IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText,
-  Menu, MenuItem, Modal, Popover, Snackbar,
+  Menu, MenuItem, Modal, Popover,
   Typography,
 } from '@mui/material';
 
@@ -34,13 +34,14 @@ import { checkAvatarUrlData } from '../../services/avatarLinkChecker';
 
 const config = require('../../config/app.config');
 
-export const Post = function ({ post, mutate }) {
+export const Post = function ({
+  post, mutate, refetch, setOpenSnackbar,
+}) {
   const { store } = useContext(authContext);
 
   const [expanded, setExpanded] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openSendModal, setOpenSendModal] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElPopover, setAnchorElPopover] = useState(null);
   const [isPostDeleted, setPostDeleted] = useState(false);
@@ -71,21 +72,6 @@ export const Post = function ({ post, mutate }) {
 
   const handlePopoverClose = () => {
     setAnchorElPopover(null);
-  };
-
-  const handleClickSnackbar = () => {
-    setOpenSnackbar(true);
-  };
-
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSnackbar(false);
-  };
-
-  const handleReloadPage = () => {
-    window.location.reload();
   };
 
   const handleExpandClick = () => {
@@ -122,26 +108,10 @@ export const Post = function ({ post, mutate }) {
 
   const handleMenuDelete = () => {
     handleCloseMenu();
-    handleClickSnackbar();
     setPostDeleted(true);
-    mutate(postData.Post_ID);
+    mutate(postData.Post_ID).then(() => refetch());
+    setOpenSnackbar(true);
   };
-
-  const actionSnackbar = (
-    <>
-      <Button size="small" onClick={handleReloadPage}>
-        RELOAD PAGE
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleCloseSnackbar}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </>
-  );
 
   const commentsData = post.Comments.map((comment) => {
     if (comment === undefined) {
@@ -352,13 +322,6 @@ export const Post = function ({ post, mutate }) {
                   )}
                 </div>
                 )}
-                <Snackbar
-                  open={openSnackbar}
-                  autoHideDuration={6000}
-                  onClose={handleCloseSnackbar}
-                  message="Post deleted"
-                  action={actionSnackbar}
-                />
               </div>
                     )}
             title={(
@@ -421,11 +384,11 @@ export const Post = function ({ post, mutate }) {
                     open={openPopover}
                     anchorEl={anchorElPopover}
                     anchorOrigin={{
-                      vertical: 'bottom',
+                      vertical: 'top',
                       horizontal: 'left',
                     }}
                     transformOrigin={{
-                      vertical: 'top',
+                      vertical: 'bottom',
                       horizontal: 'left',
                     }}
                     onClose={handlePopoverClose}
@@ -508,7 +471,11 @@ export const Post = function ({ post, mutate }) {
               <CloseIcon />
             </IconButton>
           </Box>
-          <EditPostFormContainer id={postData.Post_ID} />
+          <EditPostFormContainer
+            id={postData.Post_ID}
+            refetch={refetch}
+            setOpen={setOpenEditModal}
+          />
         </Box>
       </Modal>
       <Modal open={openSendModal}>

@@ -32,7 +32,7 @@ export default class Store {
       const res = await loginGoogle(data);
       localStorage.setItem('token', res.data.accessToken);
       this.setIsLogged(true);
-      this.setUser(parseJwt(res.data.accessToken));
+      this.setUser(res.data.user);
     } catch (e) {
       console.log(e.res?.data?.message);
     }

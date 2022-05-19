@@ -13,7 +13,7 @@ module.exports = {
     if (user) {
       if (checkPassword(req.body.Password, user.password)) {
         const accessToken = jwt.sign(
-          { User_ID: user.User_ID, Fullname: user.Fullname },
+          { User_ID: user.User_ID, Username: user.Username },
           config.appKey
         );
         const refreshToken = uuidv4();
@@ -45,7 +45,7 @@ module.exports = {
     const user = (await Users.findByPk(session.User_ID)).dataValues;
 
     const accessToken = jwt.sign(
-      { User_ID: user.User_ID, Fullname: user.Fullname },
+      { User_ID: user.User_ID, Username: user.Username },
       config.appKey
     );
     refreshToken = uuidv4();
@@ -65,7 +65,7 @@ module.exports = {
     await Users.findByPk(req.user.User_ID).then((user) => {
       if (user) {
         const accessToken = jwt.sign(
-          { User_ID: user.User_ID, Fullname: user.Fullname },
+          { User_ID: user.User_ID, Username: user.Username },
           config.appKey
         );
         const refreshToken = uuidv4();
@@ -83,6 +83,7 @@ module.exports = {
           return res.send({
             accessToken: accessToken,
             refreshToken: refreshToken,
+            user,
             success: true,
           });
         }

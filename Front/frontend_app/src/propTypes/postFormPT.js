@@ -11,4 +11,6 @@ export const postFormPropTypes = {
   }).isRequired,
   isAddPostForm: PropTypes.bool.isRequired,
   mutate: PropTypes.func.isRequired,
+  refetch: PropTypes.func,
+  setOpen: PropTypes.func,
 };

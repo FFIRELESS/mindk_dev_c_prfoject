@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const profileFormPropTypes = {
+export const editUserContainerPropTypes = {
   user: PropTypes.shape({
     user: PropTypes.shape({
       User_ID: PropTypes.number.isRequired,
@@ -15,11 +15,6 @@ export const profileFormPropTypes = {
       University_Title: PropTypes.string.isRequired,
     }),
   }),
-  mutateUser: PropTypes.func.isRequired,
-  mutateAvatar: PropTypes.func.isRequired,
-  removeAvatar: PropTypes.func.isRequired,
-  isLoadingUser: PropTypes.bool.isRequired,
-  isLoadingAvatar: PropTypes.bool.isRequired,
   refetchUserData: PropTypes.func,
   setOpen: PropTypes.func,
 };

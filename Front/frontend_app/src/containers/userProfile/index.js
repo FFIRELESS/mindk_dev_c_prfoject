@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
@@ -11,6 +11,8 @@ import NotFound from '../../components/errors/notFound';
 import UserFriendsContainer from '../friends';
 import CircleLoader from '../../components/header/circleLoader';
 import UserRequestsContainer from '../requests';
+import UserPostsContainer from './userPosts';
+import { getUserPosts } from '../post/api/crud';
 
 const UserProfileContainer = function () {
   const { id } = useParams();
@@ -21,15 +23,31 @@ const UserProfileContainer = function () {
     return <NotFound />;
   }
 
-  const { isFetching, data } = useQuery('user', () => getUser(id));
+  const { isFetching, refetch, data } = useQuery('user', () => getUser(id));
   const user = data?.data;
+
+  const {
+    fetchNextPage,
+    hasNextPage,
+    refetch: refetchPosts,
+    isFetchingNextPage,
+    isFetching: isFetchingPosts,
+    isRefetching,
+    data: dataPosts,
+  } = useInfiniteQuery(
+    'posts',
+    ({ pageParam = 0 }) => getUserPosts(pageParam, id),
+    {
+      getNextPageParam: (lastPage) => lastPage.data.nextOffset,
+    },
+  );
 
   if (user === undefined || user.length === 0) {
     return <NotFound />;
   }
   return (
     <>
-      <ResponsiveAppBar />
+      <ResponsiveAppBar refetch={refetchPosts} />
       <Offset />
       {isFetching && <CircleLoader />}
       <Box
@@ -47,9 +65,18 @@ const UserProfileContainer = function () {
           <h1>Profile</h1>
         </Box>
       </Box>
-      <UserProfile user={user} />
+      <UserProfile refetchUserData={refetch} user={user} />
       <UserFriendsContainer />
       <UserRequestsContainer />
+      <UserPostsContainer
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        refetch={refetchPosts}
+        isFetchingNextPage={isFetchingNextPage}
+        isFetching={isFetchingPosts}
+        isRefetching={isRefetching}
+        data={dataPosts}
+      />
     </>
   );
 };

@@ -97,7 +97,7 @@ module.exports = {
       ],
     }).then((data) => {
       if (!data[0] && !dataF[0]) {
-        res.send([]);
+        return res.send([]);
       }
       res.send(data.concat(dataF));
     });

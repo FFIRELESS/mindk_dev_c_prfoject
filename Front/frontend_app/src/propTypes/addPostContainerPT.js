@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const editPostFormContainerPropTypes = {
-  id: PropTypes.number,
+export const addPostContainerPropTypes = {
   refetch: PropTypes.func,
   setOpen: PropTypes.func,
 };

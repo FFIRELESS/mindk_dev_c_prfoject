@@ -1,37 +1,20 @@
-import { useInfiniteQuery, useMutation } from 'react-query';
-import { styled } from '@mui/material/styles';
+import { useMutation } from 'react-query';
 import {
   Box, Button, IconButton, Snackbar,
 } from '@mui/material';
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import { Post } from '../../components/post';
-import { deletePost, getPosts } from './api/crud';
-import ResponsiveAppBar from '../../components/header/navbar';
-import CircleLoader from '../../components/header/circleLoader';
+import { Post } from '../../../components/post';
+import { deletePost } from '../../post/api/crud';
+import CircleLoader from '../../../components/header/circleLoader';
+import { userPostsContainerPropTypes } from '../../../propTypes/userPostsContainerPT';
 
-const PostsContainer = function () {
+const UserPostsContainer = function ({
+  data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, refetch, isRefetching,
+}) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
-  const {
-    fetchNextPage,
-    hasNextPage,
-    refetch,
-    isFetchingNextPage,
-    isFetching,
-    isRefetching,
-    data,
-  } = useInfiniteQuery(
-    'posts',
-    ({ pageParam = 0 }) => getPosts(pageParam),
-    {
-      getNextPageParam: (lastPage) => lastPage.data.nextOffset,
-    },
-  );
-
   const { mutateAsync, isLoading } = useMutation(deletePost);
-
-  const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -42,9 +25,7 @@ const PostsContainer = function () {
 
   return (
     <>
-      <ResponsiveAppBar refetch={refetch} />
-      <Offset />
-      {isFetching && isRefetching && isLoading && <CircleLoader />}
+      {isRefetching && isFetching && isLoading && <CircleLoader />}
       <Box
         marginTop={3}
         marginBottom={-3}
@@ -57,7 +38,7 @@ const PostsContainer = function () {
         <Box
           sx={{ width: '80vh', maxWidth: 620 }}
         >
-          <h1>All posts</h1>
+          <h2>User posts</h2>
         </Box>
       </Box>
       {data?.pages.map((group, i) => (
@@ -106,11 +87,13 @@ const PostsContainer = function () {
               <CloseIcon fontSize="small" />
             </IconButton>
           </>
-            )}
+                )}
       />
       {isFetchingNextPage && <CircleLoader />}
     </>
   );
 };
 
-export default PostsContainer;
+export default UserPostsContainer;
+
+UserPostsContainer.propTypes = userPostsContainerPropTypes;

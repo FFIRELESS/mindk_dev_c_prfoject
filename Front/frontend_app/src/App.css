@@ -1,5 +1,11 @@
 .App {
   text-align: center;
+  background-image: url("../public/background.JPG");
+  background-size: cover;
+}
+
+.App-non-img {
+  text-align: center;
 }
 
 .App-postImg {

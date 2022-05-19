@@ -16,4 +16,5 @@ export const postPropTypes = {
       }),
     }),
   }).isRequired,
+  refetch: PropTypes.func,
 };

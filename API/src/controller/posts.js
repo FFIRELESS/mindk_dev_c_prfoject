@@ -7,7 +7,7 @@ const NotFoundException = require("../exceptions/NotFoundException");
 
 module.exports = {
   createPost: async (req, res) => {
-    if (!req.body.User_ID) {
+    if (!req.auth.User_ID) {
       return res.send("User_ID does not set");
     }
     if (req.body.Title < 1 || !req.body.Title) {
@@ -24,9 +24,7 @@ module.exports = {
     }
 
     const post = new Post({
-      // TODO: if using authMiddleware, req.auth.User_ID needed
-
-      User_ID: req.body.User_ID,
+      User_ID: req.auth.User_ID,
       Title: req.body.Title,
       Text: req.body.Text,
       Visibility: req.body.Visibility,
@@ -37,6 +35,7 @@ module.exports = {
     });
   },
   getAllPosts: async (req, res) => {
+    const postsOnPage = 10;
     let queryOffset;
     if (req.query.offset === "undefined" || req.query.offset === "") {
       queryOffset = 0;
@@ -90,31 +89,78 @@ module.exports = {
         },
       ],
       order: [["Timestamp", "DESC"]],
-      limit: 10,
+      limit: postsOnPage,
       offset: queryOffset,
     }).then((data) => {
-      if (!data[0]) {
+      if (data.length < postsOnPage) {
         return res.send({ data });
       }
-      res.send({ data, nextOffset: parseInt(queryOffset) + 10 });
+      res.send({ data, nextOffset: parseInt(queryOffset) + postsOnPage });
     });
   },
   getPostsByUserId: async (req, res) => {
+    const postsOnPage = 10;
+    let queryOffset;
+    if (req.query.offset === "undefined" || req.query.offset === "") {
+      queryOffset = 0;
+    } else {
+      queryOffset = req.query.offset;
+    }
     await Post.findAll({
       where: { User_ID: req.params.id },
       include: [
         {
           model: User,
-          attributes: ["Username", "Fullname", "Image"],
+          attributes: ["User_ID", "Username", "Image"],
         },
         {
           model: PostLikes,
-          attributes: ["Like_User_ID"],
+          attributes: ["id"],
+          include: {
+            model: User,
+            as: "Like_User",
+            attributes: ["User_ID", "Username", "Image"],
+          },
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["User_ID", "Username", "Image"],
+            },
+            {
+              model: Comment,
+              as: "Repl_to_Comment",
+              attributes: ["Comment_ID", "Text", "created"],
+              include: [
+                {
+                  model: User,
+                  attributes: ["User_ID", "Username", "Image"],
+                },
+              ],
+            },
+            {
+              model: CommentLikes,
+              attributes: ["id"],
+              include: {
+                model: User,
+                as: "Liked_by_User",
+                attributes: ["User_ID", "Username", "Image"],
+              },
+            },
+          ],
+          order: [["created", "ASC"]],
         },
       ],
       order: [["Timestamp", "DESC"]],
+      limit: postsOnPage,
+      offset: queryOffset,
     }).then((data) => {
-      res.send(data);
+      if (data.length < postsOnPage) {
+        return res.send({ data });
+      }
+      res.send({ data, nextOffset: parseInt(queryOffset) + postsOnPage });
     });
   },
   getPostById: async (req, res) => {

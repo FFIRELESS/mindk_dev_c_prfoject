@@ -26,7 +26,10 @@ import { checkAvatarUrlData } from '../../../services/avatarLinkChecker';
 const dataURLtoBlob = require('blueimp-canvas-to-blob');
 
 const EditProfileForm = function ({
-  user, mutateUser, mutateAvatar, removeAvatar, isLoadingUser, isLoadingAvatar,
+  user,
+  mutateUser, mutateAvatar, removeAvatar,
+  isLoadingUser, isLoadingAvatar, refetchUserData,
+  setOpen,
 }) {
   const [image, setImage] = useState();
   const [cropper, setCropper] = useState();
@@ -81,16 +84,20 @@ const EditProfileForm = function ({
   };
 
   const onFormSubmit = (data, actions) => {
+    // TODO: bad user updating method
+
     actions.setSubmitting(true);
-    mutateUser(data);
+    const formData = new FormData();
     if (croppedImage) {
-      const formData = new FormData();
       formData.append('avatar', dataURLtoBlob(croppedImage), filename);
-      mutateAvatar(formData);
     }
-    if (!isLoadingUser && !isLoadingAvatar) {
+    if (!isLoadingUser || !isLoadingAvatar) {
       actions.setSubmitting(false);
-      actions.submitForm().then(() => window.location.reload());
+      actions.submitForm(mutateUser(data), mutateAvatar(formData))
+        .then(() => {
+          refetchUserData();
+          setOpen(false);
+        });
     }
   };
 

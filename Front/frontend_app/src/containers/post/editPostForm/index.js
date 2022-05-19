@@ -7,7 +7,7 @@ import NotFound from '../../../components/errors/notFound';
 import { editPostFormContainerPropTypes } from '../../../propTypes/editPostFormContainerPT';
 import BackDrop from '../../../components/header/backdrop';
 
-const EditPostFormContainer = function ({ id }) {
+const EditPostFormContainer = function ({ id, refetch, setOpen }) {
   const { mutate, isLoading } = useMutation((postFormData) => editPost(id, postFormData));
   const isAddPostForm = false;
 
@@ -26,6 +26,9 @@ const EditPostFormContainer = function ({ id }) {
         isAddPostForm={isAddPostForm}
         postData={post}
         mutate={mutate}
+        isLoading={isLoading}
+        refetch={refetch}
+        setOpen={setOpen}
       />
     </>
   );

@@ -16,7 +16,7 @@ const dataURLtoBlob = require('blueimp-canvas-to-blob');
 const config = require('../../../config/app.config');
 
 const AddEditForm = function ({
-  postData, mutate, isAddPostForm,
+  postData, mutate, isAddPostForm, isLoading, refetch, setOpen,
 }) {
   const [image, setImage] = useState();
   const [filename, setFilename] = useState();
@@ -53,12 +53,18 @@ const AddEditForm = function ({
   const onFormSubmit = (data, actions) => {
     actions.setSubmitting(true);
     const formData = serialize(data);
-    console.log(data);
     if (image) {
       formData.append('image', dataURLtoBlob(image), filename);
     }
-    mutate(formData);
     actions.setSubmitting(false);
+    if (!isLoading) {
+      actions.submitForm(mutate(formData)).then(() => {
+        if (refetch) {
+          refetch();
+        }
+        setOpen(false);
+      });
+    }
   };
 
   return (
@@ -118,6 +124,7 @@ const AddEditForm = function ({
                   helperText="Please Enter Visibility"
                   select
                   variant="standard"
+                  defaultValue="all"
                   InputLabelProps={{
                     shrink: true,
                   }}

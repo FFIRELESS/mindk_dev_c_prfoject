@@ -30,8 +30,8 @@ const UserFriendsContainer = function () {
       >
         <Card sx={{ width: '80vh', maxWidth: 620 }}>
           <Box marginLeft={3}>
-            <h1>Friends</h1>
-            <Box marginTop={-2}>
+            <h2>Friends</h2>
+            <Box marginTop={-3}>
               Friends total:
               {' '}
               { friends.length }

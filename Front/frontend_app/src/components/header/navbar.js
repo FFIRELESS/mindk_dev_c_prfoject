@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -34,7 +34,7 @@ const HideOnScroll = function (props) {
   );
 };
 
-const ResponsiveAppBar = function (props) {
+const ResponsiveAppBar = function ({ refetch }) {
   const [open, setOpen] = useState(false);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -43,18 +43,15 @@ const ResponsiveAppBar = function (props) {
 
   const { store } = useContext(Context);
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      store.checkAuth().then(() => {});
-    }
-  }, []);
-
   const { isLogged } = store;
   const currentUser = store.user;
+
   let currentUserAvatar = '';
 
-  if (currentUser?.Image !== undefined && currentUser?.Image !== null) {
-    currentUserAvatar = checkAvatarUrlData(currentUser);
+  if (store.isLogged) {
+    if (store.user?.Image) {
+      currentUserAvatar = checkAvatarUrlData(currentUser);
+    }
   }
 
   const handleModalClose = () => {
@@ -87,7 +84,7 @@ const ResponsiveAppBar = function (props) {
 
   return (
     <>
-      <HideOnScroll {...props}>
+      <HideOnScroll>
         <AppBar position="fixed">
           <Container maxWidth="md">
             <Toolbar disableGutters>
@@ -150,15 +147,13 @@ const ResponsiveAppBar = function (props) {
               </Typography>
               <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                 <Button
-                  href="/users"
-                  onClick={handleCloseNavMenu}
+                  onClick={() => navigate('/users')}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Users
                 </Button>
                 <Button
-                  href="/posts"
-                  onClick={handleCloseNavMenu}
+                  onClick={() => navigate('/posts')}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Posts
@@ -229,7 +224,7 @@ const ResponsiveAppBar = function (props) {
               <CloseIcon />
             </IconButton>
           </Box>
-          <AddPostContainer />
+          <AddPostContainer refetch={refetch} setOpen={setOpen} />
         </Box>
       </Modal>
     </>
@@ -237,6 +232,10 @@ const ResponsiveAppBar = function (props) {
 };
 
 export default observer(ResponsiveAppBar);
+
+ResponsiveAppBar.propTypes = {
+  refetch: PropTypes.func,
+};
 
 HideOnScroll.propTypes = {
   children: PropTypes.element.isRequired,

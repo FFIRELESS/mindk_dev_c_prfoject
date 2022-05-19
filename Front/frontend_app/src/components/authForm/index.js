@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect,
+  useCallback, useContext,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,18 +17,12 @@ const AuthForm = function () {
 
   const { store } = useContext(Context);
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      store.checkAuth().then(() => {});
-    }
-  }, []);
-
   const handleFacebookAuth = useCallback((data) => {
-    store.loginFacebook(data).then(() => {});
+    store.loginFacebook(data).then(() => navigate('/posts'));
   }, []);
 
   const handleGoogleAuth = useCallback((data) => {
-    store.loginGoogle(data).then(() => {});
+    store.loginGoogle(data).then(() => navigate('/posts'));
   }, []);
 
   if (!store.isLogged) {
@@ -38,12 +32,12 @@ const AuthForm = function () {
           <Box marginBottom={3}>
             <CardHeader
               title={(
-                <Typography variant="h3" component="div" color="text.primary">
-                  LINE.network
+                <Typography variant="h3" component="div" color="white">
+                  <b>LINE.network</b>
                 </Typography>
                 )}
               subheader={(
-                <Typography color="text.secondary">
+                <Typography color="white">
                   by FFIRELESS
                 </Typography>
                 )}
@@ -79,7 +73,6 @@ const AuthForm = function () {
       </div>
     );
   }
-  navigate('/posts');
   return null;
 };
 

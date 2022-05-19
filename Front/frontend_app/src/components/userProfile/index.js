@@ -14,7 +14,7 @@ import { userProfilePropTypes } from '../../propTypes/userProfilePT';
 import Context from '../../authContext';
 import { checkAvatarUrlData } from '../../services/avatarLinkChecker';
 
-const UserProfile = function ({ user }) {
+const UserProfile = function ({ user, refetchUserData }) {
   const { store } = useContext(Context);
 
   const [open, setOpen] = useState(false);
@@ -106,7 +106,7 @@ const UserProfile = function ({ user }) {
               <CloseIcon />
             </IconButton>
           </Box>
-          <EditProfileContainer />
+          <EditProfileContainer user={user} setOpen={setOpen} refetchUserData={refetchUserData} />
         </Box>
       </Modal>
     </>

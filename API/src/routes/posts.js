@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 const multer = require("multer");
 
 const postsController = require("../controller/posts");
-// const authMiddleware = require("../middlewares/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 const storage = multer.diskStorage({
   destination: "uploads/postImages",
@@ -25,6 +25,7 @@ const upload = multer({
 
 router.post(
   "/",
+  authMiddleware,
   upload.single("image"),
   asyncHandler(postsController.createPost)
 );
@@ -34,10 +35,15 @@ router.get("/:id", asyncHandler(postsController.getPostById));
 router.get("/:id/image", asyncHandler(postsController.getPostImage));
 router.put(
   "/:id",
+  authMiddleware,
   upload.single("image"),
   asyncHandler(postsController.updatePost)
 );
-router.delete("/:id", asyncHandler(postsController.deletePost));
-router.delete("/:id/image", asyncHandler(postsController.deletePostImage));
+router.delete("/:id", authMiddleware, asyncHandler(postsController.deletePost));
+router.delete(
+  "/:id/image",
+  authMiddleware,
+  asyncHandler(postsController.deletePostImage)
+);
 
 module.exports = router;

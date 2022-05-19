@@ -1,14 +1,14 @@
 import { useParams } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import React from 'react';
 import EditProfileForm from '../../../components/userProfile/editProfileForm';
 import {
-  editUser, getUser, removeUserAvatar, setUserAvatar,
+  editUser, removeUserAvatar, setUserAvatar,
 } from '../../users/api/crud';
 import NotFound from '../../../components/errors/notFound';
-import CircleLoader from '../../../components/header/circleLoader';
+import { editUserContainerPropTypes } from '../../../propTypes/editUserContainerPT';
 
-const EditProfileContainer = function () {
+const EditProfileContainer = function ({ user, refetchUserData, setOpen }) {
   const { id } = useParams();
   const
     {
@@ -29,27 +29,24 @@ const EditProfileContainer = function () {
     return <NotFound />;
   }
 
-  const { isFetching, data } = useQuery('user', () => getUser(id));
-  const user = data?.data;
-
   if (user === undefined || user.length === 0) {
     return <NotFound />;
   }
 
   return (
-    <>
-      {isFetching && <CircleLoader />}
-      <EditProfileForm
-        user={user}
-        mutateUser={mutateUserData}
-        isLoadingUser={loadingUserData}
-        mutateAvatar={mutateUserAvatar}
-        removeAvatar={removeAvatar}
-        isLoadingAvatar={loadingUserAvatar}
-        id={id}
-      />
-    </>
+    <EditProfileForm
+      user={user}
+      mutateUser={mutateUserData}
+      isLoadingUser={loadingUserData}
+      mutateAvatar={mutateUserAvatar}
+      removeAvatar={removeAvatar}
+      isLoadingAvatar={loadingUserAvatar}
+      refetchUserData={refetchUserData}
+      setOpen={setOpen}
+    />
   );
 };
 
 export default EditProfileContainer;
+
+EditProfileContainer.propTypes = editUserContainerPropTypes;

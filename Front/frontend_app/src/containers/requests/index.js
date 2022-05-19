@@ -32,7 +32,7 @@ const UserRequestsContainer = function () {
           <Card sx={{ width: '80vh', maxWidth: 620 }}>
             <Box marginLeft={3}>
               <h2>Outgoing requests</h2>
-              <Box marginTop={-2}>
+              <Box marginTop={-3}>
                 Requests total:
                 {' '}
                 {outReqs.length}
@@ -69,7 +69,7 @@ const UserRequestsContainer = function () {
         <Card sx={{ width: '80vh', maxWidth: 620 }}>
           <Box marginLeft={3}>
             <h2>Incoming requests</h2>
-            <Box marginTop={-2}>
+            <Box marginTop={-3}>
               Requests total:
               {' '}
               {incReqs.length }

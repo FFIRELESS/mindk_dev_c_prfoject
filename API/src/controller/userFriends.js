@@ -178,8 +178,8 @@ module.exports = {
   deleteFriend: async (req, res) => {
     await UserFriends.destroy({
       where: {
-        In_User_ID: req.params.id,
-        Out_User_ID: req.body.Out_User_ID,
+        In_User_ID: req.auth.User_ID,
+        Out_User_ID: req.params.id,
         Status: "friend",
       },
     }).then((success) => {

@@ -71,6 +71,14 @@ module.exports = {
       throw new NotFoundException("User not found");
     });
   },
+  getUserBy: async (id) => {
+    return await Users.findByPk(id).then((data) => {
+      if (data) {
+        return data.dataValues;
+      }
+      throw new NotFoundException("User not found");
+    });
+  },
   getUserByEmail: async (email) => {
     return await Users.findOne({
       where: { Email: email },

@@ -189,6 +189,14 @@ module.exports = {
       throw new NotFoundException("post not found");
     });
   },
+  getPostBy: async (id) => {
+    return await Post.findByPk(id).then((data) => {
+      if (data) {
+        return data.dataValues;
+      }
+      throw new NotFoundException("post not found");
+    });
+  },
   getPostImage: async (req, res) => {
     await Post.findByPk(req.params.id, {
       attributes: ["Image"],
@@ -198,9 +206,9 @@ module.exports = {
         return;
       }
       if (data === null || !data.Image) {
-        throw new NotFoundException("Image does not exist");
+        return res.send();
       }
-      return res.sendFile(data.Image, { root: "uploads/postImages" });
+      res.sendFile(data.Image, { root: "uploads/postImages" });
     });
   },
   updatePost: async (req, res) => {

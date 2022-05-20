@@ -17,12 +17,13 @@ module.exports = async (req, res, next) => {
         });
       });
     } catch (e) {
-      // do nothing
+      console.log("Exception auth");
+      console.log(e);
     }
     if (decoded) {
       req.auth = decoded;
       return next();
     }
   }
-  next(new UnauthorizedException());
+  next(new UnauthorizedException("AUTH: Unauthorized action"));
 };

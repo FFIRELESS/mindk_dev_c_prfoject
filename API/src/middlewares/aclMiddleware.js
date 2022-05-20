@@ -1,11 +1,11 @@
 const ForbiddenException = require("../exceptions/ForbiddenException");
-const { getUserById } = require("../controller/users");
+const { getUserBy } = require("../controller/users");
 const { Possession, aclRules } = require("../services/acl.config");
 
 module.exports = (rule) => async (req, res, next) => {
   const rules = Array.isArray(rule) ? rule : [rule];
   let isAllow = false;
-  const user = await getUserById(req.auth.User_ID);
+  const user = await getUserBy(req.auth.User_ID);
 
   if (user) {
     for await (const checkRule of rules) {
@@ -25,9 +25,13 @@ module.exports = (rule) => async (req, res, next) => {
             if (canUseAnyAction) {
               isAllow = true;
             } else {
-              const resource = await checkRule.getResource(req);
-              if (checkRule.isOwn(resource, user.User_ID)) {
-                isAllow = true;
+              try {
+                const resource = await checkRule.getResource(req);
+                if (checkRule.isOwn(resource, user.User_ID)) {
+                  isAllow = true;
+                }
+              } catch (e) {
+                return next(e);
               }
             }
           }
@@ -39,6 +43,5 @@ module.exports = (rule) => async (req, res, next) => {
   if (isAllow) {
     return next();
   }
-
-  next(new ForbiddenException());
+  next(new ForbiddenException("ACL: Forbidden action"));
 };

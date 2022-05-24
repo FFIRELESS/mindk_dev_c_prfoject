@@ -6,6 +6,8 @@ export const getUserPosts = async (offset, id) => apiClient.get(`/posts/user/${i
 
 export const getPost = async (id) => apiClient.get(`/posts/${id}`);
 
+export const getPostImage = async (id) => apiClient.get(`/posts/${id}/image`);
+
 export const getPostComments = async (id) => apiClient.get(`/comments/${id}/post`);
 
 export const createPost = async (postFormData) => apiClient.post('/posts', postFormData, {

@@ -22,7 +22,13 @@ const UserProfile = function ({ user, refetchUserData }) {
   const userData = { ...user };
   const universityData = user?.University;
 
-  const isCurrentUser = store.user.User_ID === userData.User_ID;
+  let isCurrentUser;
+
+  if (store.user.role === 'admin') {
+    isCurrentUser = true;
+  } else {
+    isCurrentUser = store.user.User_ID === userData.User_ID;
+  }
 
   const avatarUrl = checkAvatarUrlData(userData);
 

@@ -3,14 +3,17 @@ import { styled } from '@mui/material/styles';
 import {
   Box, Button, IconButton, Snackbar,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { Post } from '../../components/post';
 import { deletePost, getPosts } from './api/crud';
 import ResponsiveAppBar from '../../components/header/navbar';
 import CircleLoader from '../../components/header/circleLoader';
+import Context from '../../authContext';
 
 const PostsContainer = function () {
+  const { store } = useContext(Context);
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const {
@@ -58,6 +61,11 @@ const PostsContainer = function () {
           sx={{ width: '80vh', maxWidth: 620 }}
         >
           <h1>All posts</h1>
+          {store.user.role === 'admin' && (
+            <Box marginTop={-3}>
+              <h3 style={{ color: 'red' }}>ADMIN MODE</h3>
+            </Box>
+          )}
         </Box>
       </Box>
       {data?.pages.map((group, i) => (

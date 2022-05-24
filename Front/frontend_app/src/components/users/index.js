@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Avatar, Box, Button, Card, CardHeader, Typography,
@@ -8,6 +9,8 @@ import { userProfilePropTypes } from '../../propTypes/userProfilePT';
 const config = require('../../config/app.config');
 
 const Users = function ({ user }) {
+  const navigate = useNavigate();
+
   const userData = { ...user };
   const universityData = user?.University;
 
@@ -38,12 +41,12 @@ const Users = function ({ user }) {
             </Avatar>
             )}
           action={(
-            <Box border={1} justifyContent="center" margin={2}>
+            <Box justifyContent="center" margin={2}>
               <Button
-                href={`users/${userData.User_ID}`}
                 variant="contained"
                 color="primary"
                 fullWidth
+                onClick={() => navigate(`/users/${userData.User_ID}`)}
               >
                 GO TO PROFILE
               </Button>

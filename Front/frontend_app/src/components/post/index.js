@@ -32,7 +32,26 @@ import { modalBoxStyle } from '../../styles/modalStyle';
 import authContext from '../../authContext';
 import { checkAvatarUrlData } from '../../services/avatarLinkChecker';
 
+// import { useQuery } from 'react-query';
+// import { getPostImage } from '../../containers/post/api/crud';
+// import CircleLoader from '../header/circleLoader';
+
 const config = require('../../config/app.config');
+
+// const PostImage = function ({ id }) {
+//   const { data: postImage, isFetched } = useQuery('postImage', () => getPostImage(id));
+//   console.log(id);
+//   console.log(postImage);
+//   console.log(isFetched);
+//
+//   return (
+//     <CardMedia
+//       component="img"
+//       image={postImage?.data}
+//       onError={handleImageError}
+//     />
+//   );
+// };
 
 export const Post = function ({
   post, mutate, refetch, setOpenSnackbar,
@@ -46,13 +65,13 @@ export const Post = function ({
   const [anchorElPopover, setAnchorElPopover] = useState(null);
   const [isPostDeleted, setPostDeleted] = useState(false);
 
-  const openPopover = Boolean(anchorElPopover);
-  const openMenu = Boolean(anchorEl);
-  const navigate = useNavigate();
-
   const postData = { ...post };
   const postLikes = post.Post_likes;
   const userData = post.User;
+
+  const openPopover = Boolean(anchorElPopover);
+  const openMenu = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const postImage = `${config.apiURL}/posts/${postData.Post_ID}/image`;
   const postDate = new Date(postData.Timestamp.toString()).toLocaleString('ru');
@@ -63,8 +82,15 @@ export const Post = function ({
   let commentsCounter = 0;
 
   const isComments = commentsCount > 0;
+
   const isCurrentUserLike = postLikes.find((like) => like.Like_User.User_ID === store.user.User_ID);
-  const isCurrentUser = userData.User_ID === store.user.User_ID;
+  let isCurrentUser;
+
+  if (store.user.role === 'admin') {
+    isCurrentUser = true;
+  } else {
+    isCurrentUser = userData.User_ID === store.user.User_ID;
+  }
 
   const handlePopoverOpen = (event) => {
     setAnchorElPopover(event.currentTarget);
@@ -347,6 +373,9 @@ export const Post = function ({
                   image={postImage}
                   onError={handleImageError}
                 />
+                {/* {isFetching ? <CircleLoader /> : ( */}
+                {/* <PostImage id={postData.Post_ID} /> */}
+                {/* )} */}
               </Box>
             )}
           </CardContent>

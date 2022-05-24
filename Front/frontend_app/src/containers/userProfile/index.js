@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { useInfiniteQuery, useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import { observer } from 'mobx-react-lite';
 import UserProfile from '../../components/userProfile';
 import { getUser } from '../users/api/crud';
 import ResponsiveAppBar from '../../components/header/navbar';
@@ -13,9 +14,11 @@ import CircleLoader from '../../components/header/circleLoader';
 import UserRequestsContainer from '../requests';
 import UserPostsContainer from './userPosts';
 import { getUserPosts } from '../post/api/crud';
+import Context from '../../authContext';
 
 const UserProfileContainer = function () {
   const { id } = useParams();
+  const { store } = useContext(Context);
 
   const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
@@ -63,6 +66,11 @@ const UserProfileContainer = function () {
           sx={{ width: '80vh', maxWidth: 620 }}
         >
           <h1>Profile</h1>
+          {store.user.role === 'admin' && (
+          <Box marginTop={-3}>
+            <h3 style={{ color: 'red' }}>ADMIN MODE</h3>
+          </Box>
+          )}
         </Box>
       </Box>
       <UserProfile refetchUserData={refetch} user={user} />
@@ -81,4 +89,4 @@ const UserProfileContainer = function () {
   );
 };
 
-export default UserProfileContainer;
+export default observer(UserProfileContainer);

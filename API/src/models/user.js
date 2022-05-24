@@ -28,7 +28,7 @@ const User = sequelize.define(
     },
     Image: {
       type: DataTypes.STRING(255),
-      allowNull: true,
+      defaultValue: "default/icon.png",
     },
     Email: {
       type: DataTypes.STRING(255),

@@ -82,6 +82,11 @@ const ResponsiveAppBar = function ({ refetch }) {
     setAnchorElUser(null);
   };
 
+  let avatarStyle = null;
+  if (store.user.role === 'admin') {
+    avatarStyle = { border: '3px solid red' };
+  }
+
   return (
     <>
       <HideOnScroll>
@@ -172,7 +177,7 @@ const ResponsiveAppBar = function ({ refetch }) {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src={currentUserAvatar} />
+                    <Avatar sx={avatarStyle} alt="User" src={currentUserAvatar} />
                   </IconButton>
                 </Tooltip>
                 <Menu

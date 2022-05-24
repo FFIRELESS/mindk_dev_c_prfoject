@@ -53,6 +53,10 @@ const allowOwn = [
     action: Action.UPDATE,
     possession: Possession.OWN,
   },
+  {
+    action: Action.DELETE,
+    possession: Possession.OWN,
+  },
 ];
 
 const aclRules = {

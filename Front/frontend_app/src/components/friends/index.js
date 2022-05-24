@@ -5,7 +5,6 @@ import {
 } from '@mui/material';
 
 import { userFriendsPropTypes } from '../../propTypes/userFriendsPT';
-// import authContext from '../../authContext';
 
 const config = require('../../config/app.config');
 
@@ -21,9 +20,9 @@ const UserFriends = function ({ friend }) {
   //
   // const isCurrentUser = userContext.id === friendUser.User_ID;
 
+  // TODO: method doesnt navigate to user
   const handleAvatarClick = () => {
     navigate(`/users/${friendUser.User_ID}`);
-    window.location.reload();
   };
 
   // if (isCurrentUser) {

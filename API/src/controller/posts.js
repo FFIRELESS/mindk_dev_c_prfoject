@@ -104,7 +104,7 @@ module.exports = {
     if (req.query.offset === "undefined" || req.query.offset === "") {
       queryOffset = 0;
     } else {
-      queryOffset = req.query.offset;
+      queryOffset = parseInt(req.query.offset);
     }
     await Post.findAll({
       where: { User_ID: req.params.id },
@@ -160,7 +160,7 @@ module.exports = {
       if (data.length < postsOnPage) {
         return res.send({ data });
       }
-      res.send({ data, nextOffset: parseInt(queryOffset) + postsOnPage });
+      res.send({ data, nextOffset: queryOffset + postsOnPage });
     });
   },
   getPostById: async (req, res) => {

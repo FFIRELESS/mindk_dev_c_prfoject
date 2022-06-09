@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const sequelize = require("./services/db_orm");
 const passport = require("passport");
+const https = require("https");
+const fs = require("fs");
 
 require("./models/modelsRel"); // eslint-disable-line no-unused-vars
 require("./services/strategies/google.strategy"); // eslint-disable-line no-unused-vars
@@ -23,6 +25,11 @@ const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 const port = config.appPort;
+
+const httpsOptions = {
+  key: fs.readFileSync(__dirname + "/security/cert.key"),
+  cert: fs.readFileSync(__dirname + "/security/cert.pem"),
+};
 
 app.use(
   cors({
@@ -52,7 +59,7 @@ const start = async () => {
     await sequelize.authenticate();
     await sequelize.sync({ alter: true });
 
-    app.listen(port);
+    https.createServer(httpsOptions, app).listen(port);
     console.log("Server started at /localhost:" + port);
   } catch (e) {
     console.log(`Exception: ${e.message}`);

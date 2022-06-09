@@ -12,8 +12,6 @@ module.exports = {
     return await Sessions.findOne({
       where: { token },
     }).then((data) => {
-      console.log("get: ");
-      console.log(data.dataValues);
       if (data) {
         return data.dataValues;
       }

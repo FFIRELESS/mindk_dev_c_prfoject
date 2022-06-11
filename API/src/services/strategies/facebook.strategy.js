@@ -11,22 +11,24 @@ passport.use(
       clientSecret: config.facebookClientSecret,
     },
     async (accessToken, refreshToken, profile, done) => {
-      const [{ value: email }] = profile.emails;
+      const email = profile._json.email;
       let user = await getUserByEmail(email);
       if (!user) {
         await createUser({
           body: {
+            Username: email,
             Fullname: profile.displayName,
             Email: email,
-            Image: profile._json.picture,
+            Image: profile.photos[0].value,
           },
         });
         user = await getUserByEmail(email);
       }
       return done(null, {
-        id: user.user_id,
-        name: user.name,
-        email: user.email,
+        User_ID: user.User_ID,
+        Username: user.Username,
+        Fullname: user.Fullname,
+        Email: user.Email,
       });
     }
   )

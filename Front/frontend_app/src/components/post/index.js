@@ -401,7 +401,7 @@ export const Post = function ({
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
                   >
-                    {likesCount}
+                    {likesCount < 1100 ? likesCount : `${(likesCount / 1000).toFixed(1)}k`}
                   </Typography>
 
                   {likesCount && (

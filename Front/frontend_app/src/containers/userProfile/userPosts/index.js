@@ -65,7 +65,7 @@ const UserPostsContainer = function ({
           disabled={!hasNextPage || isFetchingNextPage}
           onClick={() => fetchNextPage()}
         >
-          {!hasNextPage ? 'there is nothing more to load' : 'load more...'}
+          {!hasNextPage ? 'there is nothing to load' : 'load more...'}
         </Button>
       </Box>
       <Snackbar

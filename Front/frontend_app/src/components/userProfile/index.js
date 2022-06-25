@@ -47,9 +47,12 @@ const UserProfile = function ({ user, refetchUserData }) {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        // sx={{ color: 'text.secondary' }}
       >
-        <Card sx={{ width: '80vh', maxWidth: 620 }}>
+        <Card sx={{
+          width: '80vh',
+          maxWidth: 620,
+        }}
+        >
           <CardHeader
             avatar={(
               <Avatar

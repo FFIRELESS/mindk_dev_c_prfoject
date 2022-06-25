@@ -105,7 +105,7 @@ const AuthForm = function () {
             <Grid container alignItems="center" direction="column">
               <Box width="95%">
                 <Box>
-                  <Typography variant="button" color="white">
+                  <Typography variant="button">
                     You are already logged in as:
                   </Typography>
                 </Box>
@@ -115,7 +115,7 @@ const AuthForm = function () {
                       <Avatar src={currentUserAvatar} />
                       )}
                     title={(
-                      <Typography variant="h6" component="div" color="white">
+                      <Typography variant="h6" component="div">
                         <b>{store.user.Username}</b>
                       </Typography>
                       )}

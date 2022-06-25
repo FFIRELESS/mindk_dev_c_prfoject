@@ -25,7 +25,6 @@ const UserRequests = function ({ request }) {
 
   const handleAvatarClick = () => {
     navigate(`/users/${request.User_ID}`);
-    window.location.reload();
   };
 
   // if (isCurrentUser) {

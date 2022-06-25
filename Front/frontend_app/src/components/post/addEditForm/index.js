@@ -16,7 +16,7 @@ const dataURLtoBlob = require('blueimp-canvas-to-blob');
 const config = require('../../../config/app.config');
 
 const AddEditForm = function ({
-  postData, mutate, isAddPostForm, isLoading, refetch, setOpen,
+  postData, mutate, isAddPostForm, isLoading, refetch, refetchFormData, setOpen,
 }) {
   const [image, setImage] = useState();
   const [filename, setFilename] = useState();
@@ -61,6 +61,7 @@ const AddEditForm = function ({
       actions.submitForm(mutate(formData)).then(() => {
         if (refetch) {
           refetch();
+          refetchFormData();
         }
         setOpen(false);
       });

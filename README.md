@@ -3,7 +3,7 @@
 
 ### Tech stack: 
 API: Node.js, Express.js, Sequelize ORM  
-Front: React.js, Axios  
+Front: React.js, Axios, Redux?  
 Database: PostgreSQL  
 
 Architecture: client <-> server

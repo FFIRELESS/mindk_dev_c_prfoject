@@ -3,7 +3,6 @@ import config from './app.config';
 
 const apiClient = axios.create(
   {
-    // TODO: add env variable to baseURL
     baseURL: config.apiURL,
     withCredentials: true,
     responseType: 'json',

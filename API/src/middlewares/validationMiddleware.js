@@ -5,10 +5,10 @@ module.exports = (rules, resources) => async (req, res, next) => {
 
   for await (const field of Object.keys(rules)) {
     const fieldErrors = [];
-    const splitRules = rules[field].split("&");
+    const fieldRules = rules[field];
 
-    for await (const paramRule of splitRules) {
-      const [rule, parameter] = paramRule.split("=");
+    for await (const arrayRule of Object.entries(fieldRules)) {
+      const [rule, parameter] = arrayRule;
 
       switch (rule) {
         case "required":

@@ -1,21 +1,21 @@
 const userRules = {
-  Email: "email&required&unique",
-  Username: "required&minString=4&maxString=50&unique",
-  Fullname: "minString=4&maxString=125",
-  Phone: "regex=^\\+[0-9]{3}\\d{9}$",
+  Email: { email: true, required: true, unique: true },
+  Username: { required: true, minString: 4, maxString: 50, unique: true },
+  Fullname: { minString: 4, maxString: 125 },
+  Phone: { phone_UA: true },
 };
 
 const postRules = {
-  Title: "required&maxString=255",
-  Visibility: "required&regex=^(all|none|friends)$",
+  Title: { required: true, maxString: 255 },
+  Visibility: { required: true, regex: "^(all|none|friends)$" },
 };
 
 const commentRules = {
-  Text: "required&maxString=255",
+  Text: { required: true, maxString: 255 },
 };
 
 const friendsRules = {
-  Status: "required&regex=^(friend|request)$",
+  Status: { required: true, regex: "^(friend|request)$" },
 };
 
 const validationRules = {

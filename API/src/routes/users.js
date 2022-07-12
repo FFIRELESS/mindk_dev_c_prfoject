@@ -3,9 +3,10 @@ const asyncHandler = require("express-async-handler");
 const usersController = require("../controller/users");
 const authMiddleware = require("../middlewares/authMiddleware");
 const aclMiddleware = require("../middlewares/aclMiddleware");
+const validationMiddleware = require("../middlewares/validationMiddleware");
 const { uploadUserAvatar } = require("../services/multer.config");
 
-// TODO: needed aclMiddleware and authMiddleware at methods below
+const validationRules = require("../services/validator.config");
 
 router.get("/", asyncHandler(usersController.getAllUsers));
 router.get("/:id", asyncHandler(usersController.getUserById));
@@ -13,7 +14,19 @@ router.get("/:id/avatar", asyncHandler(usersController.getUserAvatar));
 
 router.use(authMiddleware);
 
-router.post("/", asyncHandler(usersController.createUser));
+router.post(
+  "/",
+  validationMiddleware(validationRules.userRules, {
+    Email: {
+      getResourceByField: (email) => usersController.getUserByEmail(email),
+    },
+    Username: {
+      getResourceByField: (username) =>
+        usersController.getUserByUsername(username),
+    },
+  }),
+  asyncHandler(usersController.createUser)
+);
 router.post(
   "/:id/avatar",
   aclMiddleware([
@@ -30,6 +43,17 @@ router.post(
 );
 router.put(
   "/:id",
+  validationMiddleware(validationRules.userRules, {
+    Email: {
+      getResource: (req) => usersController.getUserBy(req.params.id),
+      getResourceByField: (email) => usersController.getUserByEmail(email),
+    },
+    Username: {
+      getResource: (req) => usersController.getUserBy(req.params.id),
+      getResourceByField: (username) =>
+        usersController.getUserByUsername(username),
+    },
+  }),
   aclMiddleware([
     {
       resource: "user",

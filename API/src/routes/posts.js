@@ -4,7 +4,10 @@ const asyncHandler = require("express-async-handler");
 const postsController = require("../controller/posts");
 const authMiddleware = require("../middlewares/authMiddleware");
 const aclMiddleware = require("../middlewares/aclMiddleware");
+const validationMiddleware = require("../middlewares/validationMiddleware");
 const { uploadPostImage } = require("../services/multer.config");
+
+const validationRules = require("../services/validator.config");
 
 router.get("/", asyncHandler(postsController.getAllPosts));
 router.get("/user/:id/", asyncHandler(postsController.getPostsByUserId));
@@ -15,11 +18,13 @@ router.use(authMiddleware);
 
 router.post(
   "/",
+  validationMiddleware(validationRules.postRules),
   uploadPostImage.single("image"),
   asyncHandler(postsController.createPost)
 );
 router.put(
   "/:id",
+  validationMiddleware(validationRules.postRules),
   aclMiddleware([
     {
       resource: "post",

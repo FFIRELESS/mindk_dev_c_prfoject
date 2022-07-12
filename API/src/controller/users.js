@@ -95,6 +95,22 @@ module.exports = {
       return 0;
     });
   },
+  getUserByUsername: async (username) => {
+    return await Users.findOne({
+      where: { Username: username },
+      include: [
+        {
+          model: University,
+          attributes: ["University_Title"],
+        },
+      ],
+    }).then((data) => {
+      if (data) {
+        return data;
+      }
+      return 0;
+    });
+  },
   getUserAvatar: async (req, res) => {
     await Users.findByPk(req.params.id, {
       attributes: ["Image"],

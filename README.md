@@ -1,7 +1,11 @@
-# MindK Devcamp 2021 Social Network Project
+# LINE.network  
+#### a project for MindK Dev Camp 2021
 
-tech stack: Node.js, Express.js, React.js, Axios, PostgreSQL with Sequelize ORM
+### Tech stack: 
+API: Node.js, Express.js, Sequelize ORM  
+Front: React.js, Axios, Redux?  
+Database: PostgreSQL  
 
-architecture: client <-> server
+Architecture: client <-> server
 
 created by: Dmitrii Tokarenko

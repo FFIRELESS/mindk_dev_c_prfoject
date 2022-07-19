@@ -83,7 +83,7 @@ module.exports = (rules, resources) => async (req, res, next) => {
             }
           }
           break;
-        case "regex":
+        case "regexp":
           {
             if (!req.body[field].match(parameter)) {
               fieldErrors.push("field value does not match regular expression");

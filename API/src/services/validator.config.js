@@ -6,8 +6,8 @@ const userRules = {
 };
 
 const postRules = {
-  Title: { required: true, maxString: 255 },
-  Visibility: { required: true, regex: "^(all|none|friends)$" },
+  Title: { required: true, minString: 4, maxString: 255 },
+  Visibility: { required: true, regexp: "^(all|none|friends)$" },
 };
 
 const commentRules = {
@@ -15,7 +15,7 @@ const commentRules = {
 };
 
 const friendsRules = {
-  Status: { required: true, regex: "^(friend|request)$" },
+  Status: { required: true, regexp: "^(friend|request)$" },
 };
 
 const validationRules = {

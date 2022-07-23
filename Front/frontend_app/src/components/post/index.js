@@ -30,7 +30,7 @@ import { postPropTypes } from '../../propTypes/postPT';
 import EditPostFormContainer from '../../containers/post/editPostForm';
 import { modalBoxStyle } from '../../styles/modalStyle';
 import authContext from '../../authContext';
-import { checkAvatarUrlData } from '../../services/avatarLinkChecker';
+import { checkAvatarUrlData, checkPostImageUrlData } from '../../services/avatarLinkChecker';
 
 // import { useQuery } from 'react-query';
 // import { getPostImage } from '../../containers/post/api/crud';
@@ -73,7 +73,7 @@ export const Post = function ({
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
 
-  const postImage = `${config.apiURL}/posts/${postData.Post_ID}/image`;
+  const postImage = checkPostImageUrlData(postData);
   const postDate = new Date(postData.Timestamp.toString()).toLocaleString('ru');
   const postUserAvatar = checkAvatarUrlData(userData);
 

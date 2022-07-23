@@ -28,7 +28,7 @@ module.exports = {
       Title: req.body.Title,
       Text: req.body.Text,
       Visibility: req.body.Visibility,
-      Image: req.file !== undefined ? req.file.filename : null,
+      Image: req.file !== undefined ? req.file.location : null,
     });
     await post.save().then(() => {
       res.send("Post inserting OK");
@@ -218,7 +218,7 @@ module.exports = {
         Title: req.body.Title,
         Text: req.body.Text,
         Visibility: req.body.Visibility,
-        Image: req.file.filename,
+        Image: req.file.location,
       };
     } else {
       data = {

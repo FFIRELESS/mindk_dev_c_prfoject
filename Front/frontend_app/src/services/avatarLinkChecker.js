@@ -17,4 +17,14 @@ export const checkAvatarUrlById = (id) => {
   return `${config.apiURL}/users/${id}/avatar`;
 };
 
-export default { checkAvatarUrlData, checkAvatarUrlById };
+export const checkPostImageUrlData = (postData) => {
+  if (postData.Image === null) {
+    return '';
+  }
+  if (!postData.Image.match(/^(https:\/\/)/)) {
+    return `${config.apiURL}/posts/${postData.Post_ID}/image`;
+  }
+  return postData.Image;
+};
+
+export default { checkAvatarUrlData, checkAvatarUrlById, checkPostImageUrlData };

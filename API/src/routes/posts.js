@@ -5,7 +5,7 @@ const postsController = require("../controller/posts");
 const authMiddleware = require("../middlewares/authMiddleware");
 const aclMiddleware = require("../middlewares/aclMiddleware");
 const validationMiddleware = require("../middlewares/validationMiddleware");
-const { uploadToS3 } = require("../services/multer.config");
+const { uploadPostImage } = require("../services/multer.config");
 
 const validationRules = require("../services/validator.config");
 
@@ -18,8 +18,8 @@ router.use(authMiddleware);
 
 router.post(
   "/",
-  // validationMiddleware(validationRules.postRules),
-  uploadToS3.single("image"),
+  validationMiddleware(validationRules.postRules),
+  uploadPostImage.single("image"),
   asyncHandler(postsController.createPost)
 );
 router.put(
@@ -34,7 +34,7 @@ router.put(
       isOwn: (resource, userId) => resource.User_ID === userId,
     },
   ]),
-  uploadToS3.single("image"),
+  uploadPostImage.single("image"),
   asyncHandler(postsController.updatePost)
 );
 router.delete(

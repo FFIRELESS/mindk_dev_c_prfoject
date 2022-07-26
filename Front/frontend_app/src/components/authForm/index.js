@@ -45,12 +45,12 @@ const AuthForm = function () {
                 <Typography variant="h3" component="div" color="white">
                   <b>LINE.network</b>
                 </Typography>
-                )}
+                  )}
               subheader={(
                 <Typography color="white">
                   by FFIRELESS
                 </Typography>
-                )}
+                  )}
             />
           </Box>
           <Card sx={{ width: '32vh', maxWidth: 620 }}>
@@ -113,12 +113,12 @@ const AuthForm = function () {
                   <CardHeader
                     avatar={(
                       <Avatar src={currentUserAvatar} />
-                      )}
+                        )}
                     title={(
                       <Typography variant="h6" component="div">
                         <b>{store.user.Username}</b>
                       </Typography>
-                      )}
+                        )}
                   />
                 </Box>
                 <Box marginTop={1}>

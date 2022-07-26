@@ -7,28 +7,12 @@ const NotFoundException = require("../exceptions/NotFoundException");
 
 module.exports = {
   createPost: async (req, res) => {
-    if (!req.auth.User_ID) {
-      return res.send("User_ID does not set");
-    }
-    if (req.body.Title < 1 || !req.body.Title) {
-      return res.send("Short title");
-    }
-    if (
-      !(
-        req.body.Visibility === "all" ||
-        req.body.Visibility === "friends" ||
-        req.body.Visibility === "none"
-      )
-    ) {
-      return res.send("Visibility error");
-    }
-
     const post = new Post({
       User_ID: req.auth.User_ID,
       Title: req.body.Title,
       Text: req.body.Text,
       Visibility: req.body.Visibility,
-      Image: req.file !== undefined ? req.file.location : null,
+      Image: req.file !== undefined ? req.file.filename : null,
     });
     await post.save().then(() => {
       res.send("Post inserting OK");
@@ -218,7 +202,7 @@ module.exports = {
         Title: req.body.Title,
         Text: req.body.Text,
         Visibility: req.body.Visibility,
-        Image: req.file.location,
+        Image: req.file.filename,
       };
     } else {
       data = {

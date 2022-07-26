@@ -5,8 +5,7 @@ const NotFoundException = require("../exceptions/NotFoundException");
 
 module.exports = {
   createComment: async (req, res) => {
-    const comment = new Comment(req.body);
-    console.log(req.body);
+    const comment = new Comment({ ...req.body, User_ID: req.auth.User_ID });
     await comment.save().then(() => {
       return res.send("Comment inserting OK");
     });

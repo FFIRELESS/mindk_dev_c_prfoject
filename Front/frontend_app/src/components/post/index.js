@@ -8,7 +8,7 @@ import {
   CardActions,
   CardContent,
   CardHeader, CardMedia, Collapse, Grid,
-  IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText,
+  IconButton,
   Menu, MenuItem, Modal, Popover,
   Typography,
 } from '@mui/material';
@@ -17,13 +17,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { pink, red } from '@mui/material/colors';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import TextField from '@mui/material/TextField';
 
+import { InsertLink } from '@mui/icons-material';
 import { handleImageError } from '../../config/componentHandlers';
 import { ExpandMore } from '../../styles/expandMoreAnimation';
 import { postPropTypes } from '../../propTypes/postPT';
@@ -31,27 +31,9 @@ import EditPostFormContainer from '../../containers/post/editPostForm';
 import { modalBoxStyle } from '../../styles/modalStyle';
 import authContext from '../../authContext';
 import { checkAvatarUrlData, checkPostImageUrlData } from '../../services/avatarLinkChecker';
-
-// import { useQuery } from 'react-query';
-// import { getPostImage } from '../../containers/post/api/crud';
-// import CircleLoader from '../header/circleLoader';
+import CommentsContainer from '../../containers/comments';
 
 const config = require('../../config/app.config');
-
-// const PostImage = function ({ id }) {
-//   const { data: postImage, isFetched } = useQuery('postImage', () => getPostImage(id));
-//   console.log(id);
-//   console.log(postImage);
-//   console.log(isFetched);
-//
-//   return (
-//     <CardMedia
-//       component="img"
-//       image={postImage?.data}
-//       onError={handleImageError}
-//     />
-//   );
-// };
 
 export const Post = function ({
   post, mutate, refetch, setOpenSnackbar,
@@ -79,7 +61,6 @@ export const Post = function ({
 
   const commentsCount = post.Comments.length;
   const likesCount = post.Post_likes.length ? post.Post_likes.length : null;
-  let commentsCounter = 0;
 
   const isComments = commentsCount > 0;
 
@@ -139,149 +120,6 @@ export const Post = function ({
     setOpenSnackbar(true);
   };
 
-  const commentsData = post.Comments.map((comment) => {
-    if (comment === undefined) {
-      return 0;
-    }
-
-    const commentLikesCounter = comment.Comment_likes.length ? comment.Comment_likes.length : null;
-    const commentLikes = comment.Comment_likes;
-    const commentDate = new Date(comment.created.toString()).toLocaleString('ru');
-    let repliedCommentDate = 'Date error';
-
-    const commentUserAvatar = checkAvatarUrlData(comment.User);
-    const replCommentUserAvatar = checkAvatarUrlData(comment?.Repl_to_Comment?.User);
-
-    const isLastComment = commentsCount === commentsCounter + 1;
-    const isReplied = !!comment.Repl_to_Comment_ID;
-    const isLikedByCurrentUser = commentLikes
-      .find((like) => like.Liked_by_User.User_ID === store.user.User_ID);
-
-    commentsCounter += 1;
-
-    if (isReplied) {
-      repliedCommentDate = new Date(comment.Repl_to_Comment.created.toString())
-        .toLocaleString('ru');
-    }
-
-    return (
-      <div key={comment.Comment_ID}>
-        <Box>
-          <ListItem dense alignItems="flex-start" key={comment.Comment_ID}>
-            <ListItemAvatar>
-              <Avatar src={commentUserAvatar} />
-            </ListItemAvatar>
-            <ListItemText
-              sx={{ width: '60%' }}
-              primary={(
-                <div>
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    variant="subtitle1"
-                    color="text.primary"
-                  >
-                    {comment.User.Username}
-                  </Typography>
-                  <Typography
-                    sx={{ display: 'inline' }}
-                    variant="caption"
-                    color="text.secondary"
-                  >
-                    {' • '}
-                    {commentDate}
-                  </Typography>
-                </div>
-                  )}
-              secondary={(
-                <Typography
-                  sx={{ display: 'inline' }}
-                  component="span"
-                  variant="body2"
-                  color="text.primary"
-                >
-                  {comment.Text}
-                </Typography>
-                  )}
-            />
-            <Box>
-              <IconButton aria-label="like comment">
-                {!isLikedByCurrentUser && (
-                <FavoriteBorderIcon />
-                )}
-                {isLikedByCurrentUser && (
-                <FavoriteIcon sx={{ color: pink.A400 }} />
-                )}
-              </IconButton>
-              {commentLikesCounter}
-            </Box>
-          </ListItem>
-          <Box margin={2}>
-            {isReplied && (
-              <Box marginLeft={7} marginTop={-2}>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                >
-                  Replied to:
-                </Typography>
-                <Box
-                  sx={{
-                    overflow: 'hidden',
-                  }}
-                  maxHeight={60}
-                  border={1}
-                  borderColor="silver"
-                  borderRadius={2}
-                >
-                  <ListItemButton disableGutters dense alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar
-                        src={replCommentUserAvatar}
-                        sx={{ transform: 'scale(0.7)' }}
-                      />
-                    </ListItemAvatar>
-                    <ListItemText
-                      sx={{ width: '60%' }}
-                      primary={(
-                        <div>
-                          <Typography
-                            sx={{ display: 'inline' }}
-                            variant="subtitle2"
-                            color="text.primary"
-                          >
-                            {comment.Repl_to_Comment.User.Username}
-                          </Typography>
-                          <Typography
-                            sx={{ display: 'inline' }}
-                            variant="caption"
-                            color="text.secondary"
-                          >
-                            {' • '}
-                            {repliedCommentDate}
-                          </Typography>
-                        </div>
-                            )}
-                      secondary={(
-                        <Typography
-                          sx={{ display: 'inline' }}
-                          variant="caption"
-                          color="text.primary"
-                        >
-                          {comment.Repl_to_Comment.Text}
-                        </Typography>
-                            )}
-                    />
-                  </ListItemButton>
-                </Box>
-              </Box>
-            )}
-          </Box>
-          {!isLastComment && (<hr style={{ width: '94%' }} />)}
-        </Box>
-      </div>
-    );
-  });
-
   return (
     <>
       <Box
@@ -308,7 +146,7 @@ export const Post = function ({
                 && (
                 <div>
                   <IconButton aria-label="share" onClick={handleSendClick}>
-                    <SendIcon />
+                    <InsertLink />
                   </IconButton>
                   {isCurrentUser && (
                     <>
@@ -373,9 +211,6 @@ export const Post = function ({
                   image={postImage}
                   onError={handleImageError}
                 />
-                {/* {isFetching ? <CircleLoader /> : ( */}
-                {/* <PostImage id={postData.Post_ID} /> */}
-                {/* )} */}
               </Box>
             )}
           </CardContent>
@@ -446,43 +281,34 @@ export const Post = function ({
                     </Box>
                   </Popover>
                   )}
-
-                  {isComments
-                      && (
-                        <ExpandMore
-                          expand={expanded}
-                          onClick={handleExpandClick}
-                          aria-expanded={expanded}
-                          aria-label="show more"
-                        >
-                          <Typography>
-                            Comments (
-                            {commentsCount}
-                            ):
-                          </Typography>
-                          <ExpandMoreIcon />
-                        </ExpandMore>
+                  <ExpandMore
+                    expand={expanded}
+                    onClick={handleExpandClick}
+                    aria-expanded={expanded}
+                    aria-label="show more"
+                  >
+                    {isComments
+                      ? (
+                        <Typography>
+                          Comments (
+                          {commentsCount}
+                          ):
+                        </Typography>
+                      ) : (
+                        <Typography>
+                          Add a comment
+                        </Typography>
                       )}
+                    <ExpandMoreIcon />
+                  </ExpandMore>
                 </CardActions>
 
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  <CardContent>
-                    <Box marginTop="-5%"><h3>Comments:</h3></Box>
-                    <Box
-                      border={1}
-                      borderColor="silver"
-                      borderRadius={2}
-                      maxHeight={300}
-                      alignItems="center"
-                      sx={{
-                        overflow: 'auto',
-                      }}
-                    >
-                      <List>
-                        {commentsData}
-                      </List>
-                    </Box>
-                  </CardContent>
+                  <CommentsContainer
+                    comments={post.Comments}
+                    postId={post.Post_ID}
+                    reloadPosts={refetch}
+                  />
                 </Collapse>
               </div>
               )}

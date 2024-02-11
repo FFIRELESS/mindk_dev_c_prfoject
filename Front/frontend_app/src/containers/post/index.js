@@ -19,7 +19,7 @@ const PostsContainer = function () {
   const {
     fetchNextPage,
     hasNextPage,
-    refetch,
+    refetch: reloadPosts,
     isFetchingNextPage,
     isFetching,
     isRefetching,
@@ -45,7 +45,7 @@ const PostsContainer = function () {
 
   return (
     <>
-      <ResponsiveAppBar refetch={refetch} />
+      <ResponsiveAppBar refetch={reloadPosts} />
       <Offset />
       {isFetching && isRefetching && isLoading && <CircleLoader />}
       <Box
@@ -75,7 +75,7 @@ const PostsContainer = function () {
               <Post
                 post={post}
                 mutate={mutateAsync}
-                refetch={refetch}
+                reloadPosts={reloadPosts}
                 setOpenSnackbar={setOpenSnackbar}
               />
             </div>

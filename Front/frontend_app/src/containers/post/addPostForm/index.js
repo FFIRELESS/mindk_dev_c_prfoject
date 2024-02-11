@@ -6,7 +6,7 @@ import AddEditForm from '../../../components/post/addEditForm';
 import CircleLoader from '../../../components/header/circleLoader';
 import { addPostContainerPropTypes } from '../../../propTypes/addPostContainerPT';
 
-const AddPostContainer = function ({ refetch, setOpen }) {
+const AddPostContainer = function ({ reloadPosts, setOpen }) {
   const postData = {};
   const { mutate, isLoading } = useMutation(createPost);
   const isAddPostForm = true;
@@ -19,7 +19,7 @@ const AddPostContainer = function ({ refetch, setOpen }) {
         postData={postData}
         mutate={mutate}
         isLoading={isLoading}
-        refetch={refetch}
+        reloadPosts={reloadPosts}
         setOpen={setOpen}
       />
     </>

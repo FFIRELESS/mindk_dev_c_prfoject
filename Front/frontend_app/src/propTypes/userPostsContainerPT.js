@@ -16,7 +16,7 @@ export const userPostsContainerPropTypes = {
   //   }),
   // })),
   fetchNextPage: PropTypes.func,
-  refetch: PropTypes.func,
+  reloadPosts: PropTypes.func,
   hasNextPage: PropTypes.bool,
   isFetching: PropTypes.bool,
   isFetchingNextPage: PropTypes.bool,

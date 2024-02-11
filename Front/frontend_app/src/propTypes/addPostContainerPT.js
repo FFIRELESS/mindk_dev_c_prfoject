@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
 export const addPostContainerPropTypes = {
-  refetch: PropTypes.func,
+  reloadPosts: PropTypes.func,
   setOpen: PropTypes.func,
 };

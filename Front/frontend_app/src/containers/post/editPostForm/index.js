@@ -6,11 +6,11 @@ import AddEditForm from '../../../components/post/addEditForm';
 import { editPostFormContainerPropTypes } from '../../../propTypes/editPostFormContainerPT';
 import BackDrop from '../../../components/header/backdrop';
 
-const EditPostFormContainer = function ({ id, refetch, setOpen }) {
+const EditPostFormContainer = function ({ id, reloadPosts, setOpen }) {
   const { mutate, isLoading } = useMutation((postFormData) => editPost(id, postFormData));
   const isAddPostForm = false;
 
-  const { isFetching, data, refetch: refetchFormData } = useQuery('post', () => getPost(id));
+  const { isFetching, data, refetch: reloadFormData } = useQuery('post', () => getPost(id));
   const post = data?.data;
 
   if (post !== undefined) {
@@ -23,8 +23,8 @@ const EditPostFormContainer = function ({ id, refetch, setOpen }) {
           postData={post}
           mutate={mutate}
           isLoading={isLoading}
-          refetch={refetch}
-          refetchFormData={refetchFormData}
+          reloadPosts={reloadPosts}
+          reloadFormData={reloadFormData}
           setOpen={setOpen}
         />
       </>

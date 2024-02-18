@@ -24,7 +24,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import TextField from '@mui/material/TextField';
 
 import { InsertLink } from '@mui/icons-material';
-import { handleImageError } from '../../config/componentHandlers';
+import { handleImageError } from '../../services/componentHandlers';
 import { ExpandMore } from '../../styles/expandMoreAnimation';
 import { postPropTypes } from '../../propTypes/postPT';
 import EditPostFormContainer from '../../containers/post/editPostForm';
@@ -36,7 +36,7 @@ import CommentsContainer from '../../containers/comments';
 const config = require('../../config/app.config');
 
 export const Post = function ({
-  post, mutate, refetch, setOpenSnackbar,
+  post, mutate, reloadPosts, setOpenSnackbar,
 }) {
   const { store } = useContext(authContext);
 
@@ -116,7 +116,7 @@ export const Post = function ({
   const handleMenuDelete = () => {
     handleCloseMenu();
     setPostDeleted(true);
-    mutate(postData.Post_ID).then(() => refetch());
+    mutate(postData.Post_ID).then(() => reloadPosts());
     setOpenSnackbar(true);
   };
 
@@ -307,7 +307,7 @@ export const Post = function ({
                   <CommentsContainer
                     comments={post.Comments}
                     postId={post.Post_ID}
-                    reloadPosts={refetch}
+                    reloadPosts={reloadPosts}
                   />
                 </Collapse>
               </div>
@@ -328,7 +328,7 @@ export const Post = function ({
           </Box>
           <EditPostFormContainer
             id={postData.Post_ID}
-            refetch={refetch}
+            reloadPosts={reloadPosts}
             setOpen={setOpenEditModal}
           />
         </Box>

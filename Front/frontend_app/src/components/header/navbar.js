@@ -34,7 +34,7 @@ const HideOnScroll = function (props) {
   );
 };
 
-const ResponsiveAppBar = function ({ refetch }) {
+const ResponsiveAppBar = function ({ reloadPosts }) {
   const [open, setOpen] = useState(false);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -229,7 +229,7 @@ const ResponsiveAppBar = function ({ refetch }) {
               <CloseIcon />
             </IconButton>
           </Box>
-          <AddPostContainer refetch={refetch} setOpen={setOpen} />
+          <AddPostContainer reloadPosts={reloadPosts} setOpen={setOpen} />
         </Box>
       </Modal>
     </>
@@ -239,7 +239,7 @@ const ResponsiveAppBar = function ({ refetch }) {
 export default observer(ResponsiveAppBar);
 
 ResponsiveAppBar.propTypes = {
-  refetch: PropTypes.func,
+  reloadPosts: PropTypes.func,
 };
 
 HideOnScroll.propTypes = {

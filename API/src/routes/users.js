@@ -16,15 +16,17 @@ router.use(authMiddleware);
 
 router.post(
   "/",
-  validationMiddleware(validationRules.userRules, {
-    Email: {
-      getResourceByField: (email) => usersController.getUserByEmail(email),
-    },
-    Username: {
-      getResourceByField: (username) =>
-        usersController.getUserByUsername(username),
-    },
-  }),
+  asyncHandler(
+    validationMiddleware(validationRules.userRules, {
+      Email: {
+        getResourceByField: (email) => usersController.getUserByEmail(email),
+      },
+      Username: {
+        getResourceByField: (username) =>
+          usersController.getUserByUsername(username),
+      },
+    })
+  ),
   asyncHandler(usersController.createUser)
 );
 router.post(
@@ -43,17 +45,6 @@ router.post(
 );
 router.put(
   "/:id",
-  validationMiddleware(validationRules.userRules, {
-    Email: {
-      getResource: (req) => usersController.getUserBy(req.params.id),
-      getResourceByField: (email) => usersController.getUserByEmail(email),
-    },
-    Username: {
-      getResource: (req) => usersController.getUserBy(req.params.id),
-      getResourceByField: (username) =>
-        usersController.getUserByUsername(username),
-    },
-  }),
   aclMiddleware([
     {
       resource: "user",
@@ -63,6 +54,19 @@ router.put(
       isOwn: (resource, userId) => resource.User_ID === userId,
     },
   ]),
+  asyncHandler(
+    validationMiddleware(validationRules.userRules, {
+      Email: {
+        getResource: (req) => usersController.getUserBy(req.params.id),
+        getResourceByField: (email) => usersController.getUserByEmail(email),
+      },
+      Username: {
+        getResource: (req) => usersController.getUserBy(req.params.id),
+        getResourceByField: (username) =>
+          usersController.getUserByUsername(username),
+      },
+    })
+  ),
   asyncHandler(usersController.updateUserById)
 );
 router.delete(

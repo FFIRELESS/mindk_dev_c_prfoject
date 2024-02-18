@@ -1,10 +1,10 @@
 const University = require("./university");
 const User = require("./user");
 const UserFriends = require("./userFriends");
-const Comment = require("./comment");
-const CommentLikes = require("./commentLikes");
 const Post = require("./post");
 const PostLikes = require("./postLikes");
+const Comment = require("./comment");
+const CommentLikes = require("./commentLikes");
 const Sessions = require("./sessions");
 
 Sessions.belongsTo(User, { as: "User", foreignKey: "User_ID" });

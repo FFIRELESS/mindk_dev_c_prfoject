@@ -9,7 +9,6 @@ module.exports = (rules, resources) => async (req, res, next) => {
 
     for await (const arrayRule of Object.entries(fieldRules)) {
       const [rule, parameter] = arrayRule;
-
       switch (rule) {
         case "required":
           {

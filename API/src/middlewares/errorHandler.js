@@ -7,6 +7,7 @@ module.exports = (err, req, res, next) => {
   console.log();
   console.log("ERROR");
   console.log(err.message);
+  console.log(err?.errors);
   console.log();
   if (err instanceof NotFoundException) {
     return res.status(404).send({ error: err.message });

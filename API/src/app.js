@@ -60,9 +60,9 @@ const start = async () => {
     await sequelize.sync({ alter: true });
 
     https.createServer(httpsOptions, app).listen(port);
-    console.log("Server started at /localhost:" + port);
+    console.log("\nServer started at https://localhost:" + port);
   } catch (e) {
-    console.log(`Exception: ${e.message}`);
+    console.log(`\nException: ${e.message}\n`);
   }
 };
 

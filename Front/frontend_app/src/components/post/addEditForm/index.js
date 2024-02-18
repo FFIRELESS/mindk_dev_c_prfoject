@@ -59,10 +59,10 @@ const AddEditForm = function ({
     actions.setSubmitting(false);
     if (!isLoading) {
       actions.submitForm(mutate(formData)).then(() => {
-        if (reloadPosts) {
-          reloadPosts();
+        if (refetchFormData) {
           refetchFormData();
         }
+        refetch();
         setOpen(false);
       });
     }

@@ -18,13 +18,12 @@ router.use(authMiddleware);
 
 router.post(
   "/",
-  validationMiddleware(validationRules.postRules),
   uploadPostImage.single("image"),
+  asyncHandler(validationMiddleware(validationRules.postRules)),
   asyncHandler(postsController.createPost)
 );
 router.put(
   "/:id",
-  validationMiddleware(validationRules.postRules),
   aclMiddleware([
     {
       resource: "post",
@@ -35,6 +34,7 @@ router.put(
     },
   ]),
   uploadPostImage.single("image"),
+  asyncHandler(validationMiddleware(validationRules.postRules)),
   asyncHandler(postsController.updatePost)
 );
 router.delete(

@@ -7,7 +7,7 @@ import {
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 
-import { handleImageError } from '../../../config/componentHandlers';
+import { handleImageError } from '../../../services/componentHandlers';
 import { visibilityVars } from '../../userProfile/editProfileForm/visibilityOptions';
 import { postFormSchema } from './yup.validation.schema';
 import { postFormPropTypes } from '../../../propTypes/postFormPT';
@@ -16,7 +16,7 @@ const dataURLtoBlob = require('blueimp-canvas-to-blob');
 const config = require('../../../config/app.config');
 
 const AddEditForm = function ({
-  postData, mutate, isAddPostForm, isLoading, refetch, refetchFormData, setOpen,
+  postData, mutate, isAddPostForm, isLoading, reloadPosts, refetchFormData, setOpen,
 }) {
   const [image, setImage] = useState();
   const [filename, setFilename] = useState();

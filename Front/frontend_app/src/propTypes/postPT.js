@@ -16,5 +16,5 @@ export const postPropTypes = {
       }),
     }),
   }).isRequired,
-  refetch: PropTypes.func,
+  reloadPosts: PropTypes.func,
 };
